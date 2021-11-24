@@ -1,4 +1,4 @@
-﻿using Sirenix.OdinInspector;
+﻿/*using Sirenix.OdinInspector;
 using UnityEngine;
 namespace MornLib.Singletons {
     /// <summary>
@@ -28,4 +28,4 @@ namespace MornLib.Singletons {
             }
         }
     }
-}
+}*/
