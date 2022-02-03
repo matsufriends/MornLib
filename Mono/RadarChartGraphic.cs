@@ -82,8 +82,8 @@ namespace MornLib.Mono {
             return new Vector2(-Mathf.Sin(radian),Mathf.Cos(radian));
         }
         [ContextMenu("UpdateMesh")]
-        private void UpdateMesh() {
-            SetVerticesDirty();
+        public void UpdateMesh() {
+            SetAllDirty();
         }
         public void SetValue(IEnumerable<float> values) {
             _valueList.Clear();
