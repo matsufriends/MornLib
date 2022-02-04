@@ -74,11 +74,11 @@ namespace MornLib.Mono {
             return result;
         }
         private Vector2 GetPos(int index) {
-            var radian = Mathf.Deg2Rad * (90 + index * 360 / Mathf.Max(1,_valueCount));
+            var radian = Mathf.Deg2Rad * (90 - index * 360 / Mathf.Max(1,_valueCount));
             return new Vector2(Mathf.Cos(radian),Mathf.Sin(radian));
         }
         private Vector2 GetNormal(int index) {
-            var radian = Mathf.Deg2Rad * (90 + index * 360 / Mathf.Max(1,_valueCount));
+            var radian = Mathf.Deg2Rad * (90 - index * 360 / Mathf.Max(1,_valueCount));
             return new Vector2(-Mathf.Sin(radian),Mathf.Cos(radian));
         }
         [ContextMenu("UpdateMesh")]
