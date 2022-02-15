@@ -1,6 +1,8 @@
-﻿namespace MornLib.Mono {
+﻿using UnityEngine;
+namespace MornLib.Mono {
     public interface IPopUpCaller {
-        string TitleText  { get; }
-        string DetailText { get; }
+        Vector2 CenterPos  { get; }
+        string  TitleText  { get; }
+        string  DetailText { get; }
     }
 }
