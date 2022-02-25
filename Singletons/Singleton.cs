@@ -11,13 +11,14 @@
         }
         protected abstract void Instanced();
     }
-    public abstract class Singleton<TClass,TInterface> where TInterface : ISingleton where TClass : Singleton<TClass,TInterface>,TInterface,new() {
+    public abstract class Singleton<TClass,TInterface> where TClass : Singleton<TClass,TInterface>,TInterface,ISingleton,new() {
         private static TInterface s_instance;
         public static TInterface Instance {
             get {
                 if(s_instance != null) return s_instance;
-                s_instance = new TClass();
-                s_instance.Instanced();
+                var cla = new TClass();
+                cla.Instanced();
+                s_instance = cla;
                 return s_instance;
             }
         }

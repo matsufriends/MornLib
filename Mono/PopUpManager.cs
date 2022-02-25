@@ -3,7 +3,7 @@ using MornLib.Cores;
 using MornLib.Singletons;
 using UnityEngine;
 namespace MornLib.Mono {
-    public class PopUpManager : Singleton<PopUpManager,IPopUpManager>,IPopUpManager {
+    public class PopUpManager : Singleton<PopUpManager,IPopUpManager>,IPopUpManager,ISingleton {
         private       bool                  _initialized;
         private       RectTransform         _popRect;
         private       Action<string,string> _setText;

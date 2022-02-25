@@ -1,8 +1,7 @@
 ﻿using System;
-using MornLib.Singletons;
 using UnityEngine;
 namespace MornLib.Mono {
-    public interface IPopUpManager : ISingleton {
+    public interface IPopUpManager {
         void Init(RectTransform rect,Action<string,string> setText);
         void Show(IPopUpCaller  popUpCaller);
         void Hide();

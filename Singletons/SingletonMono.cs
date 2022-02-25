@@ -12,14 +12,15 @@ namespace MornLib.Singletons {
             }
         }
     }
-    public abstract class SingletonMono<TMono,TInterface> : MonoBehaviour where TInterface : ISingleton where TMono : SingletonMono<TMono,TInterface>,TInterface {
+    public abstract class SingletonMono<TMono,TInterface> : MonoBehaviour where TMono : SingletonMono<TMono,TInterface>,TInterface,ISingleton {
         private static TInterface s_instance;
         public static TInterface Instance {
             get {
                 if(s_instance != null) return s_instance;
-                s_instance = FindObjectOfType<TMono>();
+                var mono = FindObjectOfType<TMono>();
+                s_instance = mono;
                 if(s_instance == null) throw new Exception($"{typeof(TMono)}が見つかりません");
-                s_instance.Instanced();
+                mono.Instanced();
                 return s_instance;
             }
         }
