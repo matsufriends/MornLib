@@ -15,7 +15,7 @@ namespace MornLib.Mono {
             foreach(var rect in _list) {
                 var curPos = (Vector2) rect.anchoredPosition;
                 var dif    = isUpDown ? offsetPos.y - curPos.y : offsetPos.x - curPos.x;
-                var aimPos = curPos + (isUpDown ? Vector2.up : Vector2.right) * (dif * (Time.deltaTime * _movement));
+                var aimPos = curPos + (isUpDown ? Vector2.up : Vector2.right) * (dif * Mathf.Min(1,Time.deltaTime * _movement));
                 rect.anchoredPosition =  aimPos;
                 offsetPos             += dirVector * ((isUpDown ? rect.rect.size.y : rect.rect.size.x) + _spacing);
             }
