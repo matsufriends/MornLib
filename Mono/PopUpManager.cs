@@ -7,6 +7,7 @@ namespace MornLib.Mono {
         private       bool                  _initialized;
         private       RectTransform         _popRect;
         private       Action<string,string> _setText;
+        private       float                 _cachedLastShowTime;
         private const int                   _width           = 1920;
         private const int                   _height          = 1080;
         private const int                   _space           = 50;
@@ -23,6 +24,7 @@ namespace MornLib.Mono {
                 MornLog.Warning("PopUpはまだセットアップされていません");
                 return;
             }
+            _cachedLastShowTime = Time.unscaledTime;
             _popRect.gameObject.SetActive(true);
             _popRect.position = popUpCaller.CenterPos;
             var ancPos     = _popRect.anchoredPosition;
@@ -46,6 +48,7 @@ namespace MornLib.Mono {
                 MornLog.Warning("PopUpはまだセットアップされていません");
                 return;
             }
+            if(Time.unscaledTime - _cachedLastShowTime == 0) return;
             _popRect.gameObject.SetActive(false);
         }
         public void Instanced() { }
