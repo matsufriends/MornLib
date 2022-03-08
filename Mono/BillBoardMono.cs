@@ -5,7 +5,7 @@ namespace MornLib.Mono {
         private void Awake() {
             _mainCamera = Camera.main;
         }
-        private void Update() {
+        private void LateUpdate() {
             if(_mainCamera == null) _mainCamera        = Camera.main;
             if(_mainCamera != null) transform.rotation = _mainCamera.transform.rotation;
         }
