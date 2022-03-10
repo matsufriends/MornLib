@@ -32,12 +32,12 @@ namespace MornLib.Mono {
             _popRect.sizeDelta = new Vector2(detailText.LongestLengthBySplit('\n') * _offset,_baseY + _offset * detailText.MatchCount('\n'));
             if(ancPos.x < _width - _popRect.sizeDelta.x - _space - _screenDeadSpace) {
                 ancPos.x += _space + _popRect.sizeDelta.x / 2f;
-            } else {
+            } else if(_popRect.sizeDelta.x + _space + _screenDeadSpace < ancPos.x) {
                 ancPos.x -= _space + _popRect.sizeDelta.x / 2f;
             }
             if(ancPos.y < _height - _popRect.sizeDelta.y - _space - _screenDeadSpace) {
                 ancPos.y += _space + _popRect.sizeDelta.y / 2f;
-            } else {
+            } else if(_popRect.sizeDelta.y + _space + _screenDeadSpace < ancPos.y) {
                 ancPos.y -= _space + _popRect.sizeDelta.y / 2f;
             }
             _popRect.anchoredPosition = ancPos;
