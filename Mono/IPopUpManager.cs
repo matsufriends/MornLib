@@ -2,7 +2,7 @@
 using UnityEngine;
 namespace MornLib.Mono {
     public interface IPopUpManager {
-        void Init(RectTransform rect,Action<string,string> setText);
+        void Init(RectTransform rect,Action<IPopUpCaller> setText);
         void Show(IPopUpCaller  popUpCaller);
         void Hide();
     }
