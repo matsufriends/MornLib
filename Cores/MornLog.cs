@@ -7,7 +7,7 @@ namespace MornLib.Cores {
         }
         public static void Warning(string text) {
             #if UNITY_EDITOR
-            throw new Exception(text);
+            Debug.LogError(text);
             #else
             Debug.LogWarning(text);
             #endif
