@@ -9,7 +9,7 @@ namespace MornLib.Mono.UI {
         [SerializeField] private UIBehaviour _ui;
         [SerializeField] private bool _isOnMouseRight;
         [SerializeField] private bool _isOnMouseMiddle;
-        [SerializeField] private bool _isOnMouseLeft;
+        [SerializeField] private bool _isOnMouseLeft = true;
         public IObservable<Unit> OnPointerEnter => _ui.OnPointerEnterAsObservable().Select(_ => Unit.Default);
         public IObservable<Unit> OnPointerExit => _ui.OnPointerExitAsObservable().Select(_ => Unit.Default);
         public IObservable<Unit> OnPointerUp => _ui.OnPointerUpAsObservable().Where(Match).Select(_ => Unit.Default);
@@ -33,7 +33,7 @@ namespace MornLib.Mono.UI {
                .AddTo(this);
             OnPointerClick.Subscribe(
                     _ => {
-                        foreach(var user in users) user.OnDeSelect();
+                        foreach(var user in users) user.OnClick();
                     }
                 )
                .AddTo(this);
