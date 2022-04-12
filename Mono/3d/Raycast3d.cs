@@ -12,14 +12,14 @@ namespace MornLib.Mono._3d {
         private readonly Subject<Unit> _mouseClickSubject = new Subject<Unit>();
         private bool _isOver;
         private bool _isDrag;
-        IObservable<Unit> IPointerEvent.OnPointerEnter => gameObject.OnMouseEnterAsObservable();
-        IObservable<Unit> IPointerEvent.OnPointerExit => gameObject.OnMouseExitAsObservable();
-        IObservable<Unit> IPointerEvent.OnPointerUp => _mouseUpSubject;
-        IObservable<Unit> IPointerEvent.OnPointerDown => _mouseDownSubject;
+        public IObservable<Unit> OnPointerEnter => gameObject.OnMouseEnterAsObservable();
+        public IObservable<Unit> OnPointerExit => gameObject.OnMouseExitAsObservable();
+        public IObservable<Unit> OnPointerUp => _mouseUpSubject;
+        public IObservable<Unit> OnPointerDown => _mouseDownSubject;
         IObservable<Unit> IPointerEvent.OnPointerClick => _mouseClickSubject;
         private void Awake() {
-            ((IPointerEvent) this).OnPointerEnter.Subscribe(_ => _isOver = true).AddTo(this);
-            ((IPointerEvent) this).OnPointerExit.Subscribe(_ => _isOver  = false).AddTo(this);
+            OnPointerEnter.Subscribe(_ => _isOver = true).AddTo(this);
+            OnPointerExit.Subscribe(_ => _isOver  = false).AddTo(this);
         }
         private void Update() {
             if(_isDrag) UpdateDrag();
