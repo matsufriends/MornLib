@@ -16,10 +16,27 @@ namespace MornLib.Mono.UI {
         public IObservable<Unit> OnPointerDown => _ui.OnPointerDownAsObservable().Where(Match).Select(_ => Unit.Default);
         public IObservable<Unit> OnPointerClick => _ui.OnPointerClickAsObservable().Where(Match).Select(_ => Unit.Default);
         private void Awake() {
-            var user = GetComponent<IUIBaseUser>();
-            if(user == null) return;
-            OnPointerEnter.Subscribe(_ => user.OnSelect()).AddTo(this);
-            OnPointerExit.Subscribe(_ => user.OnDeSelect()).AddTo(this);
+            ;
+            var users = GetComponents<IUIBaseUser>();
+            if(users == null) return;
+            OnPointerEnter.Subscribe(
+                    _ => {
+                        foreach(var user in users) user.OnSelect();
+                    }
+                )
+               .AddTo(this);
+            OnPointerExit.Subscribe(
+                    _ => {
+                        foreach(var user in users) user.OnDeSelect();
+                    }
+                )
+               .AddTo(this);
+            OnPointerClick.Subscribe(
+                    _ => {
+                        foreach(var user in users) user.OnDeSelect();
+                    }
+                )
+               .AddTo(this);
         }
         private bool Match(PointerEventData eventData) {
             if(_isOnMouseRight && eventData.IsRightClick()) return true;
