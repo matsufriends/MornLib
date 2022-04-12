@@ -2,5 +2,6 @@
     public interface IUIBaseUser {
         void OnSelect();
         void OnDeSelect();
+        void OnClick();
     }
 }
