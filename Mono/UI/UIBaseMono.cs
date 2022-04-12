@@ -10,15 +10,17 @@ namespace MornLib.Mono.UI {
         [SerializeField] private bool _isOnMouseRight;
         [SerializeField] private bool _isOnMouseMiddle;
         [SerializeField] private bool _isOnMouseLeft = true;
+        [SerializeField] private bool _isReactChild;
         private bool _isOver;
         private readonly Subject<Unit> _pointerExitSubject = new Subject<Unit>();
-        public IObservable<Unit> OnPointerEnter => _ui.OnPointerEnterAsObservable().Select(_ => Unit.Default);
+        public IObservable<Unit> OnPointerEnter
+            => _ui.OnPointerEnterAsObservable().Where(x => _isReactChild || x.pointerEnter == gameObject).Select(_ => Unit.Default);
         public IObservable<Unit> OnPointerExit => _pointerExitSubject;
         public IObservable<Unit> OnPointerUp => _ui.OnPointerUpAsObservable().Where(Match).Select(_ => Unit.Default);
         public IObservable<Unit> OnPointerDown => _ui.OnPointerDownAsObservable().Where(Match).Select(_ => Unit.Default);
         public IObservable<Unit> OnPointerClick => _ui.OnPointerClickAsObservable().Where(Match).Select(_ => Unit.Default);
         private void Awake() {
-            _ui.OnPointerEnterAsObservable().Subscribe(_ => _isOver = true).AddTo(this);
+            OnPointerEnter.Subscribe(_ => _isOver = true).AddTo(this);
             _ui.OnPointerExitAsObservable()
                .Subscribe(
                     _ => {
