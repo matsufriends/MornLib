@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 namespace MornLib.Mono.TcgLayout {
     [RequireComponent(typeof(RectTransform))]
-    public class TcgRectMono : MonoBehaviour,ITcgRectController,IPointerEnterHandler,IPointerExitHandler {
+    public sealed class TcgRectMono : MonoBehaviour,ITcgRectController,IPointerEnterHandler,IPointerExitHandler {
         [SerializeField] private RectTransform _ownRect;
         private ITcgRectUser _tcgRectUser;
         private Action _selected;
