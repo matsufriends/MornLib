@@ -4,18 +4,20 @@ using UnityEngine;
 namespace MornLib.Mono {
     [RequireComponent(typeof(RectTransform))]
     public class AnimationLayoutMono : MonoBehaviour {
-        [SerializeField] private Dir                 _dir;
-        [SerializeField] private int                 _spacing;
-        [SerializeField] private List<RectTransform> _list     = new List<RectTransform>();
-        private const            float               _movement = 20;
+        [SerializeField] private Dir _dir;
+        [SerializeField] private int _spacing;
+        [SerializeField] private bool _ignoreTimeScale = true;
+        [SerializeField] private List<RectTransform> _list = new List<RectTransform>();
+        private const float _movement = 20;
         private void Update() {
             var offsetPos = Vector2.zero;
-            var isUpDown  = _dir == Dir.Up || _dir == Dir.Down;
+            var isUpDown = _dir == Dir.Up || _dir == Dir.Down;
             var dirVector = DirToVector(_dir);
             foreach(var rect in _list) {
                 var curPos = (Vector2) rect.anchoredPosition;
-                var dif    = isUpDown ? offsetPos.y - curPos.y : offsetPos.x - curPos.x;
-                var aimPos = curPos + (isUpDown ? Vector2.up : Vector2.right) * (dif * Mathf.Min(1,Time.deltaTime * _movement));
+                var dif = isUpDown ? offsetPos.y - curPos.y : offsetPos.x - curPos.x;
+                var deltaTime = _ignoreTimeScale ? Time.unscaledDeltaTime : Time.deltaTime;
+                var aimPos = curPos + (isUpDown ? Vector2.up : Vector2.right) * (dif * Mathf.Min(1,deltaTime* _movement));
                 rect.anchoredPosition =  aimPos;
                 offsetPos             += dirVector * ((isUpDown ? rect.rect.size.y : rect.rect.size.x) + _spacing);
             }
