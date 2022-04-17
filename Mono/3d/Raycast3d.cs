@@ -7,16 +7,16 @@ namespace MornLib.Mono._3d {
         [SerializeField] private bool _isOnMouseRight;
         [SerializeField] private bool _isOnMouseMiddle;
         [SerializeField] private bool _isOnMouseLeft;
-        private readonly Subject<Unit> _mouseUpSubject = new Subject<Unit>();
-        private readonly Subject<Unit> _mouseDownSubject = new Subject<Unit>();
-        private readonly Subject<Unit> _mouseClickSubject = new Subject<Unit>();
+        private readonly Subject<MouseClickSet> _mouseUpSubject = new Subject<MouseClickSet>();
+        private readonly Subject<MouseClickSet> _mouseDownSubject = new Subject<MouseClickSet>();
+        private readonly Subject<MouseClickSet> _mouseClickSubject = new Subject<MouseClickSet>();
         private bool _isOver;
         private bool _isDrag;
         public IObservable<Unit> OnPointerEnter => gameObject.OnMouseEnterAsObservable();
         public IObservable<Unit> OnPointerExit => gameObject.OnMouseExitAsObservable();
-        public IObservable<Unit> OnPointerUp => _mouseUpSubject;
-        public IObservable<Unit> OnPointerDown => _mouseDownSubject;
-        IObservable<Unit> IPointerEvent.OnPointerClick => _mouseClickSubject;
+        public IObservable<MouseClickSet> OnPointerUp => _mouseUpSubject;
+        public IObservable<MouseClickSet> OnPointerDown => _mouseDownSubject;
+        IObservable<MouseClickSet> IPointerEvent.OnPointerClick => _mouseClickSubject;
         private void Awake() {
             OnPointerEnter.Subscribe(_ => _isOver = true).AddTo(this);
             OnPointerExit.Subscribe(_ => _isOver  = false).AddTo(this);
@@ -26,23 +26,21 @@ namespace MornLib.Mono._3d {
             if(_isOver) UpdateOver();
         }
         private void UpdateDrag() {
-            var up = false;
-            up |= _isOnMouseLeft && Input.GetMouseButtonUp(0);
-            up |= _isOnMouseRight && Input.GetMouseButtonUp(1);
-            up |= _isOnMouseMiddle && Input.GetMouseButtonUp(2);
-            if(up) {
-                _mouseUpSubject.OnNext(Unit.Default);
-                if(_isOver) _mouseClickSubject.OnNext(Unit.Default);
+            var rightUp = _isOnMouseRight && Input.GetMouseButtonUp(1);
+            var middleUp = _isOnMouseMiddle && Input.GetMouseButtonUp(2);
+            var leftUp = _isOnMouseLeft && Input.GetMouseButtonUp(0);
+            if(rightUp || middleUp || leftUp) {
+                _mouseUpSubject.OnNext(new MouseClickSet(rightUp,middleUp,leftUp));
+                if(_isOver) _mouseClickSubject.OnNext(new MouseClickSet(rightUp,middleUp,leftUp));
                 _isDrag = false;
             }
         }
         private void UpdateOver() {
-            var down = false;
-            down |= _isOnMouseLeft && Input.GetMouseButtonDown(0);
-            down |= _isOnMouseRight && Input.GetMouseButtonDown(1);
-            down |= _isOnMouseMiddle && Input.GetMouseButtonDown(2);
-            if(down) {
-                _mouseDownSubject.OnNext(Unit.Default);
+            var rightDown = _isOnMouseRight && Input.GetMouseButtonDown(1);
+            var middleDown = _isOnMouseMiddle && Input.GetMouseButtonDown(2);
+            var leftDown = _isOnMouseLeft && Input.GetMouseButtonDown(0);
+            if(rightDown || middleDown || leftDown) {
+                _mouseDownSubject.OnNext(new MouseClickSet(rightDown,middleDown,leftDown));
                 _isDrag = true;
             }
         }

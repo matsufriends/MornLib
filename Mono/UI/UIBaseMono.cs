@@ -13,13 +13,19 @@ namespace MornLib.Mono.UI {
         [SerializeField] private bool _isReactChild;
         private bool _isOver;
         private readonly Subject<Unit> _pointerExitSubject = new Subject<Unit>();
+        private readonly Subject<MouseClickSet> _mouseUpSubject = new Subject<MouseClickSet>();
+        private readonly Subject<MouseClickSet> _mouseDownSubject = new Subject<MouseClickSet>();
+        private readonly Subject<MouseClickSet> _mouseClickSubject = new Subject<MouseClickSet>();
         public IObservable<Unit> OnPointerEnter
             => _ui.OnPointerEnterAsObservable().Where(x => _isReactChild || x.pointerEnter == gameObject).Select(_ => Unit.Default);
         public IObservable<Unit> OnPointerExit => _pointerExitSubject;
-        public IObservable<Unit> OnPointerUp => _ui.OnPointerUpAsObservable().Where(Match).Select(_ => Unit.Default);
-        public IObservable<Unit> OnPointerDown => _ui.OnPointerDownAsObservable().Where(Match).Select(_ => Unit.Default);
-        public IObservable<Unit> OnPointerClick => _ui.OnPointerClickAsObservable().Where(Match).Select(_ => Unit.Default);
+        public IObservable<MouseClickSet> OnPointerUp => _mouseUpSubject;
+        public IObservable<MouseClickSet> OnPointerDown => _mouseDownSubject;
+        public IObservable<MouseClickSet> OnPointerClick => _mouseClickSubject;
         private void Awake() {
+            _ui.OnPointerUpAsObservable().Subscribe(eventData => InvokeSubject(eventData,_mouseUpSubject)).AddTo(this);
+            _ui.OnPointerDownAsObservable().Subscribe(eventData => InvokeSubject(eventData,_mouseDownSubject)).AddTo(this);
+            _ui.OnPointerClickAsObservable().Subscribe(eventData => InvokeSubject(eventData,_mouseClickSubject)).AddTo(this);
             OnPointerEnter.Subscribe(_ => _isOver = true).AddTo(this);
             _ui.OnPointerExitAsObservable()
                .Subscribe(
@@ -59,11 +65,11 @@ namespace MornLib.Mono.UI {
                 )
                .AddTo(this);
         }
-        private bool Match(PointerEventData eventData) {
-            if(_isOnMouseRight && eventData.IsRightClick()) return true;
-            if(_isOnMouseMiddle && eventData.IsMiddleClick()) return true;
-            if(_isOnMouseLeft && eventData.IsLeftClick()) return true;
-            return false;
+        private void InvokeSubject(PointerEventData eventData,IObserver<MouseClickSet> subject) {
+            var isRight = (_isOnMouseRight && eventData.IsRightClick());
+            var isMiddle = (_isOnMouseMiddle && eventData.IsMiddleClick());
+            var isLeft = (_isOnMouseLeft && eventData.IsLeftClick());
+            if(isRight || isMiddle || isLeft) subject.OnNext(new MouseClickSet(isRight,isMiddle,isLeft));
         }
         private void Reset() {
             _ui = GetComponent<UIBehaviour>();

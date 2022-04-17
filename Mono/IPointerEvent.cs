@@ -4,8 +4,8 @@ namespace MornLib.Mono {
     public interface IPointerEvent {
         public IObservable<Unit> OnPointerEnter { get; }
         public IObservable<Unit> OnPointerExit { get; }
-        public IObservable<Unit> OnPointerUp { get; }
-        public IObservable<Unit> OnPointerDown { get; }
-        public IObservable<Unit> OnPointerClick { get; }
+        public IObservable<MouseClickSet> OnPointerUp { get; }
+        public IObservable<MouseClickSet> OnPointerDown { get; }
+        public IObservable<MouseClickSet> OnPointerClick { get; }
     }
 }
