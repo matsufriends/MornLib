@@ -18,11 +18,6 @@
             "name": "com.unity.textmeshpro",
             "expression": "",
             "define": "USE_TEXTMESHPRO"
-        },
-        {
-            "name": "Unity",
-            "expression": "",
-            "define": "USE_TEXTMESHPRO"
         }
     ],
     "noEngineReferences": false
