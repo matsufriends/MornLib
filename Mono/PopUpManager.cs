@@ -19,7 +19,7 @@ namespace MornLib.Mono {
                 return;
             }
             _cachedLastShowTime = Time.unscaledTime;
-            _popRect.gameObject.SetActive(true);
+            if(_popRect)_popRect.gameObject.SetActive(true);
             _setText(popUpCaller);
         }
         void IPopUpManager.Hide() {
@@ -28,7 +28,7 @@ namespace MornLib.Mono {
                 return;
             }
             if(Time.unscaledTime - _cachedLastShowTime == 0) return;
-            _popRect.gameObject.SetActive(false);
+            if(_popRect)_popRect.gameObject.SetActive(false);
         }
         public void Instanced() { }
     }
