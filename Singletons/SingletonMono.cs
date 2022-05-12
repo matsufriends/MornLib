@@ -11,6 +11,19 @@ namespace MornLib.Singletons {
                 return s_instance;
             }
         }
+        private void Awake() {
+            if(s_instance == null) {
+                s_instance = (T) this;
+                DontDestroyOnLoad(gameObject);
+                MyAwake();
+            } else if(s_instance == this) {
+                DontDestroyOnLoad(gameObject);
+                MyAwake();
+            } else {
+                Destroy(gameObject);
+            }
+        }
+        protected abstract void MyAwake();
     }
     public abstract class SingletonMono<TMono,TInterface> : MonoBehaviour where TMono : SingletonMono<TMono,TInterface>,TInterface,ISingleton {
         private static TInterface s_instance;
