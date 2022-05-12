@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿/*
+using Sirenix.OdinInspector;
 using UnityEngine;
 namespace MornLib.Singletons {
     //     Odin未使用の場合はこのファイル自体を削除してください
@@ -26,3 +27,4 @@ namespace MornLib.Singletons {
         }
     }
 }
+*/
