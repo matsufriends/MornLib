@@ -16,7 +16,7 @@ namespace MornLib.Mono._3d {
         public IObservable<Unit> OnPointerExit => gameObject.OnMouseExitAsObservable();
         public IObservable<MouseClickSet> OnPointerUp => _mouseUpSubject;
         public IObservable<MouseClickSet> OnPointerDown => _mouseDownSubject;
-        IObservable<MouseClickSet> IPointerEvent.OnPointerClick => _mouseClickSubject;
+        public IObservable<MouseClickSet> OnPointerClick => _mouseClickSubject;
         private void Awake() {
             OnPointerEnter.Subscribe(_ => _isOver = true).AddTo(this);
             OnPointerExit.Subscribe(_ => _isOver  = false).AddTo(this);
