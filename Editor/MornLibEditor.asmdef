@@ -1,6 +1,9 @@
 {
     "name": "MornLibEditor",
-    "references": [],
+    "rootNamespace": "",
+    "references": [
+        "GUID:05bbdb0e484c5b34eb7023fc4471e2ee"
+    ],
     "includePlatforms": [
         "Editor"
     ],
