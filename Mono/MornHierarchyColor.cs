@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 namespace MornLib.Mono {
-    public class MornHierarchy : MonoBehaviour {
+    public class MornHierarchyColor : MonoBehaviour {
         [ColorUsage(false)]public Color BackColor;
         public bool ApplyChildren;
         #if UNITY_EDITOR

@@ -6,20 +6,21 @@ namespace MornLib.Editor {
         private static void AddHierarchyItemOnGUI() {
             EditorApplication.hierarchyWindowItemOnGUI += HierarchyWindowItemOnGUI;
         }
-        private static void HierarchyWindowItemOnGUI(int instanceID,Rect selectionRect) {
-            var gameObject = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
+        private static void HierarchyWindowItemOnGUI(int instanceId,Rect selectionRect) {
+            var gameObject = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
             if(gameObject == null) return;
             DrawColor(selectionRect,gameObject);
             DrawLabel(selectionRect,gameObject);
-            DrawTag(instanceID,selectionRect,gameObject);
+            if(gameObject.TryGetComponent<Mono.MornHierarchyLine>(out _)) DrawLine(instanceId,selectionRect,gameObject);
+            DrawTag(instanceId,selectionRect,gameObject);
         }
         private static void DrawColor(Rect selectionRect,GameObject gameObject) {
             var hasDrawn = false;
-            if(gameObject.TryGetComponent<Mono.MornHierarchy>(out var ownColor)) {
+            if(gameObject.TryGetComponent<Mono.MornHierarchyColor>(out var ownColor)) {
                 DrawTransparentRect(selectionRect,ownColor.BackColor);
                 hasDrawn = true;
             }
-            var mornHiArray = gameObject.GetComponentsInParent<Mono.MornHierarchy>(true);
+            var mornHiArray = gameObject.GetComponentsInParent<Mono.MornHierarchyColor>(true);
             if(mornHiArray == null) return;
             var target = gameObject.transform;
             var depth = 0;
@@ -73,7 +74,6 @@ namespace MornLib.Editor {
         }
         private static void DrawTag(int instanceId,Rect selectionRect,GameObject gameObject) {
             var tag = gameObject.tag;
-            if(tag == "Line") DrawLine(instanceId,selectionRect,gameObject);
             if(MornHierarchySettings.instance.ShowTag == false) return;
             var style = new GUIStyle();
             selectionRect.xMax     -= 16;
