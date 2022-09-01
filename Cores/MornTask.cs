@@ -3,8 +3,9 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 namespace MornLib.Cores {
     public static class MornTask {
-        public static async UniTask TransitionAsync(float time,bool isUnscaledTime,Action<float> action) {
-            if(time <= 0) throw new ArgumentException($"time[{time}]は0以上の値を指定して下さい。");
+        public static async UniTask TransitionAsync(TimeSpan duration,bool isUnscaledTime,Action<float> action) {
+            var time = (float) duration.TotalSeconds;
+            if(time <= 0) throw new ArgumentException($"durationは0以上の値を指定して下さい。");
             var startTime = isUnscaledTime ? Time.unscaledTime : Time.time;
             while(true) {
                 var dif = (isUnscaledTime ? Time.unscaledTime : Time.time) - startTime;
