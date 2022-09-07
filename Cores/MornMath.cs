@@ -15,5 +15,8 @@ namespace MornLib.Cores {
         public static float LerpRadian(float a,float b,float t) {
             return Mathf.LerpAngle(a * Mathf.Rad2Deg,b * Mathf.Rad2Deg,t) * Mathf.Deg2Rad;
         }
+        public static bool NearZero(float a) {
+            return Mathf.Abs(a) <= 0.0001f;
+        }
     }
 }
