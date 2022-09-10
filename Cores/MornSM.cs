@@ -5,17 +5,19 @@ namespace MornLib.Cores {
     public sealed class MornSm<TEnum,TArg> where TEnum : Enum {
         private readonly Dictionary<TEnum,Action<TArg>> _taskDictionary = new();
         private TEnum _curState;
-        private float _startTime;
+        private float _startTime = -1;
         private bool _isStateChanged;
         private readonly bool _isUnScaledTime;
         public bool IsFirst { get; private set; }
         public float PlayingTime => (_isUnScaledTime ? Time.unscaledTime : Time.time) - _startTime;
         public MornSm(TEnum initType,bool isUnscaledTime) {
             _isUnScaledTime = isUnscaledTime;
-            ChangeState(initType);
+            _curState       = initType;
+            IsFirst         = true;
+            _isStateChanged = false;
         }
         public void Handle(TArg arg) {
-            //var cacheState = _curState;
+            if(_startTime < 0) _startTime = _isUnScaledTime ? Time.unscaledTime : Time.time;
             _taskDictionary[_curState].Invoke(arg);
             if(_isStateChanged == false) IsFirst = false;
             _isStateChanged = false;
@@ -24,12 +26,8 @@ namespace MornLib.Cores {
             _taskDictionary.Add(type,task);
         }
         public void ChangeState(TEnum type) {
-            _curState = type;
-            try {
-                _startTime = _isUnScaledTime ? Time.unscaledTime : Time.time;
-            } catch {
-                _startTime = 0;
-            }
+            _curState       = type;
+            _startTime      = _isUnScaledTime ? Time.unscaledTime : Time.time;
             IsFirst         = true;
             _isStateChanged = true;
         }
