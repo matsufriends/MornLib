@@ -4,7 +4,7 @@ using UnityEngine;
 namespace MornLib.Editor {
     public sealed class MornSoundProcessorWindow : EditorWindow {
         private static UnityEditor.Editor s_editor;
-        [MenuItem("Morn/SoundMaker")]
+        [MenuItem("Morn/SoundProcessor")]
         private static void Open() {
             Init();
         }
