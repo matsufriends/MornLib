@@ -1,5 +1,4 @@
-﻿using System;
-using MornLib.Cores;
+﻿using MornLib.Cores;
 using UnityEditor;
 using UnityEngine;
 namespace MornLib.Editor {
@@ -37,13 +36,14 @@ namespace MornLib.Editor {
         }
         private static AudioClip ConvertClip(AudioClip clip) {
             var instance = MornSoundProcessorSettings.instance;
-            switch (instance.IsCutBeginning,instance.IsNormalizeVolume) {
-                case (true,true):
-                    var newClip = MornSoundProcessor.CutBeginningSilence(clip,instance.CutAmplitude);
-                    newClip = MornSoundProcessor.NormalizeAmplitude(newClip,instance.NormalizeVolume);
-                    return newClip;
-                case (true,false): return MornSoundProcessor.CutBeginningSilence(clip,instance.CutAmplitude);
-                case (false,true): return MornSoundProcessor.NormalizeAmplitude(clip,instance.NormalizeVolume);
+            if(instance.IsCutBeginning && instance.IsNormalizeVolume) {
+                var newClip = MornSoundProcessor.CutBeginningSilence(clip,instance.CutAmplitude);
+                newClip = MornSoundProcessor.NormalizeAmplitude(newClip,instance.NormalizeVolume);
+                return newClip;
+            } else if(instance.IsCutBeginning) {
+                return MornSoundProcessor.CutBeginningSilence(clip,instance.CutAmplitude);
+            } else if(instance.IsNormalizeVolume) {
+                return MornSoundProcessor.NormalizeAmplitude(clip,instance.NormalizeVolume);
             }
             return clip;
         }
@@ -58,7 +58,7 @@ namespace MornLib.Editor {
             } else {
                 var path = AssetDatabase.GetAssetPath(clip);
                 var lastIndex = path.LastIndexOf('.');
-                MornSoundProcessor.SaveAudioClipToWave(clip,$"{path.AsSpan(0,lastIndex).ToString()}_Converted.wav");
+                MornSoundProcessor.SaveAudioClipToWave(clip,$"{path.Substring(0,lastIndex)}_Converted.wav");
             }
         }
     }

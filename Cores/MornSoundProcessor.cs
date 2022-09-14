@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace MornLib.Cores {
             var max = Mathf.Max(Mathf.Abs(data.Min()),Mathf.Abs(data.Max()));
             var rate = maxAmplitude / max;
             for(var i = 0;i < data.Length;i++) data[i] *= rate;
-            var normalizeClip = AudioClip.Create(clip.name + "AmplitudeNormalized",samples,channels,frequency,clip.loadType == AudioClipLoadType.Streaming);
+            var normalizeClip = AudioClip.Create(clip.name,samples,channels,frequency,clip.loadType == AudioClipLoadType.Streaming);
             normalizeClip.SetData(data,0);
             return normalizeClip;
         }
@@ -25,13 +25,14 @@ namespace MornLib.Cores {
             clip.GetData(data,0);
             var startIndex = GetSoundBeginningIndex(data,minAmplitude);
             var cutSamples = samples - (startIndex - startIndex % channels) / channels;
-            var cutClip = AudioClip.Create(clip.name + "_BeginningSilenceCut",cutSamples,channels,frequency,clip.loadType == AudioClipLoadType.Streaming);
-            var cachedArray = data.AsSpan(startIndex,cutSamples * channels).ToArray();
+            var cutClip = AudioClip.Create(clip.name,cutSamples,channels,frequency,clip.loadType == AudioClipLoadType.Streaming);
+            var cachedArray = new float[cutSamples * channels];
+            for(var i = 0;i < cutSamples * channels;i++) cachedArray[i] = data[startIndex + i];
             cutClip.SetData(cachedArray,0);
             return cutClip;
         }
-        private static int GetSoundBeginningIndex(ReadOnlySpan<float> span,float minAmplitude) {
-            for(var i = 0;i < span.Length;i++) {
+        private static int GetSoundBeginningIndex(IReadOnlyList<float> span,float minAmplitude) {
+            for(var i = 0;i < span.Count;i++) {
                 if(Mathf.Abs(span[i]) > minAmplitude) return i;
             }
             return 0;
