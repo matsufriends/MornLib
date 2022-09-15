@@ -17,25 +17,47 @@ namespace MornLib.Cores {
             normalizeClip.SetData(data,0);
             return normalizeClip;
         }
-        public static AudioClip CutBeginningSilence(AudioClip clip,float minAmplitude) {
+        public static AudioClip CutBeginningSilence(AudioClip clip,int beginOffsetSample,float beginAmplitude) {
             var samples = clip.samples;               //サンプル数（波形の個数）
             var frequency = clip.frequency;           //周波数（1秒あたりの分割数）
             var channels = clip.channels;             //モノラルかステレオか。１か２か。
             var data = new float[samples * channels]; //波形
             clip.GetData(data,0);
-            var startIndex = GetSoundBeginningIndex(data,minAmplitude);
-            var cutSamples = samples - (startIndex - startIndex % channels) / channels;
-            var cutClip = AudioClip.Create(clip.name,cutSamples,channels,frequency,clip.loadType == AudioClipLoadType.Streaming);
-            var cachedArray = new float[cutSamples * channels];
-            for(var i = 0;i < cutSamples * channels;i++) cachedArray[i] = data[startIndex + i];
+            var startIndex = GetSoundBeginningIndex(data,beginAmplitude,channels);
+            startIndex = Mathf.Max(startIndex - beginOffsetSample * channels,0);
+            var newSamples = samples - startIndex / channels;
+            var cutClip = AudioClip.Create(clip.name,newSamples,channels,frequency,clip.loadType == AudioClipLoadType.Streaming);
+            var cachedArray = new float[newSamples * channels];
+            for(var i = 0;i < newSamples * channels;i++) cachedArray[i] = data[startIndex + i];
             cutClip.SetData(cachedArray,0);
             return cutClip;
         }
-        private static int GetSoundBeginningIndex(IReadOnlyList<float> span,float minAmplitude) {
+        public static AudioClip CutEndSilence(AudioClip clip,int endOffsetSample,float endAmplitude) {
+            var samples = clip.samples;               //サンプル数（波形の個数）
+            var frequency = clip.frequency;           //周波数（1秒あたりの分割数）
+            var channels = clip.channels;             //モノラルかステレオか。１か２か。
+            var data = new float[samples * channels]; //波形
+            clip.GetData(data,0);
+            var endIndex = GetSoundEndingIndex(data,endAmplitude,channels);
+            endIndex = Mathf.Min(endIndex + endOffsetSample * channels,samples * channels);
+            var newSamples = endIndex / channels;
+            var cutClip = AudioClip.Create(clip.name,newSamples,channels,frequency,clip.loadType == AudioClipLoadType.Streaming);
+            var cachedArray = new float[newSamples * channels];
+            for(var i = 0;i < newSamples * channels;i++) cachedArray[i] = data[i];
+            cutClip.SetData(cachedArray,0);
+            return cutClip;
+        }
+        private static int GetSoundBeginningIndex(IReadOnlyList<float> span,float minAmplitude,int channels) {
             for(var i = 0;i < span.Count;i++) {
-                if(Mathf.Abs(span[i]) > minAmplitude) return i;
+                if(Mathf.Abs(span[i]) > minAmplitude) return i - i % channels;
             }
             return 0;
+        }
+        private static int GetSoundEndingIndex(IReadOnlyList<float> span,float minAmplitude,int channels) {
+            for(var i = span.Count - 1;i >= 0;i--) {
+                if(Mathf.Abs(span[i]) > minAmplitude) return i - i % channels;
+            }
+            return span.Count - 1 - (span.Count - 1) % channels;
         }
         public static void SaveAudioClipToWave(AudioClip clip,string path) {
             var samples = clip.samples;               //サンプル数（波形の個数）

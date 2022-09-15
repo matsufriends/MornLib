@@ -22,44 +22,53 @@ namespace MornLib.Editor {
             EditorGUI.BeginChangeCheck();
             s_editor.OnInspectorGUI();
             var instance = MornSoundProcessorSettings.instance;
-            if((instance.IsCutBeginning || instance.IsNormalizeVolume) && GUILayout.Button("Generate")) {
+            if((instance.IsCutBeginningSilence || instance.IsNormalizeAmplitude) && GUILayout.Button("Generate")) {
                 var length = instance.ClipList.Count;
+                instance.OutputList.Clear();
                 for(var i = 0;i < length;i++) {
                     var clip = instance.ClipList[i];
                     EditorUtility.DisplayProgressBar("変換中",clip.name,i * 1f / length);
-                    SaveClip(ConvertClip(clip));
+                    instance.OutputList.Add(SaveClip(ConvertClip(clip)));
                 }
                 EditorUtility.ClearProgressBar();
                 Debug.Log($"{length}件の変換が終わりました");
-                AssetDatabase.Refresh(ImportAssetOptions.Default);
             }
         }
         private static AudioClip ConvertClip(AudioClip clip) {
             var instance = MornSoundProcessorSettings.instance;
-            if(instance.IsCutBeginning && instance.IsNormalizeVolume) {
-                var newClip = MornSoundProcessor.CutBeginningSilence(clip,instance.CutAmplitude);
-                newClip = MornSoundProcessor.NormalizeAmplitude(newClip,instance.NormalizeVolume);
-                return newClip;
-            } else if(instance.IsCutBeginning) {
-                return MornSoundProcessor.CutBeginningSilence(clip,instance.CutAmplitude);
-            } else if(instance.IsNormalizeVolume) {
-                return MornSoundProcessor.NormalizeAmplitude(clip,instance.NormalizeVolume);
-            }
+            if(instance.IsCutBeginningSilence) clip = CutBeginningSilence(clip);
+            if(instance.IsCutEndingSilence) clip    = CutEndingSilence(clip);
+            if(instance.IsNormalizeAmplitude) clip  = Normalize(clip);
             return clip;
         }
-        private static void SaveClip(AudioClip clip) {
+        private static AudioClip CutBeginningSilence(AudioClip clip) {
             var instance = MornSoundProcessorSettings.instance;
-            if(instance.IsSaveInFolder) {
-                if(AssetDatabase.IsValidFolder($"Assets/{instance.FolderName}") == false) {
-                    AssetDatabase.CreateFolder("Assets",instance.FolderName);
+            return MornSoundProcessor.CutBeginningSilence(clip,instance.BeginningOffsetSample,instance.BeginningAmplitude);
+        }
+        private static AudioClip CutEndingSilence(AudioClip clip) {
+            var instance = MornSoundProcessorSettings.instance;
+            return MornSoundProcessor.CutEndSilence(clip,instance.EndingOffsetSample,instance.EndingAmplitude);
+        }
+        private static AudioClip Normalize(AudioClip clip) {
+            var instance = MornSoundProcessorSettings.instance;
+            return MornSoundProcessor.NormalizeAmplitude(clip,instance.NormalizeAmplitude);
+        }
+        private static AudioClip SaveClip(AudioClip clip) {
+            var instance = MornSoundProcessorSettings.instance;
+            string path;
+            if(instance.IsSaveInUnderAssetsFolder) {
+                if(AssetDatabase.IsValidFolder($"Assets/{instance.UnderAssetsFolderName}") == false) {
+                    AssetDatabase.CreateFolder("Assets",instance.UnderAssetsFolderName);
                 }
-                var path = $"Assets/{instance.FolderName}/{clip.name}_Converted.wav";
-                MornSoundProcessor.SaveAudioClipToWave(clip,path);
+                path = $"Assets/{instance.UnderAssetsFolderName}/{clip.name}_Converted.wav";
             } else {
-                var path = AssetDatabase.GetAssetPath(clip);
+                path = AssetDatabase.GetAssetPath(clip);
                 var lastIndex = path.LastIndexOf('.');
-                MornSoundProcessor.SaveAudioClipToWave(clip,$"{path.Substring(0,lastIndex)}_Converted.wav");
+                path = $"{path.Substring(0,lastIndex)}_Converted.wav";
             }
+            MornSoundProcessor.SaveAudioClipToWave(clip,path);
+            AssetDatabase.Refresh(ImportAssetOptions.Default);
+            return AssetDatabase.LoadAssetAtPath<AudioClip>(path);
         }
     }
 }
