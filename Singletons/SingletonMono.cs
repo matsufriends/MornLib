@@ -3,11 +3,13 @@ using UnityEngine;
 namespace MornLib.Singletons {
     public abstract class SingletonMono<T> : MonoBehaviour where T : SingletonMono<T> {
         private static T s_instance;
+        private bool didAwake;
         public static T Instance {
             get {
                 if(s_instance != null) return s_instance;
                 s_instance = FindObjectOfType<T>();
                 if(s_instance == null) Debug.LogError($"{typeof(T)}が見つかりません");
+                s_instance.MyAwake();
                 return s_instance;
             }
         }
@@ -18,7 +20,6 @@ namespace MornLib.Singletons {
                 MyAwake();
             } else if(s_instance == this) {
                 DontDestroyOnLoad(gameObject);
-                MyAwake();
             } else {
                 Destroy(gameObject);
             }
