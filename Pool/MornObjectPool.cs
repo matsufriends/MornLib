@@ -8,16 +8,16 @@ namespace MornLib.Pool {
         private readonly Action<T> _onPush;
         public MornObjectPool(Func<T> generator,Action<T> onPop,Action<T> onPush,uint startCount) {
             _generator = generator;
-            _onPop      = onPop;
-            _onPush     = onPush;
+            _onPop     = onPop;
+            _onPush    = onPush;
             for(var i = 0;i < startCount;i++) {
                 var generated = generator();
                 onPush(generated);
-                _poolStack.Push( generated);
+                _poolStack.Push(generated);
             }
         }
         public T Pop() {
-            if(_poolStack.TryPop(out var result) == false) result =_generator();
+            if(_poolStack.TryPop(out var result) == false) result = _generator();
             _onPop(result);
             return result;
         }
