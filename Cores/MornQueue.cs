@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
+using MornLib.Pool;
 namespace MornLib.Cores {
-    public class MornQueue<T> : Queue<T>,IPool {
-        void IPool.Clear() {
-            Clear();
-        }
+    public class MornQueue<T> : Queue<T>,IPoolItem {
+        void IPoolItem.Clear() => Clear();
     }
 }

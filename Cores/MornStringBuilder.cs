@@ -1,21 +1,21 @@
 ﻿using System.Text;
+using MornLib.Pool;
 namespace MornLib.Cores {
-    public static class MornStringBuilder {
-        private static readonly StringBuilder s_builder = new StringBuilder();
-        private static          char          s_split;
-        private static          bool          s_isFirst;
-        public static void Init(char split) {
-            s_builder.Clear();
-            s_split   = split;
-            s_isFirst = true;
+    public sealed class MornStringBuilder : IPoolItem {
+        private readonly StringBuilder _builder = new();
+        private readonly char _split;
+        private bool _isFirst;
+        public MornStringBuilder(char split) {
+            _builder.Clear();
+            _split   = split;
+            _isFirst = true;
         }
-        public static void Append(string message) {
-            if (s_isFirst == false) s_builder.Append(s_split);
-            s_builder.Append(message);
-            s_isFirst = false;
+        public void Clear() => _builder.Clear();
+        public void Append(string message) {
+            if(_isFirst == false) _builder.Append(_split);
+            _builder.Append(message);
+            _isFirst = false;
         }
-        public static string Get() {
-            return s_builder.ToString();
-        }
+        public string Get() => _builder.ToString();
     }
 }
