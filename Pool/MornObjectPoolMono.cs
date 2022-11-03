@@ -4,22 +4,17 @@ namespace MornLib.Pool {
     public class MornObjectPoolMono<T> : SingletonMono<MornObjectPoolMono<T>> where T : MonoBehaviour {
         [SerializeField] private T _cellPrefab;
         private MornObjectPool<T> _mornObjectPool;
-        protected override void MyAwake() {
-            _mornObjectPool = new MornObjectPool<T>(
-                () => Instantiate(_cellPrefab,transform),x => {
-                    x.transform.SetParent(transform);
-                    x.gameObject.SetActive(true);
-                },x => {
-                    x.gameObject.SetActive(false);
-                    x.transform.SetParent(transform);
-                },50
-            );
+        protected override void MyAwake() => _mornObjectPool = new MornObjectPool<T>(OnGenerate,OnRent,OnReturn,50);
+        protected virtual void OnReturn(T x) {
+            x.gameObject.SetActive(false);
+            x.transform.SetParent(transform);
         }
-        public T Pop() {
-            return _mornObjectPool.Pop();
+        protected virtual void OnRent(T x) {
+            x.transform.SetParent(transform);
+            x.gameObject.SetActive(true);
         }
-        public void Push(T poolObject) {
-            _mornObjectPool.Push(poolObject);
-        }
+        protected virtual T OnGenerate() => Instantiate(_cellPrefab,transform);
+        public T Rent() => _mornObjectPool.Rent();
+        public void Return(T poolObject) => _mornObjectPool.Return(poolObject);
     }
 }

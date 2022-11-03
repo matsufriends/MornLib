@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 namespace MornLib.Pool {
     public sealed class MornObjectPool<T> {
-        private readonly Func<T> _generator;
+        private readonly Func<T> _onGenerate;
         private readonly Action<T> _onRent;
         private readonly Action<T> _onReturn;
         private readonly Stack<T> _poolStack = new();
-        public MornObjectPool(Func<T> generator,Action<T> onRent,Action<T> onReturn,int startCount) {
+        public MornObjectPool(Func<T> onGenerate,Action<T> onRent,Action<T> onReturn,int startCount) {
             if(startCount < 0) throw new ArgumentOutOfRangeException();
-            _generator = generator;
-            _onRent    = onRent;
-            _onReturn  = onReturn;
+            _onGenerate = onGenerate;
+            _onRent     = onRent;
+            _onReturn   = onReturn;
             for(var i = 0;i < startCount;i++) {
-                var generated = generator();
+                var generated = onGenerate();
                 onReturn(generated);
                 _poolStack.Push(generated);
             }
         }
         public T Rent() {
-            if(_poolStack.TryPop(out var result) == false) result = _generator();
+            if(_poolStack.TryPop(out var result) == false) result = _onGenerate();
             _onRent(result);
             return result;
         }
