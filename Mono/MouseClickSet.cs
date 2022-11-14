@@ -1,6 +1,6 @@
 ﻿namespace MornLib.Mono {
     public readonly struct MouseClickSet {
-        public static MouseClickSet Invalid => new MouseClickSet(false,false,false);
+        public static MouseClickSet Invalid => new(false,false,false);
         public readonly bool IsRight;
         public readonly bool IsMiddle;
         public readonly bool IsLeft;

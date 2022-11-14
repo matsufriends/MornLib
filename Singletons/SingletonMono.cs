@@ -15,7 +15,7 @@ namespace MornLib.Singletons {
         }
         private void Awake() {
             if(s_instance == null) {
-                s_instance = (T) this;
+                s_instance = (T)this;
                 DontDestroyOnLoad(gameObject);
                 MyAwake();
             } else if(s_instance == this) {

@@ -7,10 +7,10 @@ namespace MornLib.Mono.TcgLayout {
         [SerializeField] private RectTransform _ownRect;
         [SerializeField] private int _spacing;
         [SerializeField] private int _angle;
-        [SerializeField,Range(0,1)] private float _circleRatio;
+        [SerializeField] [Range(0,1)] private float _circleRatio;
         [SerializeField] private Vector3 _focusScale;
         [SerializeField] private float _transitionK;
-        private readonly List<ITcgRectController> _rectList = new List<ITcgRectController>();
+        private readonly List<ITcgRectController> _rectList = new();
         private ITcgRectController _curRect;
         private ITcgRectController _dragRect;
         private void Update() {
@@ -68,16 +68,15 @@ namespace MornLib.Mono.TcgLayout {
                 }
             }
             {
-                var radius = _angle == 0 ? 0 : (widthSum / 2f) / Mathf.Sin(_angle * Mathf.Deg2Rad);
+                var radius = _angle == 0 ? 0 : widthSum / 2f / Mathf.Sin(_angle * Mathf.Deg2Rad);
                 for(var i = 0;i < rectCount;i++) {
                     float aimPosX;
-                    if(i < focusIndex) { //左側の時
-                        aimPosX = -widthSum / 2f + (leftWidthSum - focusWidth / 2f) / (leftCount) * (i + 0.5f);
-                    } else if(i == focusIndex) { //フォーカス中のやつ
+                    if(i < focusIndex) //左側の時
+                        aimPosX = -widthSum / 2f + (leftWidthSum - focusWidth / 2f) / leftCount * (i + 0.5f);
+                    else if(i == focusIndex) //フォーカス中のやつ
                         aimPosX = -widthSum / 2f + widthSum / rectCount * (i + 0.5f);
-                    } else { //右側のやつ
-                        aimPosX = widthSum / 2f + (rightWidthSum - focusWidth / 2f) / (rightCount) * (i - rectCount + 0.5f);
-                    }
+                    else //右側のやつ
+                        aimPosX = widthSum / 2f + (rightWidthSum - focusWidth / 2f) / rightCount * (i - rectCount + 0.5f);
                     var rect = _rectList[i];
                     var aimScale = i == focusIndex ? _focusScale : Vector3.one;
                     var xRatio = aimPosX / (widthSum / 2f); //-1 ~ 1
@@ -105,7 +104,9 @@ namespace MornLib.Mono.TcgLayout {
         public void RemoveItem(ITcgRectController tcgRect) {
             if(tcgRect.Index < 0 || _rectList.Count <= tcgRect.Index) MornLog.Error("不正なIndexです");
             _rectList.RemoveAt(tcgRect.Index);
-            foreach(var rect in _rectList) rect.RemoveIndex(tcgRect.Index);
+            foreach(var rect in _rectList) {
+                rect.RemoveIndex(tcgRect.Index);
+            }
             if(_curRect == tcgRect) _curRect   = null;
             if(_dragRect == tcgRect) _dragRect = null;
             tcgRect.ExeDestroy();

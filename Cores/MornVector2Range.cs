@@ -6,10 +6,8 @@ namespace MornLib.Cores {
         public Vector2 End;
         public MornVector2Range(Vector2 start,Vector2 end) {
             Start = start;
-            End = end;
+            End   = end;
         }
-        public Vector2 Lerp(float rate) {
-            return Vector2.Lerp(Start,End,Mathf.Clamp01(rate));
-        }
+        public Vector2 Lerp(float rate) => Vector2.Lerp(Start,End,Mathf.Clamp01(rate));
     }
 }

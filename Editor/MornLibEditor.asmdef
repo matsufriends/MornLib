@@ -1,18 +1,18 @@
 {
-    "name": "MornLibEditor",
-    "rootNamespace": "",
-    "references": [
-        "GUID:05bbdb0e484c5b34eb7023fc4471e2ee"
-    ],
-    "includePlatforms": [
-        "Editor"
-    ],
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
-    "noEngineReferences": false
+  "name": "MornLibEditor",
+  "rootNamespace": "",
+  "references": [
+    "GUID:05bbdb0e484c5b34eb7023fc4471e2ee"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
 }

@@ -22,17 +22,13 @@ namespace MornLib.Cores {
             if(_isStateChanged == false) IsFirst = false;
             _isStateChanged = false;
         }
-        public void RegisterState(TEnum type,Action<TArg> task) {
-            _taskDictionary.Add(type,task);
-        }
+        public void RegisterState(TEnum type,Action<TArg> task) => _taskDictionary.Add(type,task);
         public void ChangeState(TEnum type) {
             _curState       = type;
             _startTime      = _isUnScaledTime ? Time.unscaledTime : Time.time;
             IsFirst         = true;
             _isStateChanged = true;
         }
-        public bool IsState(TEnum type) {
-            return EqualityComparer<TEnum>.Default.Equals(_curState,type);
-        }
+        public bool IsState(TEnum type) => EqualityComparer<TEnum>.Default.Equals(_curState,type);
     }
 }

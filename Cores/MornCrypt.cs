@@ -5,7 +5,7 @@ using System.Text;
 namespace MornLib.Cores {
     public class MornCrypt {
         /// <summary>
-        /// 暗号化
+        ///     暗号化
         /// </summary>
         /// <param name="text">平文</param>
         /// <param name="iv">128bit ブロックサイズ</param>
@@ -20,7 +20,6 @@ namespace MornLib.Cores {
                ,IV        = Encoding.UTF8.GetBytes(iv)
                ,Key       = Encoding.UTF8.GetBytes(key)
             };
-
             var encryptor = myRijndael.CreateEncryptor(myRijndael.Key,myRijndael.IV);
             using var mStream = new MemoryStream();
             using var ctStream = new CryptoStream(mStream,encryptor,CryptoStreamMode.Write);
@@ -31,7 +30,7 @@ namespace MornLib.Cores {
             return Convert.ToBase64String(encrypted);
         }
         /// <summary>
-        /// 復号
+        ///     復号
         /// </summary>
         /// <param name="cipher">暗号文</param>
         /// <param name="iv">128bit ブロックサイズ</param>

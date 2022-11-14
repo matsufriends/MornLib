@@ -12,19 +12,13 @@ namespace MornLib.Mono.TcgLayout {
         int ITcgRectController.Index => _index;
         Vector2 ITcgRectController.Size => _ownRect.sizeDelta;
         Vector2 ITcgRectController.Scale => _ownRect.localScale;
-        private void Awake() {
-            _tcgRectUser = GetComponent<ITcgRectUser>();
-        }
-        private void Reset() {
-            _ownRect = GetComponent<RectTransform>();
-        }
+        private void Awake() => _tcgRectUser = GetComponent<ITcgRectUser>();
+        private void Reset() => _ownRect = GetComponent<RectTransform>();
         void ITcgRectController.Init(Action selected,Action deselected) {
             _selected   = selected;
             _deselected = deselected;
         }
-        void ITcgRectController.SetIndex(int index) {
-            _index = index;
-        }
+        void ITcgRectController.SetIndex(int index) => _index = index;
         void ITcgRectController.RemoveIndex(int index) {
             if(index < _index) _index--;
         }
@@ -33,23 +27,11 @@ namespace MornLib.Mono.TcgLayout {
             _ownRect.localRotation    = Quaternion.Lerp(_ownRect.localRotation,rotation,transition);
             _ownRect.anchoredPosition = Vector3.Lerp(_ownRect.anchoredPosition,pos,transition);
         }
-        void ITcgRectController.ExeDestroy() {
-            Destroy(gameObject);
-        }
-        void ITcgRectController.Clicked() {
-           _tcgRectUser?.OnClick();
-        }
-        void ITcgRectController.Select() {
-            _tcgRectUser?.OnSelect();
-        }
-        void ITcgRectController.Deselect() {
-            _tcgRectUser?.OnDeselect();
-        }
-        void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData) {
-            _selected?.Invoke();
-        }
-        void IPointerExitHandler.OnPointerExit(PointerEventData eventData) {
-            _deselected?.Invoke();
-        }
+        void ITcgRectController.ExeDestroy() => Destroy(gameObject);
+        void ITcgRectController.Clicked() => _tcgRectUser?.OnClick();
+        void ITcgRectController.Select() => _tcgRectUser?.OnSelect();
+        void ITcgRectController.Deselect() => _tcgRectUser?.OnDeselect();
+        void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData) => _selected?.Invoke();
+        void IPointerExitHandler.OnPointerExit(PointerEventData   eventData) => _deselected?.Invoke();
     }
 }

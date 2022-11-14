@@ -7,9 +7,9 @@ namespace MornLib.Mono._3d {
         [SerializeField] private bool _isOnMouseRight;
         [SerializeField] private bool _isOnMouseMiddle;
         [SerializeField] private bool _isOnMouseLeft;
-        private readonly Subject<MouseClickSet> _mouseUpSubject = new Subject<MouseClickSet>();
-        private readonly Subject<MouseClickSet> _mouseDownSubject = new Subject<MouseClickSet>();
-        private readonly Subject<MouseClickSet> _mouseClickSubject = new Subject<MouseClickSet>();
+        private readonly Subject<MouseClickSet> _mouseUpSubject = new();
+        private readonly Subject<MouseClickSet> _mouseDownSubject = new();
+        private readonly Subject<MouseClickSet> _mouseClickSubject = new();
         private bool _isOver;
         private bool _isDrag;
         public IObservable<Unit> OnPointerEnter => gameObject.OnMouseEnterAsObservable();

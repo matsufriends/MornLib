@@ -15,6 +15,6 @@ namespace MornLib.Cores {
         public TValue this[TKey key] {
             get => GetDictionary()[key];
             set => GetDictionary()[key] = value;
-        } 
+        }
     }
 }

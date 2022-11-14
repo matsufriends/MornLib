@@ -5,14 +5,10 @@ namespace MornLib.Editor {
     public sealed class MornSoundProcessorWindow : EditorWindow {
         private static UnityEditor.Editor s_editor;
         [MenuItem("Morn/SoundProcessor")]
-        private static void Open() {
-            Init();
-        }
+        private static void Open() => Init();
         private static void Init() {
             var instance = MornSoundProcessorSettings.instance;
-            if(instance.Window == null) {
-                instance.Window = CreateInstance<MornSoundProcessorWindow>();
-            }
+            if(instance.Window == null) instance.Window = CreateInstance<MornSoundProcessorWindow>();
             instance.Window.Show();
             instance.hideFlags = HideFlags.HideAndDontSave & ~HideFlags.NotEditable;
             UnityEditor.Editor.CreateCachedEditor(instance,null,ref s_editor);
@@ -57,9 +53,8 @@ namespace MornLib.Editor {
             var instance = MornSoundProcessorSettings.instance;
             string path;
             if(instance.IsSaveInUnderAssetsFolder) {
-                if(AssetDatabase.IsValidFolder($"Assets/{instance.UnderAssetsFolderName}") == false) {
+                if(AssetDatabase.IsValidFolder($"Assets/{instance.UnderAssetsFolderName}") == false)
                     AssetDatabase.CreateFolder("Assets",instance.UnderAssetsFolderName);
-                }
                 path = $"Assets/{instance.UnderAssetsFolderName}/{clip.name}_Converted.wav";
             } else {
                 path = AssetDatabase.GetAssetPath(clip);

@@ -2,8 +2,8 @@
 using UnityEngine;
 namespace MornLib.Mono {
     public class Pool<T> : MonoBehaviour,IPool<T> where T : MonoBehaviour {
-        [SerializeField] private T        _prefab;
-        private readonly         Queue<T> _poolList = new Queue<T>();
+        [SerializeField] private T _prefab;
+        private readonly Queue<T> _poolList = new();
         public void PoolDestroy(T pool) {
             pool.gameObject.SetActive(false);
             pool.transform.SetParent(null);

@@ -36,12 +36,11 @@ namespace MornLib.Sounds {
             fadeInSource.clip = _soundClipDictionaryProvider.GetDictionary()[soundType];
             fadeInSource.Play();
             MornTask.TransitionAsync(
-                    duration,true,rate => {
-                        fadeInSource.volume  = rate;
-                        fadeOutSource.volume = 1 - rate;
-                    },_cachedBgmFadeTokenSource.Token
-                )
-               .Forget();
+                duration,true,rate => {
+                    fadeInSource.volume  = rate;
+                    fadeOutSource.volume = 1 - rate;
+                },_cachedBgmFadeTokenSource.Token
+            ).Forget();
             _isPlayingBgmOnSourceA = !_isPlayingBgmOnSourceA;
         }
         public void PlaySe(TEnum soundType) {
@@ -57,16 +56,13 @@ namespace MornLib.Sounds {
             };
             slider.SetValue(PlayerPrefs.GetFloat(key,1));
             slider.OnValueChanged.Subscribe(
-                    x => {
-                        PlayerPrefs.SetFloat(key,x);
-                        _mixer.SetFloat(key,RateToDb(x));
-                        PlayerPrefs.Save();
-                    }
-                )
-               .AddTo(this);
+                x => {
+                    PlayerPrefs.SetFloat(key,x);
+                    _mixer.SetFloat(key,RateToDb(x));
+                    PlayerPrefs.Save();
+                }
+            ).AddTo(this);
         }
-        private static float RateToDb(float rate) {
-            return rate <= 0 ? -5000 : (rate - 1) * c_minDb;
-        }
+        private static float RateToDb(float rate) => rate <= 0 ? -5000 : (rate - 1) * c_minDb;
     }
 }

@@ -3,9 +3,7 @@ using UnityEngine;
 namespace MornLib.Editor {
     public static class MornHierarchyOnGUI {
         [InitializeOnLoadMethod]
-        private static void AddHierarchyItemOnGUI() {
-            EditorApplication.hierarchyWindowItemOnGUI += HierarchyWindowItemOnGUI;
-        }
+        private static void AddHierarchyItemOnGUI() => EditorApplication.hierarchyWindowItemOnGUI += HierarchyWindowItemOnGUI;
         private static void HierarchyWindowItemOnGUI(int instanceId,Rect selectionRect) {
             var gameObject = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
             if(gameObject == null) return;
@@ -41,7 +39,7 @@ namespace MornLib.Editor {
                 //Side
                 var kBack = GetKRecursion(hi.transform,target.parent);
                 var rectA = selectionRect;
-                rectA.xMax = rectA.xMin - 14 * (depth);
+                rectA.xMax = rectA.xMin - 14 * depth;
                 rectA.xMin = rectA.xMax - 14;
                 DrawTransparentRect(rectA,hi.BackColor * kBack);
 

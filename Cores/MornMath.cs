@@ -12,11 +12,7 @@ namespace MornLib.Cores {
             var valueB = func.Invoke(b);
             return valueA < valueB ? a : b;
         }
-        public static float LerpRadian(float a,float b,float t) {
-            return Mathf.LerpAngle(a * Mathf.Rad2Deg,b * Mathf.Rad2Deg,t) * Mathf.Deg2Rad;
-        }
-        public static bool IsNearZero(float a) {
-            return Mathf.Abs(a) <= 0.0001f;
-        }
+        public static float LerpRadian(float a,float b,float t) => Mathf.LerpAngle(a * Mathf.Rad2Deg,b * Mathf.Rad2Deg,t) * Mathf.Deg2Rad;
+        public static bool IsNearZero(float  a) => Mathf.Abs(a) <= 0.0001f;
     }
 }

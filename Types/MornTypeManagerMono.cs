@@ -8,9 +8,7 @@ namespace MornLib.Types {
         private readonly Subject<char> _inputChar = new();
         public IObservable<char> OnInputChar => _inputChar;
         protected override void MyAwake() { }
-        public void SetIsActive(bool isActive) {
-            _isActive = isActive;
-        }
+        public void SetIsActive(bool isActive) => _isActive = isActive;
         private void OnGUI() {
             if(_isActive && Event.current.type == EventType.KeyDown) {
                 var c = KeyCodeToChar(Event.current.keyCode);

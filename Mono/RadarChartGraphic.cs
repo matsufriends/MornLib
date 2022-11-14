@@ -5,26 +5,22 @@ namespace MornLib.Mono {
     [RequireComponent(typeof(RectTransform))]
     [RequireComponent(typeof(CanvasRenderer))]
     public class RadarChartGraphic : Graphic {
-        [SerializeField] private Color         _lineColor;
-        [SerializeField] private List<float>   _valueList;
-        [SerializeField] private bool          _drawInside;
-        [SerializeField] private float         _lineWidth;
-        [SerializeField] private float         _scaleCount;
-        [SerializeField] private float         _splitWidth;
-        private                  int           _valueCount;
-        private                  float         _baseRadius;
-        private                  RectTransform _rectTransform;
-        protected override void OnEnable() {
-            _rectTransform = GetComponent<RectTransform>();
-        }
+        [SerializeField] private Color _lineColor;
+        [SerializeField] private List<float> _valueList;
+        [SerializeField] private bool _drawInside;
+        [SerializeField] private float _lineWidth;
+        [SerializeField] private float _scaleCount;
+        [SerializeField] private float _splitWidth;
+        private int _valueCount;
+        private float _baseRadius;
+        private RectTransform _rectTransform;
+        protected override void OnEnable() => _rectTransform = GetComponent<RectTransform>();
         protected override void OnPopulateMesh(VertexHelper vh) {
             vh.Clear();
             _valueCount = _valueList.Count;
             var size = _rectTransform.sizeDelta;
             _baseRadius = Mathf.Min(size.x,size.y) / 2;
-            if(_drawInside) {
-                GenerateInsideMesh(vh);
-            }
+            if(_drawInside) GenerateInsideMesh(vh);
             if(0 < _lineWidth && 1 <= _scaleCount) {
                 var dif = 1f / _scaleCount;
                 for(var i = dif;i <= 1;i += dif) {
@@ -43,7 +39,7 @@ namespace MornLib.Mono {
             }
         }
         private void GenerateBroadLine(VertexHelper vh,float k) {
-            var dif       = _lineWidth / 2f;
+            var dif = _lineWidth / 2f;
             var baseCount = vh.currentVertCount;
             for(var i = 0;i < _valueCount;i++) {
                 vh.AddVert(GenerateUIVertex(GetPos(i) * (_baseRadius * k * _valueList[i] + dif),_lineColor)); //Outer Vertex
@@ -57,7 +53,7 @@ namespace MornLib.Mono {
         private void GenerateSplitLine(VertexHelper vh) {
             var baseCount = vh.currentVertCount;
             for(var i = 0;i < _valueCount;i++) {
-                var normal   = GetNormal(i) * _splitWidth;
+                var normal = GetNormal(i) * _splitWidth;
                 var outerPos = GetPos(i) * _baseRadius * _valueList[i];
                 vh.AddVert(GenerateUIVertex(outerPos + normal,_lineColor));
                 vh.AddVert(GenerateUIVertex(Vector2.zero + normal,_lineColor));
@@ -82,9 +78,7 @@ namespace MornLib.Mono {
             return new Vector2(-Mathf.Sin(radian),Mathf.Cos(radian));
         }
         [ContextMenu("UpdateMesh")]
-        public void UpdateMesh() {
-            SetAllDirty();
-        }
+        public void UpdateMesh() => SetAllDirty();
         public void SetValue(IEnumerable<float> values) {
             _valueList.Clear();
             _valueList.AddRange(values);

@@ -3,8 +3,8 @@ namespace MornLib.Types {
     public sealed class MornTypeSystem {
         public string Stack { get; private set; }
         public bool TryAppendChar(char addChar,out string hiragana) {
-            Stack += addChar;
-            hiragana  =  UpdateHiraganaList(out var isKeep);
+            Stack    += addChar;
+            hiragana =  UpdateHiraganaList(out var isKeep);
             if(hiragana != "") Stack = isKeep ? Stack[^1].ToString() : "";
             return hiragana != "";
         }

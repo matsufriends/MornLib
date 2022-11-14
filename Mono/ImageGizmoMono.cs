@@ -4,9 +4,7 @@ namespace MornLib.Mono {
     [RequireComponent(typeof(Image))]
     public class ImageGizmoMono : MonoBehaviour {
         [SerializeField] private Image _image;
-        private void Reset() {
-            _image = GetComponent<Image>();
-        }
+        private void Reset() => _image = GetComponent<Image>();
         #if UNITY_EDITOR
         private void OnDrawGizmos() {
             Gizmos.color = Color.yellow * _image.canvasRenderer.GetInheritedAlpha();
@@ -17,8 +15,8 @@ namespace MornLib.Mono {
             if(rect.pivot != new Vector2(0.5f,0.5f)) {
                 var scaleX = rect.transform.lossyScale.x;
                 var scaleY = rect.transform.lossyScale.y;
-                var x      = rect.rect.width / 2f * scaleX;
-                var y      = rect.rect.height / 2f * scaleY;
+                var x = rect.rect.width / 2f * scaleX;
+                var y = rect.rect.height / 2f * scaleY;
                 position.x += Mathf.Lerp(x,-x,rect.pivot.x);
                 position.y += Mathf.Lerp(y,-y,rect.pivot.y);
             }

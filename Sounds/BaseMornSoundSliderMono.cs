@@ -9,14 +9,8 @@ namespace MornLib.Sounds {
         [SerializeField] private SoundSliderType _soundSliderType;
         public IObservable<float> OnValueChanged => _slider.OnValueChangedAsObservable();
         public SoundSliderType SoundSliderType => _soundSliderType;
-        private void Awake() {
-            BaseMornSoundManagerMono<TEnum>.Instance.InitSlider(this);
-        }
-        private void Reset() {
-            _slider = GetComponent<Slider>();
-        }
-        public void SetValue(float value) {
-            _slider.value = value;
-        }
+        private void Awake() => BaseMornSoundManagerMono<TEnum>.Instance.InitSlider(this);
+        private void Reset() => _slider = GetComponent<Slider>();
+        public void SetValue(float value) => _slider.value = value;
     }
 }
