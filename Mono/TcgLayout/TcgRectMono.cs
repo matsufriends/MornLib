@@ -32,6 +32,6 @@ namespace MornLib.Mono.TcgLayout {
         void ITcgRectController.Select() => _tcgRectUser?.OnSelect();
         void ITcgRectController.Deselect() => _tcgRectUser?.OnDeselect();
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData) => _selected?.Invoke();
-        void IPointerExitHandler.OnPointerExit(PointerEventData   eventData) => _deselected?.Invoke();
+        void IPointerExitHandler.OnPointerExit(PointerEventData eventData) => _deselected?.Invoke();
     }
 }

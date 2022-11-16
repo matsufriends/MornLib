@@ -8,7 +8,7 @@ namespace MornLib.Cores {
             Start = start;
             End   = end;
         }
-        public float Lerp(float  rate) => Mathf.Lerp(Start,End,Mathf.Clamp01(rate));
+        public float Lerp(float rate) => Mathf.Lerp(Start,End,Mathf.Clamp01(rate));
         public float Clamp(float value) => Mathf.Clamp(value,Start,End);
         public float Random() => UnityEngine.Random.Range(Start,End);
     }
