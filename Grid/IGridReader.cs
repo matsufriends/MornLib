@@ -4,6 +4,5 @@
         public GridSize Size { get; }
         public bool IsInner(GridPos pos);
         public bool TrtGet(GridPos gridPos,out T value);
-        public bool TrtSet(GridPos gridPos,T value);
     }
 }
