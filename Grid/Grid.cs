@@ -6,10 +6,10 @@ namespace MornLib.Grid {
             get => _board[pos.X,pos.Y];
             set => _board[pos.X,pos.Y] = value;
         }
-        public GridSize GridSize { get; }
-        public Grid(GridSize gridSize) {
-            GridSize = gridSize;
-            _board   = new T[gridSize.Width,gridSize.Height];
+        public GridSize Size { get; }
+        protected Grid(GridSize size) {
+            Size   = size;
+            _board = new T[size.Width,size.Height];
         }
         public bool TrtGet(GridPos pos,out T value) {
             var isValid = 0 <= pos.X && pos.X < GridSize.Width && 0 <= pos.Y && pos.Y < GridSize.Height;
@@ -18,9 +18,9 @@ namespace MornLib.Grid {
         }
         public bool TrtSet(GridPos pos,T value) {
             var isValid = 0 <= pos.X
-                       && pos.X < GridSize.Width
+                       && pos.X < Size.Width
                        && 0 <= pos.Y
-                       && pos.Y < GridSize.Height
+                       && pos.Y < Size.Height
                        && !EqualityComparer<T>.Default.Equals(_board[pos.X,pos.Y],value);
             if(isValid) _board[pos.X,pos.Y] = value;
             return isValid;
