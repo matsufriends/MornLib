@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 namespace MornLib.Grid {
-    public class Grid<T> : IGridReader<T> {
+    public abstract class Grid<T> : IGridReader<T> {
         private readonly T[,] _board;
         public T this[GridPos pos] {
             get => _board[pos.X,pos.Y];
