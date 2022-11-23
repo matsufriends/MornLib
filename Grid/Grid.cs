@@ -11,8 +11,9 @@ namespace MornLib.Grid {
             Size   = size;
             _board = new T[size.Width,size.Height];
         }
+        public bool IsInner(GridPos pos) => 0 <= pos.X && pos.X < Size.Width && 0 <= pos.Y && pos.Y < Size.Height;
         public bool TrtGet(GridPos pos,out T value) {
-            var isValid = 0 <= pos.X && pos.X < GridSize.Width && 0 <= pos.Y && pos.Y < GridSize.Height;
+            var isValid = IsInner(pos);
             value = isValid ? _board[pos.X,pos.Y] : default;
             return isValid;
         }
