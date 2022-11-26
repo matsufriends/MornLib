@@ -1,15 +1,27 @@
 ﻿using UnityEngine;
-namespace MornLib.Mono {
-    public class BillBoardMono : MonoBehaviour {
+
+namespace MornLib.Mono
+{
+    public class BillBoardMono : MonoBehaviour
+    {
         private Camera _mainCamera;
 
-        private void Awake() {
+        private void Awake()
+        {
             _mainCamera = Camera.main;
         }
 
-        private void LateUpdate() {
-            if(_mainCamera == null) _mainCamera        = Camera.main;
-            if(_mainCamera != null) transform.rotation = _mainCamera.transform.rotation;
+        private void LateUpdate()
+        {
+            if (_mainCamera == null)
+            {
+                _mainCamera = Camera.main;
+            }
+
+            if (_mainCamera != null)
+            {
+                transform.rotation = _mainCamera.transform.rotation;
+            }
         }
     }
 }

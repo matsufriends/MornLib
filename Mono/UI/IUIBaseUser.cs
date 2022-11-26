@@ -1,5 +1,7 @@
-﻿namespace MornLib.Mono.UI {
-    public interface IUIBaseUser {
+﻿namespace MornLib.Mono.UI
+{
+    public interface IUIBaseUser
+    {
         void OnSelect();
         void OnDeSelect();
         void OnClick();

@@ -1,17 +1,23 @@
-﻿using UnityEngine;
-namespace MornLib.Cores {
-    [System.Serializable]
-    public struct MornColorRange {
+﻿using System;
+using UnityEngine;
+
+namespace MornLib.Cores
+{
+    [Serializable]
+    public struct MornColorRange
+    {
         public Color Start;
         public Color End;
 
-        public MornColorRange(Color start,Color end) {
+        public MornColorRange(Color start, Color end)
+        {
             Start = start;
-            End   = end;
+            End = end;
         }
 
-        public Color Lerp(float rate) {
-            return Color.Lerp(Start,End,Mathf.Clamp01(rate));
+        public Color Lerp(float rate)
+        {
+            return Color.Lerp(Start, End, Mathf.Clamp01(rate));
         }
     }
 }

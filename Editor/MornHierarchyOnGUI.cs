@@ -1,38 +1,63 @@
+using MornLib.Mono;
 using UnityEditor;
 using UnityEngine;
-namespace MornLib.Editor {
-    public static class MornHierarchyOnGUI {
+
+namespace MornLib.Editor
+{
+    public static class MornHierarchyOnGUI
+    {
         [InitializeOnLoadMethod]
-        private static void AddHierarchyItemOnGUI() {
+        private static void AddHierarchyItemOnGUI()
+        {
             EditorApplication.hierarchyWindowItemOnGUI += HierarchyWindowItemOnGUI;
         }
 
-        private static void HierarchyWindowItemOnGUI(int instanceId,Rect selectionRect) {
+        private static void HierarchyWindowItemOnGUI(int instanceId, Rect selectionRect)
+        {
             var gameObject = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
-            if(gameObject == null) return;
-            DrawColor(selectionRect,gameObject);
-            DrawLabel(selectionRect,gameObject);
-            if(gameObject.TryGetComponent<Mono.MornHierarchyLine>(out _)) DrawLine(instanceId,selectionRect,gameObject);
-            DrawTag(instanceId,selectionRect,gameObject);
+            if (gameObject == null)
+            {
+                return;
+            }
+
+            DrawColor(selectionRect, gameObject);
+            DrawLabel(selectionRect, gameObject);
+            if (gameObject.TryGetComponent<MornHierarchyLine>(out _))
+            {
+                DrawLine(instanceId, selectionRect, gameObject);
+            }
+
+            DrawTag(instanceId, selectionRect, gameObject);
         }
 
-        private static void DrawColor(Rect selectionRect,GameObject gameObject) {
+        private static void DrawColor(Rect selectionRect, GameObject gameObject)
+        {
             var hasDrawn = false;
-            if(gameObject.TryGetComponent<Mono.MornHierarchyColor>(out var ownColor)) {
-                DrawTransparentRect(selectionRect,ownColor.BackColor);
+            if (gameObject.TryGetComponent<MornHierarchyColor>(out var ownColor))
+            {
+                DrawTransparentRect(selectionRect, ownColor.BackColor);
                 hasDrawn = true;
             }
-            var mornHiArray = gameObject.GetComponentsInParent<Mono.MornHierarchyColor>(true);
-            if(mornHiArray == null) return;
+
+            var mornHiArray = gameObject.GetComponentsInParent<MornHierarchyColor>(true);
+            if (mornHiArray == null)
+            {
+                return;
+            }
+
             var target = gameObject.transform;
             var depth = 0;
-            for(var hiIndex = 0;hiIndex < mornHiArray.Length;) {
+            for (var hiIndex = 0; hiIndex < mornHiArray.Length;)
+            {
                 var hi = mornHiArray[hiIndex];
-                if(target == hi.transform) {
+                if (target == hi.transform)
+                {
                     hiIndex++;
                     continue;
                 }
-                if(hi.ApplyChildren == false) {
+
+                if (hi.ApplyChildren == false)
+                {
                     hiIndex++;
                     target = target.parent;
                     depth++;
@@ -41,79 +66,101 @@ namespace MornLib.Editor {
                 }
 
                 //Side
-                var kBack = GetKRecursion(hi.transform,target.parent);
+                var kBack = GetKRecursion(hi.transform, target.parent);
                 var rectA = selectionRect;
                 rectA.xMax = rectA.xMin - 14 * depth;
                 rectA.xMin = rectA.xMax - 14;
-                DrawTransparentRect(rectA,hi.BackColor * kBack);
+                DrawTransparentRect(rectA, hi.BackColor * kBack);
 
                 //Main
-                if(hasDrawn == false) {
-                    var kFront = GetKRecursion(hi.transform,gameObject.transform);
-                    DrawTransparentRect(selectionRect,hi.BackColor * kFront);
+                if (hasDrawn == false)
+                {
+                    var kFront = GetKRecursion(hi.transform, gameObject.transform);
+                    DrawTransparentRect(selectionRect, hi.BackColor * kFront);
                     hasDrawn = true;
                 }
+
                 target = target.parent;
                 depth++;
             }
         }
 
-        private static void DrawTransparentRect(Rect rect,Color color) {
+        private static void DrawTransparentRect(Rect rect, Color color)
+        {
             color.a = 0.3f;
-            EditorGUI.DrawRect(rect,color);
+            EditorGUI.DrawRect(rect, color);
         }
 
-        private static float GetKRecursion(Transform aim,Transform own) {
-            if(aim == own) return 1f;
+        private static float GetKRecursion(Transform aim, Transform own)
+        {
+            if (aim == own)
+            {
+                return 1f;
+            }
+
             const int offset = 2;
             var pare = own.parent;
-            return Mathf.InverseLerp(pare.childCount + offset,-1,own.GetSiblingIndex()) * GetKRecursion(aim,pare);
+            return Mathf.InverseLerp(pare.childCount + offset, -1, own.GetSiblingIndex()) * GetKRecursion(aim, pare);
         }
 
-        private static void DrawLabel(Rect selectionRect,GameObject gameObject) {
+        private static void DrawLabel(Rect selectionRect, GameObject gameObject)
+        {
             selectionRect.xMin += 18;
             var style = new GUIStyle();
             style.normal.textColor = gameObject.activeInHierarchy ? GUI.contentColor : Color.gray;
-            style.alignment        = TextAnchor.UpperLeft;
-            EditorGUI.LabelField(selectionRect,gameObject.name,style);
+            style.alignment = TextAnchor.UpperLeft;
+            EditorGUI.LabelField(selectionRect, gameObject.name, style);
         }
 
-        private static void DrawTag(int instanceId,Rect selectionRect,GameObject gameObject) {
+        private static void DrawTag(int instanceId, Rect selectionRect, GameObject gameObject)
+        {
             var tag = gameObject.tag;
-            if(MornHierarchySettings.instance.ShowTag == false) return;
+            if (MornHierarchySettings.instance.ShowTag == false)
+            {
+                return;
+            }
+
             var style = new GUIStyle();
-            selectionRect.xMax     -= 16;
-            selectionRect.xMin     += selectionRect.width - 80;
-            style.normal.textColor =  tag == "Untagged" ? Color.red : GUI.color;
-            style.alignment        =  TextAnchor.MiddleRight;
-            EditorGUI.LabelField(selectionRect,tag,style);
+            selectionRect.xMax -= 16;
+            selectionRect.xMin += selectionRect.width - 80;
+            style.normal.textColor = tag == "Untagged" ? Color.red : GUI.color;
+            style.alignment = TextAnchor.MiddleRight;
+            EditorGUI.LabelField(selectionRect, tag, style);
         }
 
-        private static void DrawLine(int instanceID,Rect selectionRect,GameObject gameObject) {
+        private static void DrawLine(int instanceID, Rect selectionRect, GameObject gameObject)
+        {
             //DrawBack
-            EditorGUI.DrawRect(selectionRect,GetBackGroundColor(instanceID,selectionRect));
+            EditorGUI.DrawRect(selectionRect, GetBackGroundColor(instanceID, selectionRect));
             selectionRect.xMin = 32;
 
             //UpperLine
             var upperLineRect = selectionRect;
             upperLineRect.yMax = upperLineRect.yMin + 2;
-            EditorGUI.DrawRect(upperLineRect,Color.black);
+            EditorGUI.DrawRect(upperLineRect, Color.black);
 
             //LowerLine
             var lowerLineRect = selectionRect;
             lowerLineRect.yMin = lowerLineRect.yMax - 2;
-            EditorGUI.DrawRect(lowerLineRect,Color.black);
+            EditorGUI.DrawRect(lowerLineRect, Color.black);
 
             //Label
             var style = new GUIStyle();
             style.normal.textColor = GUI.contentColor;
-            style.alignment        = TextAnchor.UpperCenter;
-            EditorGUI.LabelField(selectionRect,gameObject.name,style);
+            style.alignment = TextAnchor.UpperCenter;
+            EditorGUI.LabelField(selectionRect, gameObject.name, style);
         }
 
-        private static Color GetBackGroundColor(int instanceID,Rect rect) {
-            if(Selection.Contains(instanceID)) return new Color32(44,93,134,255);
-            return rect.Contains(Event.current.mousePosition) ? new Color32(68,68,68,255) : new Color32(56,56,56,255);
+        private static Color GetBackGroundColor(int instanceID, Rect rect)
+        {
+            if (Selection.Contains(instanceID))
+            {
+                return new Color32(44, 93, 134, 255);
+            }
+
+            return rect.Contains(Event.current.mousePosition)
+                ? new Color32(68, 68, 68, 255)
+                : new Color32(56, 56, 56, 255);
         }
     }
 }

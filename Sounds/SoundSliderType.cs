@@ -1,7 +1,9 @@
-﻿namespace MornLib.Sounds {
-    public enum SoundSliderType {
-        Master
-       ,Se
-       ,Bgm
+﻿namespace MornLib.Sounds
+{
+    public enum SoundSliderType
+    {
+        Master,
+        Se,
+        Bgm,
     }
 }

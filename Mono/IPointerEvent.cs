@@ -1,7 +1,10 @@
 ﻿using System;
 using UniRx;
-namespace MornLib.Mono {
-    public interface IPointerEvent {
+
+namespace MornLib.Mono
+{
+    public interface IPointerEvent
+    {
         public IObservable<Unit> OnPointerEnter { get; }
         public IObservable<Unit> OnPointerExit { get; }
         public IObservable<MouseClickSet> OnPointerUp { get; }

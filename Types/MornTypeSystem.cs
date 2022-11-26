@@ -1,52 +1,93 @@
 ﻿using System;
-namespace MornLib.Types {
-    public sealed class MornTypeSystem {
+
+namespace MornLib.Types
+{
+    public sealed class MornTypeSystem
+    {
         public string Stack { get; private set; }
 
-        public bool TryAppendChar(char addChar,out string hiragana) {
-            Stack    += addChar;
-            hiragana =  UpdateHiraganaList(out var isKeep);
-            if(hiragana != "") Stack = isKeep ? Stack[^1].ToString() : "";
+        public bool TryAppendChar(char addChar, out string hiragana)
+        {
+            Stack += addChar;
+            hiragana = UpdateHiraganaList(out var isKeep);
+            if (hiragana != "")
+            {
+                Stack = isKeep ? Stack[^1].ToString() : "";
+            }
+
             return hiragana != "";
         }
 
-        private string UpdateHiraganaList(out bool isKeep) {
+        private string UpdateHiraganaList(out bool isKeep)
+        {
             isKeep = true;
             //っ
-            if(TryConvert(Convert2ToXtu,2,out var hiragana)) return hiragana;
+            if (TryConvert(Convert2ToXtu, 2, out var hiragana))
+            {
+                return hiragana;
+            }
+
             //ん
-            if(TryConvert(Convert2ToNn,2,out hiragana)) return hiragana;
+            if (TryConvert(Convert2ToNn, 2, out hiragana))
+            {
+                return hiragana;
+            }
+
             isKeep = false;
             //4文字
-            if(TryConvert(Convert4ToHiragana,4,out hiragana)) return hiragana;
+            if (TryConvert(Convert4ToHiragana, 4, out hiragana))
+            {
+                return hiragana;
+            }
+
             //3文字
-            if(TryConvert(Convert3ToHiragana,3,out hiragana)) return hiragana;
+            if (TryConvert(Convert3ToHiragana, 3, out hiragana))
+            {
+                return hiragana;
+            }
+
             //2文字
-            if(TryConvert(Convert2ToHiragana,2,out hiragana)) return hiragana;
+            if (TryConvert(Convert2ToHiragana, 2, out hiragana))
+            {
+                return hiragana;
+            }
+
             //1文字
-            if(TryConvert(Convert1ToHiragana,1,out hiragana)) return hiragana;
+            if (TryConvert(Convert1ToHiragana, 1, out hiragana))
+            {
+                return hiragana;
+            }
+
             return "";
         }
 
-        private bool TryConvert(Func<string,string> func,int count,out string hiragana) {
-            if(Stack.Length < count) {
+        private bool TryConvert(Func<string, string> func, int count, out string hiragana)
+        {
+            if (Stack.Length < count)
+            {
                 hiragana = "";
                 return false;
             }
+
             hiragana = func(Stack[^count ..]);
             return hiragana != "";
         }
 
-        private static string Convert4ToHiragana(string check) {
-            switch(check) {
+        private static string Convert4ToHiragana(string check)
+        {
+            switch (check)
+            {
                 case "ltsu": return "っ";
                 case "xtsu": return "っ";
             }
+
             return "";
         }
 
-        private static string Convert3ToHiragana(string check) {
-            switch(check) {
+        private static string Convert3ToHiragana(string check)
+        {
+            switch (check)
+            {
                 case "wyi": return "ゐ";
                 case "kya": return "きゃ";
                 case "kyi": return "きぃ";
@@ -169,11 +210,14 @@ namespace MornLib.Types {
                 case "wha": return "うぁ";
                 case "who": return "うぉ";
             }
+
             return "";
         }
 
-        private static string Convert2ToXtu(string check) {
-            switch(check) {
+        private static string Convert2ToXtu(string check)
+        {
+            switch (check)
+            {
                 case "qq":
                 case "rr":
                 case "tt":
@@ -194,11 +238,14 @@ namespace MornLib.Types {
                 case "bb":
                 case "mm": return "っ";
             }
+
             return "";
         }
 
-        private static string Convert2ToNn(string check) {
-            switch(check) {
+        private static string Convert2ToNn(string check)
+        {
+            switch (check)
+            {
                 case "nq":
                 case "nw":
                 case "nr":
@@ -219,11 +266,14 @@ namespace MornLib.Types {
                 case "nb":
                 case "nm": return "ん";
             }
+
             return "";
         }
 
-        private static string Convert2ToHiragana(string check) {
-            switch(check) {
+        private static string Convert2ToHiragana(string check)
+        {
+            switch (check)
+            {
                 case "ka": return "か";
                 case "ki": return "き";
                 case "ku": return "く";
@@ -322,11 +372,14 @@ namespace MornLib.Types {
                 case "xe": return "ぇ";
                 case "xo": return "ぉ";
             }
+
             return "";
         }
 
-        private static string Convert1ToHiragana(string check) {
-            switch(check) {
+        private static string Convert1ToHiragana(string check)
+        {
+            switch (check)
+            {
                 case "a": return "あ";
                 case "i": return "い";
                 case "u": return "う";
@@ -335,6 +388,7 @@ namespace MornLib.Types {
                 case "ー": return "ー";
                 case "・": return "・";
             }
+
             return "";
         }
     }
