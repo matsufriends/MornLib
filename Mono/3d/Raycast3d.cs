@@ -17,14 +17,17 @@ namespace MornLib.Mono._3d {
         public IObservable<MouseClickSet> OnPointerUp => _mouseUpSubject;
         public IObservable<MouseClickSet> OnPointerDown => _mouseDownSubject;
         public IObservable<MouseClickSet> OnPointerClick => _mouseClickSubject;
+
         private void Awake() {
             OnPointerEnter.Subscribe(_ => _isOver = true).AddTo(this);
             OnPointerExit.Subscribe(_ => _isOver  = false).AddTo(this);
         }
+
         private void Update() {
             if(_isDrag) UpdateDrag();
             if(_isOver) UpdateOver();
         }
+
         private void UpdateDrag() {
             var rightUp = _isOnMouseRight && Input.GetMouseButtonUp(1);
             var middleUp = _isOnMouseMiddle && Input.GetMouseButtonUp(2);
@@ -35,6 +38,7 @@ namespace MornLib.Mono._3d {
                 _isDrag = false;
             }
         }
+
         private void UpdateOver() {
             var rightDown = _isOnMouseRight && Input.GetMouseButtonDown(1);
             var middleDown = _isOnMouseMiddle && Input.GetMouseButtonDown(2);

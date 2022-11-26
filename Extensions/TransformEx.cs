@@ -7,19 +7,33 @@ namespace MornLib.Extensions {
                 Object.DestroyImmediate(transform.GetChild(i).gameObject);
             }
         }
-        public static Vector3 GetConvertedDifUsingLocalAxis(this Transform transform,Vector3 dif)
-            => transform.right * dif.x + transform.up * dif.y + transform.forward * dif.z;
-        public static void PositionLerp(this Transform transform,Vector3 aim,float k)
-            => transform.position = Vector3.Lerp(transform.position,aim,Mathf.Clamp01(k));
-        public static void LocalPositionLerp(this Transform transform,Vector3 aim,float k)
-            => transform.localPosition = Vector3.Lerp(transform.localPosition,aim,Mathf.Clamp01(k));
-        public static void RotationLerp(this Transform transform,Quaternion aim,float k)
-            => transform.rotation = Quaternion.Lerp(transform.rotation,aim,Mathf.Clamp01(k));
-        public static void LocalRotationLerp(this Transform transform,Quaternion aim,float k)
-            => transform.localRotation = Quaternion.Lerp(transform.localRotation,aim,Mathf.Clamp01(k));
-        public static void EulerAnglesLerp(this Transform transform,Vector3 aim,float k)
-            => transform.eulerAngles = Vector3.Lerp(transform.eulerAngles,aim,Mathf.Clamp01(k));
-        public static void LocalEulerAnglesLerp(this Transform transform,Vector3 aim,float k)
-            => transform.localEulerAngles = Vector3.Lerp(transform.localEulerAngles,aim,Mathf.Clamp01(k));
+
+        public static Vector3 GetConvertedDifUsingLocalAxis(this Transform transform,Vector3 dif) {
+            return transform.right * dif.x + transform.up * dif.y + transform.forward * dif.z;
+        }
+
+        public static void PositionLerp(this Transform transform,Vector3 aim,float k) {
+            transform.position = Vector3.Lerp(transform.position,aim,Mathf.Clamp01(k));
+        }
+
+        public static void LocalPositionLerp(this Transform transform,Vector3 aim,float k) {
+            transform.localPosition = Vector3.Lerp(transform.localPosition,aim,Mathf.Clamp01(k));
+        }
+
+        public static void RotationLerp(this Transform transform,Quaternion aim,float k) {
+            transform.rotation = Quaternion.Lerp(transform.rotation,aim,Mathf.Clamp01(k));
+        }
+
+        public static void LocalRotationLerp(this Transform transform,Quaternion aim,float k) {
+            transform.localRotation = Quaternion.Lerp(transform.localRotation,aim,Mathf.Clamp01(k));
+        }
+
+        public static void EulerAnglesLerp(this Transform transform,Vector3 aim,float k) {
+            transform.eulerAngles = Vector3.Lerp(transform.eulerAngles,aim,Mathf.Clamp01(k));
+        }
+
+        public static void LocalEulerAnglesLerp(this Transform transform,Vector3 aim,float k) {
+            transform.localEulerAngles = Vector3.Lerp(transform.localEulerAngles,aim,Mathf.Clamp01(k));
+        }
     }
 }

@@ -4,8 +4,12 @@ using UnityEngine;
 namespace MornLib.Editor {
     public sealed class MornSoundProcessorWindow : EditorWindow {
         private static UnityEditor.Editor s_editor;
+
         [MenuItem("Morn/SoundProcessor")]
-        private static void Open() => Init();
+        private static void Open() {
+            Init();
+        }
+
         private static void Init() {
             var instance = MornSoundProcessorSettings.instance;
             if(instance.Window == null) instance.Window = CreateInstance<MornSoundProcessorWindow>();
@@ -13,6 +17,7 @@ namespace MornLib.Editor {
             instance.hideFlags = HideFlags.HideAndDontSave & ~HideFlags.NotEditable;
             UnityEditor.Editor.CreateCachedEditor(instance,null,ref s_editor);
         }
+
         private void OnGUI() {
             if(s_editor == null) Init();
             EditorGUI.BeginChangeCheck();
@@ -30,6 +35,7 @@ namespace MornLib.Editor {
                 Debug.Log($"{length}件の変換が終わりました");
             }
         }
+
         private static AudioClip ConvertClip(AudioClip clip) {
             var instance = MornSoundProcessorSettings.instance;
             if(instance.IsCutBeginningSilence) clip = CutBeginningSilence(clip);
@@ -37,18 +43,22 @@ namespace MornLib.Editor {
             if(instance.IsNormalizeAmplitude) clip  = Normalize(clip);
             return clip;
         }
+
         private static AudioClip CutBeginningSilence(AudioClip clip) {
             var instance = MornSoundProcessorSettings.instance;
             return MornSoundProcessor.CutBeginningSilence(clip,instance.BeginningOffsetSample,instance.BeginningAmplitude);
         }
+
         private static AudioClip CutEndingSilence(AudioClip clip) {
             var instance = MornSoundProcessorSettings.instance;
             return MornSoundProcessor.CutEndSilence(clip,instance.EndingOffsetSample,instance.EndingAmplitude);
         }
+
         private static AudioClip Normalize(AudioClip clip) {
             var instance = MornSoundProcessorSettings.instance;
             return MornSoundProcessor.NormalizeAmplitude(clip,instance.NormalizeAmplitude);
         }
+
         private static AudioClip SaveClip(AudioClip clip) {
             var instance = MornSoundProcessorSettings.instance;
             string path;

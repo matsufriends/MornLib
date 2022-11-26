@@ -4,7 +4,9 @@ namespace MornLib.Mono {
         [ColorUsage(false)] public Color BackColor;
         public bool ApplyChildren;
         #if UNITY_EDITOR
-        private void OnValidate() => UnityEditor.EditorApplication.RepaintHierarchyWindow();
+        private void OnValidate() {
+            UnityEditor.EditorApplication.RepaintHierarchyWindow();
+        }
         #endif
     }
 }

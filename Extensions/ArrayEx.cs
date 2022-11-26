@@ -8,12 +8,16 @@ namespace MornLib.Extensions {
             }
             return false;
         }
+
         public static bool EnumContains<T>(this T[] array,T value) where T : Enum {
             for(var i = 0;i < array.Length;i++) {
                 if(array[i].Equals(value)) return true;
             }
             return false;
         }
-        public static T RandomValue<T>(this T[] array) => array[Random.Range(0,array.Length)];
+
+        public static T RandomValue<T>(this T[] array) {
+            return array[Random.Range(0,array.Length)];
+        }
     }
 }

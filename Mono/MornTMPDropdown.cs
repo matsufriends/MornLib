@@ -11,6 +11,7 @@ namespace MornLib.Mono {
         public bool IsClickOnMouseRight;
         public bool IsClickOnMouseMiddle;
         public bool IsClickOnMouseLeft;
+
         public override void OnPointerClick(PointerEventData eventData) {
             if(eventData.IsLeftClick() && IsClickOnMouseLeft) Show();
             if(eventData.IsMiddleClick() && IsClickOnMouseMiddle) Show();

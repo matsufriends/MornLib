@@ -22,6 +22,7 @@ namespace MornLib.Mono.UI {
         public IObservable<MouseClickSet> OnPointerUp => _mouseUpSubject;
         public IObservable<MouseClickSet> OnPointerDown => _mouseDownSubject;
         public IObservable<MouseClickSet> OnPointerClick => _mouseClickSubject;
+
         private void Awake() {
             _ui.OnPointerUpAsObservable().Subscribe(eventData => InvokeSubject(eventData,_mouseUpSubject)).AddTo(this);
             _ui.OnPointerDownAsObservable().Subscribe(eventData => InvokeSubject(eventData,_mouseDownSubject)).AddTo(this);
@@ -63,12 +64,16 @@ namespace MornLib.Mono.UI {
                 }
             ).AddTo(this);
         }
+
         private void InvokeSubject(PointerEventData eventData,IObserver<MouseClickSet> subject) {
             var isRight = _isOnMouseRight && eventData.IsRightClick();
             var isMiddle = _isOnMouseMiddle && eventData.IsMiddleClick();
             var isLeft = _isOnMouseLeft && eventData.IsLeftClick();
             if(isRight || isMiddle || isLeft) subject.OnNext(new MouseClickSet(isRight,isMiddle,isLeft));
         }
-        private void Reset() => _ui = GetComponent<UIBehaviour>();
+
+        private void Reset() {
+            _ui = GetComponent<UIBehaviour>();
+        }
     }
 }

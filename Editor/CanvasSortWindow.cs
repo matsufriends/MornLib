@@ -4,11 +4,13 @@ using UnityEngine;
 namespace MornLib.Editor {
     public class CanvasSortWindow : EditorWindow {
         private Vector2 _scrollPos;
+
         [MenuItem("Window/Morn/" + nameof(CanvasSortWindow))]
         private static void Open() {
             var window = GetWindow<CanvasSortWindow>();
             window.titleContent = new GUIContent(nameof(CanvasSortWindow));
         }
+
         private void OnGUI() {
             _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
             {

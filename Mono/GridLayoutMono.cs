@@ -3,6 +3,7 @@ namespace MornLib.Mono {
     public class GridLayoutMono : MonoBehaviour {
         [SerializeField] private Vector3 _basePos;
         [SerializeField] private Vector3 _dif;
+
         [ContextMenu("Sort")]
         public void Sort() {
             var childCount = 0;

@@ -6,6 +6,7 @@ namespace MornLib.Pool {
         private readonly Action<T> _onRent;
         private readonly Action<T> _onReturn;
         private readonly Stack<T> _poolStack = new();
+
         public MornObjectPool(Func<T> onGenerate,Action<T> onRent,Action<T> onReturn,int startCount) {
             if(startCount < 0) throw new ArgumentOutOfRangeException();
             _onGenerate = onGenerate;
@@ -17,11 +18,13 @@ namespace MornLib.Pool {
                 _poolStack.Push(generated);
             }
         }
+
         public T Rent() {
             if(_poolStack.TryPop(out var result) == false) result = _onGenerate();
             _onRent(result);
             return result;
         }
+
         public void Return(T pushObject) {
             _onReturn(pushObject);
             _poolStack.Push(pushObject);

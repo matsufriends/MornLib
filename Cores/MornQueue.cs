@@ -2,6 +2,8 @@
 using MornLib.Pool;
 namespace MornLib.Cores {
     public class MornQueue<T> : Queue<T>,IPoolItem {
-        void IPoolItem.Clear() => Clear();
+        void IPoolItem.Clear() {
+            Clear();
+        }
     }
 }

@@ -4,12 +4,15 @@ namespace MornLib.Mono {
     [RequireComponent(typeof(Image))]
     public class ImageGizmoMono : MonoBehaviour {
         [SerializeField] private Image _image;
-        private void Reset() => _image = GetComponent<Image>();
+        private void Reset() {
+            _image = GetComponent<Image>();
+        }
         #if UNITY_EDITOR
         private void OnDrawGizmos() {
             Gizmos.color = Color.yellow * _image.canvasRenderer.GetInheritedAlpha();
             Gizmos.DrawWireCube(GetCenterPosition(_image.rectTransform),_image.rectTransform.rect.size * _image.rectTransform.lossyScale);
         }
+
         private static Vector2 GetCenterPosition(RectTransform rect) {
             var position = rect.transform.position;
             if(rect.pivot != new Vector2(0.5f,0.5f)) {

@@ -9,6 +9,7 @@ namespace MornLib.Mono {
         [SerializeField] private bool _ignoreTimeScale = true;
         [SerializeField] private List<RectTransform> _list = new();
         private const float _movement = 20;
+
         private void Update() {
             var offsetPos = Vector2.zero;
             var isUpDown = _dir == Dir.Up || _dir == Dir.Down;
@@ -22,6 +23,7 @@ namespace MornLib.Mono {
                 offsetPos             += dirVector * ((isUpDown ? rect.rect.size.y : rect.rect.size.x) + _spacing);
             }
         }
+
         private static Vector2 DirToVector(Dir dir) {
             switch(dir) {
                 case Dir.Up:    return Vector2.up;
@@ -31,12 +33,14 @@ namespace MornLib.Mono {
                 default:        throw new ArgumentOutOfRangeException();
             }
         }
+
         private void OnTransformChildrenChanged() {
             _list.Clear();
             for(var i = transform.childCount - 1;i >= 0;i--) {
                 if(transform.GetChild(i).TryGetComponent<RectTransform>(out var rect)) _list.Add(rect);
             }
         }
+
         private enum Dir {
             Up
            ,Left

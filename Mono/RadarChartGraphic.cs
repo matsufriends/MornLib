@@ -14,7 +14,11 @@ namespace MornLib.Mono {
         private int _valueCount;
         private float _baseRadius;
         private RectTransform _rectTransform;
-        protected override void OnEnable() => _rectTransform = GetComponent<RectTransform>();
+
+        protected override void OnEnable() {
+            _rectTransform = GetComponent<RectTransform>();
+        }
+
         protected override void OnPopulateMesh(VertexHelper vh) {
             vh.Clear();
             _valueCount = _valueList.Count;
@@ -29,6 +33,7 @@ namespace MornLib.Mono {
             }
             if(_splitWidth > 0) GenerateSplitLine(vh);
         }
+
         private void GenerateInsideMesh(VertexHelper vh) {
             vh.AddVert(GenerateUIVertex(GetPos(0),color)); //Center
             for(var i = 0;i < _valueCount;i++) {
@@ -38,6 +43,7 @@ namespace MornLib.Mono {
                 vh.AddTriangle(0,i + 1,(i + 1) % _valueCount + 1);
             }
         }
+
         private void GenerateBroadLine(VertexHelper vh,float k) {
             var dif = _lineWidth / 2f;
             var baseCount = vh.currentVertCount;
@@ -50,6 +56,7 @@ namespace MornLib.Mono {
                 vh.AddTriangle(baseCount + 2 * i,baseCount + (2 * i + 3) % (_valueCount * 2),baseCount + (2 * i + 1) % (_valueCount * 2));
             }
         }
+
         private void GenerateSplitLine(VertexHelper vh) {
             var baseCount = vh.currentVertCount;
             for(var i = 0;i < _valueCount;i++) {
@@ -63,22 +70,29 @@ namespace MornLib.Mono {
                 vh.AddTriangle(baseCount + i * 4,baseCount + i * 4 + 3,baseCount + i * 4 + 1);
             }
         }
+
         private UIVertex GenerateUIVertex(Vector2 pos,Color vertexColor) {
             var result = UIVertex.simpleVert;
             result.position = pos;
             result.color    = vertexColor;
             return result;
         }
+
         private Vector2 GetPos(int index) {
             var radian = Mathf.Deg2Rad * (90 - index * 360 / Mathf.Max(1,_valueCount));
             return new Vector2(Mathf.Cos(radian),Mathf.Sin(radian));
         }
+
         private Vector2 GetNormal(int index) {
             var radian = Mathf.Deg2Rad * (90 - index * 360 / Mathf.Max(1,_valueCount));
             return new Vector2(-Mathf.Sin(radian),Mathf.Cos(radian));
         }
+
         [ContextMenu("UpdateMesh")]
-        public void UpdateMesh() => SetAllDirty();
+        public void UpdateMesh() {
+            SetAllDirty();
+        }
+
         public void SetValue(IEnumerable<float> values) {
             _valueList.Clear();
             _valueList.AddRange(values);

@@ -19,6 +19,7 @@ namespace MornLib.Sounds {
         private const string c_seVolume = "SeVolume";
         private const string c_bgmVolume = "BgmVolume";
         private const float c_minDb = 30;
+
         protected override async void MyAwake() {
             _bgmSourceA.loop = true;
             _bgmSourceB.loop = true;
@@ -27,6 +28,7 @@ namespace MornLib.Sounds {
             _mixer.SetFloat(c_seVolume,RateToDb(PlayerPrefs.GetFloat(c_seVolume,1)));
             _mixer.SetFloat(c_bgmVolume,RateToDb(PlayerPrefs.GetFloat(c_bgmVolume,1)));
         }
+
         public void PlayBgm(TEnum soundType,TimeSpan duration) {
             _cachedBgmFadeTokenSource?.Cancel();
             _cachedBgmFadeTokenSource?.Dispose();
@@ -43,10 +45,12 @@ namespace MornLib.Sounds {
             ).Forget();
             _isPlayingBgmOnSourceA = !_isPlayingBgmOnSourceA;
         }
+
         public void PlaySe(TEnum soundType) {
             var clip = _soundClipDictionaryProvider.GetDictionary()[soundType];
             _seSource.PlayOneShot(clip);
         }
+
         public void InitSlider(BaseMornSoundSliderMono<TEnum> slider) {
             var key = slider.SoundSliderType switch {
                 SoundSliderType.Master => c_masterVolumeKey
@@ -63,6 +67,9 @@ namespace MornLib.Sounds {
                 }
             ).AddTo(this);
         }
-        private static float RateToDb(float rate) => rate <= 0 ? -5000 : (rate - 1) * c_minDb;
+
+        private static float RateToDb(float rate) {
+            return rate <= 0 ? -5000 : (rate - 1) * c_minDb;
+        }
     }
 }

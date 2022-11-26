@@ -13,17 +13,20 @@ namespace MornLib.Mono.TcgLayout {
         private readonly List<ITcgRectController> _rectList = new();
         private ITcgRectController _curRect;
         private ITcgRectController _dragRect;
+
         private void Update() {
             if(_dragRect == null) NoDragUpdate();
             else DragUpdate();
             ContentUpdate();
         }
+
         private void NoDragUpdate() {
             if(Input.GetMouseButtonDown(0) && _curRect != null) {
                 _dragRect = _curRect;
                 _dragRect.Clicked();
             }
         }
+
         private void DragUpdate() {
             if(Input.GetMouseButton(0) == false) {
                 _dragRect.Deselect();
@@ -31,6 +34,7 @@ namespace MornLib.Mono.TcgLayout {
                 _curRect?.Select();
             }
         }
+
         private void ContentUpdate() {
             var transition = _transitionK * Time.deltaTime;
             var rectCount = _rectList.Count;
@@ -88,6 +92,7 @@ namespace MornLib.Mono.TcgLayout {
                 }
             }
         }
+
         public void AddItem(ITcgRectController tcgRect) {
             _rectList.Add(tcgRect);
             tcgRect.SetIndex(_rectList.Count - 1);
@@ -101,6 +106,7 @@ namespace MornLib.Mono.TcgLayout {
                 }
             );
         }
+
         public void RemoveItem(ITcgRectController tcgRect) {
             if(tcgRect.Index < 0 || _rectList.Count <= tcgRect.Index) MornLog.Error("不正なIndexです");
             _rectList.RemoveAt(tcgRect.Index);
@@ -111,6 +117,7 @@ namespace MornLib.Mono.TcgLayout {
             if(_dragRect == tcgRect) _dragRect = null;
             tcgRect.ExeDestroy();
         }
+
         public void DestroyAll() {
             _rectList.Clear();
             _curRect  = null;

@@ -13,6 +13,7 @@ namespace MornLib.Singletons {
                 return s_instance;
             }
         }
+
         private void Awake() {
             if(s_instance == null) {
                 s_instance = (T)this;
@@ -24,6 +25,7 @@ namespace MornLib.Singletons {
                 Destroy(gameObject);
             }
         }
+
         protected abstract void MyAwake();
     }
     public abstract class SingletonMono<TMono,TInterface> : MonoBehaviour where TMono : SingletonMono<TMono,TInterface>,TInterface,ISingleton {

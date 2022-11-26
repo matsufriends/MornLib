@@ -4,6 +4,7 @@
         public readonly bool IsRight;
         public readonly bool IsMiddle;
         public readonly bool IsLeft;
+
         public MouseClickSet(bool isRight,bool isMiddle,bool isLeft) {
             IsRight  = isRight;
             IsMiddle = isMiddle;

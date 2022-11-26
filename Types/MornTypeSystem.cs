@@ -2,12 +2,14 @@
 namespace MornLib.Types {
     public sealed class MornTypeSystem {
         public string Stack { get; private set; }
+
         public bool TryAppendChar(char addChar,out string hiragana) {
             Stack    += addChar;
             hiragana =  UpdateHiraganaList(out var isKeep);
             if(hiragana != "") Stack = isKeep ? Stack[^1].ToString() : "";
             return hiragana != "";
         }
+
         private string UpdateHiraganaList(out bool isKeep) {
             isKeep = true;
             //っ
@@ -25,6 +27,7 @@ namespace MornLib.Types {
             if(TryConvert(Convert1ToHiragana,1,out hiragana)) return hiragana;
             return "";
         }
+
         private bool TryConvert(Func<string,string> func,int count,out string hiragana) {
             if(Stack.Length < count) {
                 hiragana = "";
@@ -33,6 +36,7 @@ namespace MornLib.Types {
             hiragana = func(Stack[^count ..]);
             return hiragana != "";
         }
+
         private static string Convert4ToHiragana(string check) {
             switch(check) {
                 case "ltsu": return "っ";
@@ -40,6 +44,7 @@ namespace MornLib.Types {
             }
             return "";
         }
+
         private static string Convert3ToHiragana(string check) {
             switch(check) {
                 case "wyi": return "ゐ";
@@ -166,6 +171,7 @@ namespace MornLib.Types {
             }
             return "";
         }
+
         private static string Convert2ToXtu(string check) {
             switch(check) {
                 case "qq":
@@ -190,6 +196,7 @@ namespace MornLib.Types {
             }
             return "";
         }
+
         private static string Convert2ToNn(string check) {
             switch(check) {
                 case "nq":
@@ -214,6 +221,7 @@ namespace MornLib.Types {
             }
             return "";
         }
+
         private static string Convert2ToHiragana(string check) {
             switch(check) {
                 case "ka": return "か";
@@ -316,6 +324,7 @@ namespace MornLib.Types {
             }
             return "";
         }
+
         private static string Convert1ToHiragana(string check) {
             switch(check) {
                 case "a": return "あ";

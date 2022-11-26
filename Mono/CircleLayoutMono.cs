@@ -6,6 +6,7 @@ namespace MornLib.Mono {
         [SerializeField] private bool _clock;
         [SerializeField] private float _angleOffset;
         [SerializeField] private float _rotOffset;
+
         private void OnValidate() {
             var count = transform.childCount;
             var degree = 360f / count * (_clock ? -1 : 1);

@@ -29,6 +29,7 @@ namespace MornLib.Cores {
             var encrypted = mStream.ToArray();
             return Convert.ToBase64String(encrypted);
         }
+
         /// <summary>
         ///     復号
         /// </summary>

@@ -4,6 +4,7 @@ namespace MornLib.Cores {
     public static class MornEnum<T> where T : Enum {
         private static List<T> s_enumList;
         public static int Count => Values().Count;
+
         public static IReadOnlyList<T> Values() {
             if(s_enumList == null) {
                 s_enumList = new List<T>();

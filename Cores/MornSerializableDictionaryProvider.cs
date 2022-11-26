@@ -6,7 +6,11 @@ namespace MornLib.Cores {
     public class MornSerializableDictionaryProvider<TKey,TValue> {
         [SerializeField] private List<MornKeyValuePair> _list;
         private Dictionary<TKey,TValue> _dict;
-        public Dictionary<TKey,TValue> GetDictionary() => _dict ??= _list.ToDictionary(pair => pair.Key,pair => pair.Value);
+
+        public Dictionary<TKey,TValue> GetDictionary() {
+            return _dict ??= _list.ToDictionary(pair => pair.Key,pair => pair.Value);
+        }
+
         [System.Serializable]
         private struct MornKeyValuePair {
             public TKey Key;

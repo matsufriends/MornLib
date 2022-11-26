@@ -19,6 +19,7 @@ namespace MornLib.Cores {
             normalizeClip.SetData(data,0);
             return normalizeClip;
         }
+
         public static AudioClip CutBeginningSilence(AudioClip clip,int beginOffsetSample,float beginAmplitude) {
             var samples = clip.samples;               //サンプル数（波形の個数）
             var frequency = clip.frequency;           //周波数（1秒あたりの分割数）
@@ -36,6 +37,7 @@ namespace MornLib.Cores {
             cutClip.SetData(cachedArray,0);
             return cutClip;
         }
+
         public static AudioClip CutEndSilence(AudioClip clip,int endOffsetSample,float endAmplitude) {
             var samples = clip.samples;               //サンプル数（波形の個数）
             var frequency = clip.frequency;           //周波数（1秒あたりの分割数）
@@ -53,18 +55,21 @@ namespace MornLib.Cores {
             cutClip.SetData(cachedArray,0);
             return cutClip;
         }
+
         private static int GetSoundBeginningIndex(IReadOnlyList<float> span,float minAmplitude,int channels) {
             for(var i = 0;i < span.Count;i++) {
                 if(Mathf.Abs(span[i]) > minAmplitude) return i - i % channels;
             }
             return 0;
         }
+
         private static int GetSoundEndingIndex(IReadOnlyList<float> span,float minAmplitude,int channels) {
             for(var i = span.Count - 1;i >= 0;i--) {
                 if(Mathf.Abs(span[i]) > minAmplitude) return i - i % channels;
             }
             return span.Count - 1 - (span.Count - 1) % channels;
         }
+
         public static void SaveAudioClipToWave(AudioClip clip,string path) {
             var samples = clip.samples;               //サンプル数（波形の個数）
             var frequency = clip.frequency;           //周波数（1秒あたりの分割数）
@@ -87,6 +92,7 @@ namespace MornLib.Cores {
                 }
             }
         }
+
         private static void WriteWavHeader(Stream fileStream,int samples,short channels,int frequency) {
             var fileSize = 2 * samples * channels + 44;
             fileStream.Seek(0,SeekOrigin.Begin);
@@ -142,12 +148,14 @@ namespace MornLib.Cores {
             //サブチャンクサイズ 4byte
             WriteIntLittleEndian(fileStream,2 * samples * channels);
         }
+
         private static void WriteIntLittleEndian(Stream fileStream,int value) {
             fileStream.WriteByte((byte)value);         // 8~1bit
             fileStream.WriteByte((byte)(value >> 8));  //16~9bit
             fileStream.WriteByte((byte)(value >> 16)); //24~17bit
             fileStream.WriteByte((byte)(value >> 24)); //32~25bit
         }
+
         private static void WriteShortLittleEndian(Stream fileStream,short value) {
             fileStream.WriteByte((byte)value);        // 8~1bit
             fileStream.WriteByte((byte)(value >> 8)); //16~9bit

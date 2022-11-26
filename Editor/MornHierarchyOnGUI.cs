@@ -3,7 +3,10 @@ using UnityEngine;
 namespace MornLib.Editor {
     public static class MornHierarchyOnGUI {
         [InitializeOnLoadMethod]
-        private static void AddHierarchyItemOnGUI() => EditorApplication.hierarchyWindowItemOnGUI += HierarchyWindowItemOnGUI;
+        private static void AddHierarchyItemOnGUI() {
+            EditorApplication.hierarchyWindowItemOnGUI += HierarchyWindowItemOnGUI;
+        }
+
         private static void HierarchyWindowItemOnGUI(int instanceId,Rect selectionRect) {
             var gameObject = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
             if(gameObject == null) return;
@@ -12,6 +15,7 @@ namespace MornLib.Editor {
             if(gameObject.TryGetComponent<Mono.MornHierarchyLine>(out _)) DrawLine(instanceId,selectionRect,gameObject);
             DrawTag(instanceId,selectionRect,gameObject);
         }
+
         private static void DrawColor(Rect selectionRect,GameObject gameObject) {
             var hasDrawn = false;
             if(gameObject.TryGetComponent<Mono.MornHierarchyColor>(out var ownColor)) {
@@ -53,16 +57,19 @@ namespace MornLib.Editor {
                 depth++;
             }
         }
+
         private static void DrawTransparentRect(Rect rect,Color color) {
             color.a = 0.3f;
             EditorGUI.DrawRect(rect,color);
         }
+
         private static float GetKRecursion(Transform aim,Transform own) {
             if(aim == own) return 1f;
             const int offset = 2;
             var pare = own.parent;
             return Mathf.InverseLerp(pare.childCount + offset,-1,own.GetSiblingIndex()) * GetKRecursion(aim,pare);
         }
+
         private static void DrawLabel(Rect selectionRect,GameObject gameObject) {
             selectionRect.xMin += 18;
             var style = new GUIStyle();
@@ -70,6 +77,7 @@ namespace MornLib.Editor {
             style.alignment        = TextAnchor.UpperLeft;
             EditorGUI.LabelField(selectionRect,gameObject.name,style);
         }
+
         private static void DrawTag(int instanceId,Rect selectionRect,GameObject gameObject) {
             var tag = gameObject.tag;
             if(MornHierarchySettings.instance.ShowTag == false) return;
@@ -80,6 +88,7 @@ namespace MornLib.Editor {
             style.alignment        =  TextAnchor.MiddleRight;
             EditorGUI.LabelField(selectionRect,tag,style);
         }
+
         private static void DrawLine(int instanceID,Rect selectionRect,GameObject gameObject) {
             //DrawBack
             EditorGUI.DrawRect(selectionRect,GetBackGroundColor(instanceID,selectionRect));
@@ -101,6 +110,7 @@ namespace MornLib.Editor {
             style.alignment        = TextAnchor.UpperCenter;
             EditorGUI.LabelField(selectionRect,gameObject.name,style);
         }
+
         private static Color GetBackGroundColor(int instanceID,Rect rect) {
             if(Selection.Contains(instanceID)) return new Color32(44,93,134,255);
             return rect.Contains(Event.current.mousePosition) ? new Color32(68,68,68,255) : new Color32(56,56,56,255);

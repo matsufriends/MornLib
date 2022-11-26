@@ -2,10 +2,12 @@ namespace MornLib.Types {
     public sealed class MornTypeSystemUser {
         public string Typed { get; private set; }
         public string NotTyped { get; private set; }
+
         public MornTypeSystemUser(string typed,string notTyped) {
             Typed    = typed;
             NotTyped = notTyped;
         }
+
         public bool TryAppend(string hiragana) {
             if(NotTyped.Length < hiragana.Length) return false;
             var next = NotTyped[..hiragana.Length];
