@@ -4,7 +4,7 @@ namespace MornLib.Pool
 {
     public abstract class MornBaseObjectPoolMono<T> : MonoBehaviour where T : MonoBehaviour
     {
-        [SerializeField] private T _prefab;
+        [SerializeField] protected T _prefab;
         private MornObjectPool<T> _mornObjectPool;
 
         private void Awake()
