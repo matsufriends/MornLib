@@ -8,9 +8,8 @@ namespace MornLib.Scenes
     public abstract class BaseSceneControllerMono<TEnum> : MonoBehaviour where TEnum : Enum
     {
         [SerializeField] private List<BaseSceneMono<TEnum>> _sceneList;
-
+        [SerializeField] private TEnum _sceneType;
         private readonly Dictionary<TEnum, BaseSceneMono<TEnum>> _sceneDictionary = new();
-        private TEnum _sceneType;
 
         private void Awake()
         {
