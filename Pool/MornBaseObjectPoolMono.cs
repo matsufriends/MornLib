@@ -1,14 +1,13 @@
-using MornLib.Singletons;
 using UnityEngine;
 
 namespace MornLib.Pool
 {
-    public abstract class MornBaseObjectPoolMono<T> : SingletonMono<MornBaseObjectPoolMono<T>> where T : MonoBehaviour
+    public abstract class MornBaseObjectPoolMono<T> : MonoBehaviour where T : MonoBehaviour
     {
         [SerializeField] private T _prefab;
         private MornObjectPool<T> _mornObjectPool;
 
-        protected override void MyAwake()
+        private void Awake()
         {
             _mornObjectPool = new MornObjectPool<T>(OnGenerate, OnRent, OnReturn, StartCount);
         }
