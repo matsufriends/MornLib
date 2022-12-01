@@ -21,6 +21,11 @@ namespace MornLib.Scenes
             }
         }
 
+        private void Start()
+        {
+            ChangeScene(_sceneType);
+        }
+
         private void ChangeScene(TEnum sceneType)
         {
             _sceneDictionary[_sceneType].OnExitScene();
