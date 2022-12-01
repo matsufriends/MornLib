@@ -14,7 +14,7 @@ namespace MornLib.Cores
         public bool IsFirst { get; private set; }
         public float PlayingTime => (_isUnScaledTime ? Time.unscaledTime : Time.time) - _startTime;
 
-        public MornSm(TEnum initType, bool isUnscaledTime)
+        public MornSm(TEnum initType, bool isUnscaledTime = false)
         {
             _isUnScaledTime = isUnscaledTime;
             _curState = initType;
