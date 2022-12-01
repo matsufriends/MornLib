@@ -8,7 +8,7 @@ namespace MornLib.Pool
         private readonly Func<T> _onGenerate;
         private readonly Action<T> _onRent;
         private readonly Action<T> _onReturn;
-        private readonly Stack<T> _poolStack = new();
+        private readonly Queue<T> _poolStack = new();
 
         public MornObjectPool(Func<T> onGenerate, Action<T> onRent, Action<T> onReturn, int startCount)
         {
@@ -24,13 +24,13 @@ namespace MornLib.Pool
             {
                 var generated = onGenerate();
                 onReturn(generated);
-                _poolStack.Push(generated);
+                _poolStack.Enqueue(generated);
             }
         }
 
         public T Rent()
         {
-            if (_poolStack.TryPop(out var result) == false)
+            if (_poolStack.TryDequeue(out var result) == false)
             {
                 result = _onGenerate();
             }
@@ -42,7 +42,7 @@ namespace MornLib.Pool
         public void Return(T pushObject)
         {
             _onReturn(pushObject);
-            _poolStack.Push(pushObject);
+            _poolStack.Enqueue(pushObject);
         }
     }
 }
