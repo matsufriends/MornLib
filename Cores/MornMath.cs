@@ -24,5 +24,15 @@ namespace MornLib.Cores
         {
             return Mathf.Abs(a) <= 0.0001f;
         }
+
+        public static float ClampMinus1Plus1(float value)
+        {
+            return Mathf.Clamp(value, -1, 1);
+        }
+
+        public static int ClampMinus1Plus1(int value)
+        {
+            return Mathf.Clamp(value, -1, 1);
+        }
     }
 }
