@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MornLib.StatePattern
 {
-    public sealed class MornStatePattern<TInterface, TArg> where TInterface : IMornStatePattern<TArg>
+    public sealed class MornStatePattern<TInterface, TArg> where TInterface : class, IMornStatePattern<TArg>
     {
         private TInterface _state;
         private float _startTime = -1;
@@ -49,7 +48,7 @@ namespace MornLib.StatePattern
 
         public bool IsState(TInterface state)
         {
-            return EqualityComparer<TInterface>.Default.Equals(_state, state);
+            return ReferenceEquals(_state, state);
         }
     }
 }
