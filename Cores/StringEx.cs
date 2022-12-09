@@ -2,7 +2,7 @@
 
 namespace MornLib.Cores
 {
-    public static class MornString
+    public static class StringEx
     {
         public static int LongestLengthBySplit(this string message, char split)
         {

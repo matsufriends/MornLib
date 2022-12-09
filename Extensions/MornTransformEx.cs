@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using MornLib.Cores;
+using MornLib.Pools;
+using UnityEngine;
 
 namespace MornLib.Extensions
 {
@@ -11,6 +13,29 @@ namespace MornLib.Extensions
             {
                 Object.DestroyImmediate(transform.GetChild(i).gameObject);
             }
+        }
+
+        public static string GetPath(this Transform transform)
+        {
+            var list = MornSharedObjectPool<MornList<string>>.Rent();
+            var builder = MornSharedObjectPool<MornStringBuilder>.Rent();
+            builder.Init('/');
+            var parent = transform;
+            while (parent != null)
+            {
+                list.Add(parent.name);
+                parent = parent.parent;
+            }
+
+            for (var i = list.Count - 1; i >= 0; i--)
+            {
+                builder.Append(list[i]);
+            }
+
+            var message = builder.Get();
+            MornSharedObjectPool<MornList<string>>.Return(list);
+            MornSharedObjectPool<MornStringBuilder>.Return(builder);
+            return message;
         }
 
         public static Vector3 GetConvertedDifUsingLocalAxis(this Transform transform, Vector3 dif)

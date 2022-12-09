@@ -39,11 +39,13 @@ namespace MornLib.Mono
             if (GUILayout.Button("SetActive"))
             {
                 _canvasGroupSetter.SetActiveImmediate(true);
+                EditorUtility.SetDirty(_canvasGroupSetter);
             }
 
             if (GUILayout.Button("SetInactive"))
             {
                 _canvasGroupSetter.SetActiveImmediate(false);
+                EditorUtility.SetDirty(_canvasGroupSetter);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using MornLib.Extensions;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ namespace MornLib.Editor
                 var list = FindObjectsOfType<Canvas>().OrderBy(x => x.sortingOrder);
                 foreach (var canvas in list)
                 {
-                    GUILayout.Label($"{canvas.sortingOrder}:{canvas.gameObject.name}");
+                    GUILayout.Label($"{canvas.sortingOrder}:{canvas.transform.GetPath()}");
                 }
             }
             EditorGUILayout.EndScrollView();
