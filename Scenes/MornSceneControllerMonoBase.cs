@@ -17,6 +17,8 @@ namespace MornLib.Scenes
             {
                 _sceneDictionary.Add(scene.SceneType, scene);
                 scene.OnChangeScene.Subscribe(ChangeScene).AddTo(this);
+                scene.OnAddScene.Subscribe(AddScene).AddTo(this);
+                scene.OnRemoveScene.Subscribe(RemoveScene).AddTo(this);
             }
         }
 
@@ -30,6 +32,16 @@ namespace MornLib.Scenes
             _sceneDictionary[_sceneType].OnExitScene();
             _sceneType = sceneType;
             _sceneDictionary[_sceneType].OnEnterScene();
+        }
+
+        private void AddScene(TEnum sceneType)
+        {
+            _sceneDictionary[_sceneType].OnEnterScene();
+        }
+
+        private void RemoveScene(TEnum sceneType)
+        {
+            _sceneDictionary[_sceneType].OnExitScene();
         }
 
         public void MyUpdate()
