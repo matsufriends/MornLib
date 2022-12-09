@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 namespace MornLib.Mono.UI
 {
-    public class UIBaseMono : MonoBehaviour, IPointerEvent
+    public class UIMonoBase : MonoBehaviour, IPointerEvent
     {
         [SerializeField] private UIBehaviour _ui;
         [SerializeField] private bool _isOnMouseRight;
@@ -20,9 +20,9 @@ namespace MornLib.Mono.UI
         private readonly Subject<MouseClickSet> _mouseDownSubject = new();
         private readonly Subject<MouseClickSet> _mouseClickSubject = new();
 
-        public IObservable<Unit> OnPointerEnter
-            => _ui.OnPointerEnterAsObservable().Where(x => _isReactChild || x.pointerEnter == gameObject)
-                .Select(_ => Unit.Default);
+        public IObservable<Unit> OnPointerEnter => _ui.OnPointerEnterAsObservable()
+            .Where(x => _isReactChild || x.pointerEnter == gameObject)
+            .Select(_ => Unit.Default);
 
         public IObservable<Unit> OnPointerExit => _pointerExitSubject;
         public IObservable<MouseClickSet> OnPointerUp => _mouseUpSubject;
@@ -32,58 +32,58 @@ namespace MornLib.Mono.UI
         private void Awake()
         {
             _ui.OnPointerUpAsObservable().Subscribe(eventData => InvokeSubject(eventData, _mouseUpSubject)).AddTo(this);
-            _ui.OnPointerDownAsObservable().Subscribe(eventData => InvokeSubject(eventData, _mouseDownSubject))
+            _ui.OnPointerDownAsObservable()
+                .Subscribe(eventData => InvokeSubject(eventData, _mouseDownSubject))
                 .AddTo(this);
-            _ui.OnPointerClickAsObservable().Subscribe(eventData => InvokeSubject(eventData, _mouseClickSubject))
+            _ui.OnPointerClickAsObservable()
+                .Subscribe(eventData => InvokeSubject(eventData, _mouseClickSubject))
                 .AddTo(this);
             OnPointerEnter.Subscribe(_ => _isOver = true).AddTo(this);
-            _ui.OnPointerExitAsObservable().Subscribe(
-                _ =>
+            _ui.OnPointerExitAsObservable()
+                .Subscribe(_ =>
                 {
                     _isOver = false;
                     _pointerExitSubject.OnNext(Unit.Default);
-                }
-            ).AddTo(this);
-            gameObject.OnDisableAsObservable().Where(_ => _isOver).Subscribe(
-                _ =>
+                })
+                .AddTo(this);
+            gameObject.OnDisableAsObservable()
+                .Where(_ => _isOver)
+                .Subscribe(_ =>
                 {
                     _isOver = false;
                     _pointerExitSubject.OnNext(Unit.Default);
-                }
-            ).AddTo(this);
-            var users = GetComponents<IUIBaseUser>();
+                })
+                .AddTo(this);
+            var users = GetComponents<IUIUserBase>();
             if (users == null)
             {
                 return;
             }
 
-            ((IPointerEvent)this).OnPointerEnter.Subscribe(
-                _ =>
+            ((IPointerEvent)this).OnPointerEnter.Subscribe(_ =>
                 {
                     foreach (var user in users)
                     {
                         user.OnSelect();
                     }
-                }
-            ).AddTo(this);
-            ((IPointerEvent)this).OnPointerExit.Subscribe(
-                _ =>
+                })
+                .AddTo(this);
+            ((IPointerEvent)this).OnPointerExit.Subscribe(_ =>
                 {
                     foreach (var user in users)
                     {
                         user.OnDeSelect();
                     }
-                }
-            ).AddTo(this);
-            ((IPointerEvent)this).OnPointerClick.Subscribe(
-                _ =>
+                })
+                .AddTo(this);
+            ((IPointerEvent)this).OnPointerClick.Subscribe(_ =>
                 {
                     foreach (var user in users)
                     {
                         user.OnClick();
                     }
-                }
-            ).AddTo(this);
+                })
+                .AddTo(this);
         }
 
         private void InvokeSubject(PointerEventData eventData, IObserver<MouseClickSet> subject)

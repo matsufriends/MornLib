@@ -9,7 +9,7 @@ using UnityEngine.Audio;
 
 namespace MornLib.Sounds
 {
-    public abstract class BaseMornSoundManagerMono<TEnum> : SingletonMono<BaseMornSoundManagerMono<TEnum>>
+    public abstract class MornSoundManagerMonoBase<TEnum> : SingletonMono<MornSoundManagerMonoBase<TEnum>>
         where TEnum : Enum
     {
         [SerializeField] private MornSerializableDictionaryProvider<TEnum, AudioClip> _soundClipDictionaryProvider;
@@ -43,13 +43,12 @@ namespace MornLib.Sounds
             var fadeOutSource = _isPlayingBgmOnSourceA ? _bgmSourceA : _bgmSourceB;
             fadeInSource.clip = _soundClipDictionaryProvider.GetDictionary()[soundType];
             fadeInSource.Play();
-            MornTask.TransitionAsync(
-                duration, true, rate =>
+            MornTask.TransitionAsync(duration, true, rate =>
                 {
                     fadeInSource.volume = rate;
                     fadeOutSource.volume = 1 - rate;
-                }, _cachedBgmFadeTokenSource.Token
-            ).Forget();
+                }, _cachedBgmFadeTokenSource.Token)
+                .Forget();
             _isPlayingBgmOnSourceA = !_isPlayingBgmOnSourceA;
         }
 
@@ -59,7 +58,7 @@ namespace MornLib.Sounds
             _seSource.PlayOneShot(clip);
         }
 
-        public void InitSlider(BaseMornSoundSliderMono<TEnum> slider)
+        public void InitSlider(MornSoundSliderMonoBase<TEnum> slider)
         {
             var key = slider.SoundSliderType switch
             {
@@ -67,14 +66,13 @@ namespace MornLib.Sounds
                 SoundSliderType.Bgm => c_bgmVolume, _ => "",
             };
             slider.SetValue(PlayerPrefs.GetFloat(key, 1));
-            slider.OnValueChanged.Subscribe(
-                x =>
+            slider.OnValueChanged.Subscribe(x =>
                 {
                     PlayerPrefs.SetFloat(key, x);
                     _mixer.SetFloat(key, RateToDb(x));
                     PlayerPrefs.Save();
-                }
-            ).AddTo(this);
+                })
+                .AddTo(this);
         }
 
         private static float RateToDb(float rate)

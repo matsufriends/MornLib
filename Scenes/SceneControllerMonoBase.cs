@@ -5,19 +5,18 @@ using UnityEngine;
 
 namespace MornLib.Scenes
 {
-    public abstract class BaseSceneControllerMono<TEnum> : MonoBehaviour where TEnum : Enum
+    public abstract class SceneControllerMonoBase<TEnum> : MonoBehaviour where TEnum : Enum
     {
-        [SerializeField] private List<BaseSceneMono<TEnum>> _sceneList;
+        [SerializeField] private List<SceneMonoBase<TEnum>> _sceneList;
         [SerializeField] private TEnum _sceneType;
-        private readonly Dictionary<TEnum, BaseSceneMono<TEnum>> _sceneDictionary = new();
+        private readonly Dictionary<TEnum, SceneMonoBase<TEnum>> _sceneDictionary = new();
 
         private void Awake()
         {
             foreach (var scene in _sceneList)
             {
                 _sceneDictionary.Add(scene.SceneType, scene);
-                scene.OnChangeScene.Subscribe(ChangeScene)
-                    .AddTo(this);
+                scene.OnChangeScene.Subscribe(ChangeScene).AddTo(this);
             }
         }
 

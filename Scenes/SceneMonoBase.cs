@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MornLib.Scenes
 {
-    public abstract class BaseSceneMono<TEnum> : MonoBehaviour where TEnum : Enum
+    public abstract class SceneMonoBase<TEnum> : MonoBehaviour where TEnum : Enum
     {
         [SerializeField] private TEnum _sceneType;
         private readonly Subject<TEnum> _changeSceneSubject = new();

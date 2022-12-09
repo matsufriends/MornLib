@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace MornLib.Sounds
 {
     [RequireComponent(typeof(Slider))]
-    public class BaseMornSoundSliderMono<TEnum> : MonoBehaviour where TEnum : Enum
+    public class MornSoundSliderMonoBase<TEnum> : MonoBehaviour where TEnum : Enum
     {
         [SerializeField] private Slider _slider;
         [SerializeField] private SoundSliderType _soundSliderType;
@@ -15,7 +15,7 @@ namespace MornLib.Sounds
 
         private void Awake()
         {
-            BaseMornSoundManagerMono<TEnum>.Instance.InitSlider(this);
+            MornSoundManagerMonoBase<TEnum>.Instance.InitSlider(this);
         }
 
         private void Reset()

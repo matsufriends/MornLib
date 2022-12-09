@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MornLib.Pool
 {
-    public abstract class MornBaseObjectPoolMono<T> : MonoBehaviour where T : MonoBehaviour
+    public abstract class MornObjectPoolMonoBase<T> : MonoBehaviour where T : MonoBehaviour
     {
         [SerializeField] protected T _prefab;
         private MornObjectPool<T> _mornObjectPool;
