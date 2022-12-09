@@ -7,17 +7,17 @@ namespace MornLib.Scenes
     public abstract class MornSceneMonoBase<TEnum> : MonoBehaviour where TEnum : Enum
     {
         [SerializeField] private TEnum _sceneType;
-        private readonly Subject<TEnum> _changeSceneSubject = new();
+        private readonly Subject<TEnum> _loadSceneSubject = new();
         private readonly Subject<TEnum> _addSceneSubject = new();
         private readonly Subject<TEnum> _removeSceneSubject = new();
         public TEnum SceneType => _sceneType;
-        public IObservable<TEnum> OnChangeScene => _changeSceneSubject;
+        public IObservable<TEnum> OnLoadScene => _loadSceneSubject;
         public IObservable<TEnum> OnAddScene => _addSceneSubject;
         public IObservable<TEnum> OnRemoveScene => _removeSceneSubject;
 
-        protected void ChangeScene(TEnum sceneType)
+        protected void LoadScene(TEnum sceneType)
         {
-            _changeSceneSubject.OnNext(sceneType);
+            _loadSceneSubject.OnNext(sceneType);
         }
 
         protected void AddScene(TEnum sceneType)
