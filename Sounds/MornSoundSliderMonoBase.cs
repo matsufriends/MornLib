@@ -15,7 +15,7 @@ namespace MornLib.Sounds
 
         private void Awake()
         {
-            MornSoundManagerMonoBase<TEnum>.Instance.InitSlider(this);
+            MornSoundManagerMonoBase<TEnum>.Instance.RegisterSlider(this);
         }
 
         private void Reset()

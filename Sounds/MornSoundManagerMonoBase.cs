@@ -19,19 +19,24 @@ namespace MornLib.Sounds
         [SerializeField] private AudioMixer _mixer;
         private bool _isPlayingBgmOnSourceA;
         private CancellationTokenSource _cachedBgmFadeTokenSource;
-        private const string c_masterVolumeKey = "MasterVolume";
-        private const string c_seVolume = "SeVolume";
-        private const string c_bgmVolume = "BgmVolume";
-        private const float c_minDb = 30;
+        private IMornSoundSaver _soundSaver = new MornSoundSaver();
+        private const float DefaultVolume = 1;
+        private const string MasterMixerKey = "MasterVolume";
+        private const string SeMixerKey = "SeVolume";
+        private const string BGMMixerKey = "BgmVolume";
+        private const float MinDb = 30;
 
         protected override async void MyAwake()
         {
             _bgmSourceA.loop = true;
             _bgmSourceB.loop = true;
             await UniTask.Yield(PlayerLoopTiming.LastInitialization);
-            _mixer.SetFloat(c_masterVolumeKey, RateToDb(PlayerPrefs.GetFloat(c_masterVolumeKey, 1)));
-            _mixer.SetFloat(c_seVolume, RateToDb(PlayerPrefs.GetFloat(c_seVolume, 1)));
-            _mixer.SetFloat(c_bgmVolume, RateToDb(PlayerPrefs.GetFloat(c_bgmVolume, 1)));
+            var masterVolume = _soundSaver.LoadVolume(MornSoundSliderType.Master, DefaultVolume);
+            var seVolume = _soundSaver.LoadVolume(MornSoundSliderType.Se, DefaultVolume);
+            var bgmVolume = _soundSaver.LoadVolume(MornSoundSliderType.Bgm, DefaultVolume);
+            _mixer.SetFloat(MasterMixerKey, RateToDb(masterVolume));
+            _mixer.SetFloat(SeMixerKey, RateToDb(seVolume));
+            _mixer.SetFloat(BGMMixerKey, RateToDb(bgmVolume));
         }
 
         public void PlayBgm(TEnum soundType, TimeSpan duration)
@@ -58,26 +63,30 @@ namespace MornLib.Sounds
             _seSource.PlayOneShot(clip);
         }
 
-        public void InitSlider(MornSoundSliderMonoBase<TEnum> slider)
+        public void SetSoundSaver(IMornSoundSaver soundSaver)
         {
-            var key = slider.MornSoundSliderType switch
+            _soundSaver = soundSaver;
+        }
+
+        public void RegisterSlider(MornSoundSliderMonoBase<TEnum> slider)
+        {
+            var mixerKey = slider.MornSoundSliderType switch
             {
-                MornSoundSliderType.Master => c_masterVolumeKey, MornSoundSliderType.Se => c_seVolume,
-                MornSoundSliderType.Bgm => c_bgmVolume, _ => "",
+                MornSoundSliderType.Master => MasterMixerKey, MornSoundSliderType.Se => SeMixerKey,
+                MornSoundSliderType.Bgm => BGMMixerKey, _ => "",
             };
-            slider.SetValue(PlayerPrefs.GetFloat(key, 1));
+            slider.SetValue(_soundSaver.LoadVolume(slider.MornSoundSliderType, DefaultVolume));
             slider.OnValueChanged.Subscribe(x =>
                 {
-                    PlayerPrefs.SetFloat(key, x);
-                    _mixer.SetFloat(key, RateToDb(x));
-                    PlayerPrefs.Save();
+                    _soundSaver.SaveVolume(slider.MornSoundSliderType, x);
+                    _mixer.SetFloat(mixerKey, RateToDb(x));
                 })
                 .AddTo(this);
         }
 
         private static float RateToDb(float rate)
         {
-            return rate <= 0 ? -5000 : (rate - 1) * c_minDb;
+            return rate <= 0 ? -5000 : (rate - 1) * MinDb;
         }
     }
 }
