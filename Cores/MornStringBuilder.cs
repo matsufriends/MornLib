@@ -1,9 +1,9 @@
 ﻿using System.Text;
-using MornLib.Pool;
+using MornLib.Pools;
 
 namespace MornLib.Cores
 {
-    public sealed class MornStringBuilder : IPoolItem
+    public sealed class MornStringBuilder : IMornPoolItem
     {
         private readonly StringBuilder _builder = new();
         private bool _isFirst;

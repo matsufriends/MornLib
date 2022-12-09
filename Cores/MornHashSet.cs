@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using MornLib.Pool;
+using MornLib.Pools;
 
 namespace MornLib.Cores
 {
-    public class MornHashSet<T> : HashSet<T>, IPoolItem
+    public class MornHashSet<T> : HashSet<T>, IMornPoolItem
     {
-        void IPoolItem.Clear()
+        void IMornPoolItem.Clear()
         {
             Clear();
         }

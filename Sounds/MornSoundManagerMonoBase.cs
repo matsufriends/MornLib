@@ -9,7 +9,7 @@ using UnityEngine.Audio;
 
 namespace MornLib.Sounds
 {
-    public abstract class MornSoundManagerMonoBase<TEnum> : SingletonMono<MornSoundManagerMonoBase<TEnum>>
+    public abstract class MornSoundManagerMonoBase<TEnum> : MornSingletonMono<MornSoundManagerMonoBase<TEnum>>
         where TEnum : Enum
     {
         [SerializeField] private MornSerializableDictionaryProvider<TEnum, AudioClip> _soundClipDictionaryProvider;
@@ -60,10 +60,10 @@ namespace MornLib.Sounds
 
         public void InitSlider(MornSoundSliderMonoBase<TEnum> slider)
         {
-            var key = slider.SoundSliderType switch
+            var key = slider.MornSoundSliderType switch
             {
-                SoundSliderType.Master => c_masterVolumeKey, SoundSliderType.Se => c_seVolume,
-                SoundSliderType.Bgm => c_bgmVolume, _ => "",
+                MornSoundSliderType.Master => c_masterVolumeKey, MornSoundSliderType.Se => c_seVolume,
+                MornSoundSliderType.Bgm => c_bgmVolume, _ => "",
             };
             slider.SetValue(PlayerPrefs.GetFloat(key, 1));
             slider.OnValueChanged.Subscribe(x =>

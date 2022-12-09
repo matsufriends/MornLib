@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MornLib.Types
 {
-    public sealed class MornTypeManagerMono : SingletonMono<MornTypeManagerMono>
+    public sealed class MornTypeManagerMono : MornSingletonMono<MornTypeManagerMono>
     {
         private bool _isActive;
         private readonly Subject<char> _inputChar = new();

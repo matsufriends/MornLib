@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using MornLib.Pool;
+using MornLib.Pools;
 
 namespace MornLib.Cores
 {
-    public class MornQueue<T> : Queue<T>, IPoolItem
+    public class MornQueue<T> : Queue<T>, IMornPoolItem
     {
-        void IPoolItem.Clear()
+        void IMornPoolItem.Clear()
         {
             Clear();
         }

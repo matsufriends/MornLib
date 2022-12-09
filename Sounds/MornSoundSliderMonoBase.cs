@@ -9,9 +9,9 @@ namespace MornLib.Sounds
     public class MornSoundSliderMonoBase<TEnum> : MonoBehaviour where TEnum : Enum
     {
         [SerializeField] private Slider _slider;
-        [SerializeField] private SoundSliderType _soundSliderType;
+        [SerializeField] private MornSoundSliderType _mornSoundSliderType;
         public IObservable<float> OnValueChanged => _slider.OnValueChangedAsObservable();
-        public SoundSliderType SoundSliderType => _soundSliderType;
+        public MornSoundSliderType MornSoundSliderType => _mornSoundSliderType;
 
         private void Awake()
         {
