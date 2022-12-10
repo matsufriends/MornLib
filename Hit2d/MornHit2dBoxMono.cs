@@ -15,7 +15,7 @@ namespace MornLib.Hit2d
         {
             var cache = Gizmos.matrix;
             Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
-            Gizmos.DrawWireCube(Vector3.zero, _size);
+            Gizmos.DrawWireCube(Vector3.zero, new Vector3(_size.x, _size.y, 1));
             Gizmos.matrix = cache;
         }
     }

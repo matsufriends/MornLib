@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Threading;
-using Cysharp.Threading.Tasks;
-using MornLib.Cores;
 using MornLib.Singletons;
 using UniRx;
 using UnityEngine;
@@ -10,38 +9,62 @@ namespace MornLib.Frames
 {
     public class MornFrameManagerMono : MornSingletonMono<MornFrameManagerMono>
     {
+        private bool _isUpdating;
+        private float _currentFrameTime;
         private readonly Subject<Unit> _updateSubject = new();
-        private MornTaskCanceller _canceller;
-        private float _cachedUpdateTime;
-        private float _frameTime;
         public IObservable<Unit> OnUpdate => _updateSubject;
 
         protected override void MyAwake()
         {
-            _canceller = new MornTaskCanceller(gameObject);
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 9999;
         }
 
         public void StartUpdate()
         {
-            _canceller.Cancel();
-            MyUpdateAsync(_canceller.Token).Forget();
+            if (_isUpdating)
+            {
+                return;
+            }
+
+            _isUpdating = true;
+            StartCoroutine(WaitForNextFrame());
         }
 
-        private async UniTaskVoid MyUpdateAsync(CancellationToken token)
+        private void Update()
+        {
+            if (_isUpdating)
+            {
+                _updateSubject.OnNext(Unit.Default);
+            }
+        }
+
+        private IEnumerator WaitForNextFrame()
         {
             while (true)
             {
-                var current = Time.realtimeSinceStartup;
-                var frameSec = 1f / Mathf.Max(1, MornFrameSettingSo.Instance.AimFps);
-                while (_frameTime + frameSec <= current)
+                yield return new WaitForEndOfFrame();
+                _currentFrameTime += 1f / MornFrameSettingSo.Instance.AimFps;
+                var realTime = Time.realtimeSinceStartup;
+
+                //フレーム秒以上にリアルタイムが進んでいるとき、フレーム秒を補正
+                if (_currentFrameTime < realTime)
                 {
-                    _frameTime += frameSec;
-                    _updateSubject.OnNext(Unit.Default);
+                    _currentFrameTime = realTime;
                 }
 
-                await UniTask.WaitForEndOfFrame(this, token);
+                //フレーム秒まで0.01秒以上残っていれば、フレーム秒の0.01秒前までThread.Sleep
+                if (realTime + 0.01f < _currentFrameTime)
+                {
+                    var sleepTime = _currentFrameTime - realTime - 0.01f;
+                    Thread.Sleep((int)(sleepTime * 1000));
+                }
+
+                //フレーム秒まで待機(0.01秒未満)
+                while (realTime < _currentFrameTime)
+                {
+                    realTime = Time.realtimeSinceStartup;
+                }
             }
         }
     }
