@@ -49,8 +49,8 @@ namespace MornLib.Singletons
         protected abstract void MyAwake();
     }
 
-    public abstract class SingletonMono<TMono, TInterface> : MonoBehaviour
-        where TMono : SingletonMono<TMono, TInterface>, TInterface, IMornSingleton
+    public abstract class MornSingletonMono<TMono, TInterface> : MonoBehaviour
+        where TMono : MornSingletonMono<TMono, TInterface>, TInterface, IMornSingleton
     {
         private static TInterface s_instance;
 
