@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using MornLib.Cores;
 using MornLib.Singletons;
+using UniRx;
 using UnityEngine;
 
 namespace MornLib.Inputs
@@ -55,9 +57,9 @@ namespace MornLib.Inputs
         private readonly InputChecker<string> _buttonDown = new(Input.GetButtonDown);
         private readonly InputChecker<string> _button = new(Input.GetButton);
         private readonly InputChecker<string> _buttonUp = new(Input.GetButtonUp);
-        private readonly InputChecker<string> _keyDown = new(Input.GetKeyDown);
-        private readonly InputChecker<string> _key = new(Input.GetKey);
-        private readonly InputChecker<string> _keyUp = new(Input.GetKeyUp);
+        private readonly InputChecker<KeyCode> _keyDown = new(Input.GetKeyDown);
+        private readonly InputChecker<KeyCode> _key = new(Input.GetKey);
+        private readonly InputChecker<KeyCode> _keyUp = new(Input.GetKeyUp);
         private readonly InputChecker<int> _mouseUp = new(Input.GetMouseButtonUp);
         private readonly InputChecker<int> _mouse = new(Input.GetMouseButton);
         private readonly InputChecker<int> _mouseDown = new(Input.GetMouseButtonDown);
@@ -73,6 +75,7 @@ namespace MornLib.Inputs
             _mouseDown.RegisterKey(0);
             _mouseDown.RegisterKey(1);
             _mouseDown.RegisterKey(2);
+            Observable.EveryUpdate().Subscribe(_ => Update()).AddTo(MornApp.QuitDisposable);
         }
 
         private void Update()
@@ -108,7 +111,7 @@ namespace MornLib.Inputs
             _buttonDown.RegisterKey(buttonName);
         }
 
-        public void RegisterKey(string keyName)
+        public void RegisterKey(KeyCode keyName)
         {
             _keyDown.RegisterKey(keyName);
             _key.RegisterKey(keyName);
@@ -130,17 +133,17 @@ namespace MornLib.Inputs
             return _buttonDown.GetInput(buttonName);
         }
 
-        public bool GetKeyUp(string keyName)
+        public bool GetKeyUp(KeyCode keyName)
         {
             return _keyUp.GetInput(keyName);
         }
 
-        public bool GetKey(string keyName)
+        public bool GetKey(KeyCode keyName)
         {
             return _key.GetInput(keyName);
         }
 
-        public bool GetKeyDown(string keyName)
+        public bool GetKeyDown(KeyCode keyName)
         {
             return _keyDown.GetInput(keyName);
         }
