@@ -18,24 +18,20 @@ namespace MornLib.Scenes
             foreach (var scene in _sceneList)
             {
                 _sceneDictionary.Add(scene.SceneType, scene);
-                scene.OnLoadScene.Subscribe(newScene =>
-                    {
-                        while (_sceneUpdateStack.TryPop(out var sceneType))
-                        {
-                            _sceneDictionary[sceneType].OnExitScene();
-                        }
-
-                        AddScene(newScene);
-                    })
-                    .AddTo(this);
+                scene.OnLoadScene.Subscribe(LoadScene).AddTo(this);
                 scene.OnAddScene.Subscribe(AddScene).AddTo(this);
                 scene.OnRemoveScene.Subscribe(RemoveScene).AddTo(this);
             }
         }
 
-        private void Start()
+        private void LoadScene(TEnum sceneType)
         {
-            AddScene(_firstSceneType);
+            while (_sceneUpdateStack.TryPop(out var updateScene))
+            {
+                _sceneDictionary[updateScene].OnExitScene();
+            }
+
+            AddScene(sceneType);
         }
 
         private void AddScene(TEnum sceneType)
@@ -58,6 +54,11 @@ namespace MornLib.Scenes
             {
                 MornLog.Log($"{sceneType}=>AddSceneした記録が1つも存在しません。");
             }
+        }
+
+        public void LoadFirstScene()
+        {
+            LoadScene(_firstSceneType);
         }
 
         public void MyUpdate()
