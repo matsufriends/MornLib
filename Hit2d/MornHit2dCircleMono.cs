@@ -6,19 +6,14 @@ namespace MornLib.Hit2d
     {
         [SerializeField] private float _radius;
 
-        public override int Overlap(Collider2D[] other, LayerMask layerMask)
+        protected override int OverlapImpl(Collider2D[] results, LayerMask layerMask)
         {
-            return Physics2D.OverlapCircleNonAlloc(transform.position, _radius, other, layerMask);
+            return Physics2D.OverlapCircleNonAlloc(transform.position, _radius, results, layerMask);
         }
 
-#if UNITY_EDITOR
-        private void OnDrawGizmos()
+        protected override void DrawGizmosImpl()
         {
-            if (IsActive && MornHit2dSettingSo.Instance.DrawGizmos)
-            {
-                Gizmos.DrawWireSphere(transform.position, _radius);
-            }
+            Gizmos.DrawWireSphere(transform.position, _radius);
         }
-#endif
     }
 }
