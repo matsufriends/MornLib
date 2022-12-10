@@ -9,6 +9,7 @@ namespace MornLib.Physics2d
         private MornPhysics2dGlobalSettingSo _globalSetting;
         private Vector2 _vel;
         public Vector2 Vel => _vel;
+        public Vector2 Pos => transform.position;
         public MornPhysics2dLocalSettingSo LocalSetting => _localSetting;
 
         private void Awake()
