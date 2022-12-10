@@ -4,17 +4,18 @@ namespace MornLib.StatePatterns
 {
     public sealed class MornStatePattern<TInterface, TArg> where TInterface : class, IMornStatePattern<TArg>
     {
+        private readonly bool _useUnScaledTime;
         private TInterface _state;
         private float _startTime = -1;
-        private readonly bool _useUnScaledTime;
-        public bool IsFirst { get; private set; }
+        public bool IsFirst => Frame == 0;
+        public int Frame { get; private set; }
         public float PlayingTime => (_useUnScaledTime ? Time.unscaledTime : Time.time) - _startTime;
 
         public MornStatePattern(TInterface initState, bool useUnscaledTime = false)
         {
             _useUnScaledTime = useUnscaledTime;
             _state = initState;
-            IsFirst = true;
+            Frame = 0;
         }
 
         public void Handle(TArg arg)
@@ -30,20 +31,18 @@ namespace MornLib.StatePatterns
             }
 
             var newState = _state.Execute(arg);
-            IsFirst = false;
+            Frame++;
             if (newState != null && IsState((TInterface)newState) == false)
             {
-                _state = (TInterface)newState;
-                IsFirst = true;
-                _startTime = _useUnScaledTime ? Time.unscaledTime : Time.time;
+                ChangeState((TInterface)newState);
             }
         }
 
         public void ChangeState(TInterface state)
         {
             _state = state;
+            Frame = 0;
             _startTime = _useUnScaledTime ? Time.unscaledTime : Time.time;
-            IsFirst = true;
         }
 
         public bool IsState(TInterface state)

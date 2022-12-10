@@ -6,20 +6,19 @@ namespace MornLib.StatePatterns
 {
     public sealed class MornStateMachine<TEnum, TArg> where TEnum : Enum
     {
-        private readonly Dictionary<TEnum, Action<TArg>> _taskDictionary = new();
+        private readonly Dictionary<TEnum, Func<TArg, TEnum>> _taskDictionary = new();
         private float _startTime = -1;
-        private bool _isStateChanged;
         private readonly bool _useUnScaledTime;
         public TEnum CurState { get; private set; }
-        public bool IsFirst { get; private set; }
+        public bool IsFirst => Frame == 0;
+        public int Frame { get; private set; }
         public float PlayingTime => (_useUnScaledTime ? Time.unscaledTime : Time.time) - _startTime;
 
         public MornStateMachine(TEnum initType, bool useUnscaledTime = false)
         {
             _useUnScaledTime = useUnscaledTime;
             CurState = initType;
-            IsFirst = true;
-            _isStateChanged = false;
+            Frame = 0;
         }
 
         public void Handle(TArg arg)
@@ -29,26 +28,26 @@ namespace MornLib.StatePatterns
                 _startTime = _useUnScaledTime ? Time.unscaledTime : Time.time;
             }
 
-            _taskDictionary[CurState](arg);
-            if (_isStateChanged == false)
+            var newState = _taskDictionary[CurState](arg);
+            Frame++;
+            if (IsState(newState) == false)
             {
-                IsFirst = false;
+                ChangeState(newState);
             }
 
-            _isStateChanged = false;
+            Frame++;
         }
 
-        public void RegisterState(TEnum type, Action<TArg> task)
+        public void RegisterState(TEnum type, Func<TArg, TEnum> task)
         {
             _taskDictionary.Add(type, task);
         }
 
-        public void ChangeState(TEnum type)
+        private void ChangeState(TEnum type)
         {
             CurState = type;
+            Frame = 0;
             _startTime = _useUnScaledTime ? Time.unscaledTime : Time.time;
-            IsFirst = true;
-            _isStateChanged = true;
         }
 
         public bool IsState(TEnum type)
