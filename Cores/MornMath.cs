@@ -15,6 +15,17 @@ namespace MornLib.Cores
             return func(a) < func(b) ? a : b;
         }
 
+        public static double InverseLerp(double a, double b, double value)
+        {
+            var dif = b - a;
+            return (value - a) / dif;
+        }
+
+        public static double Lerp(double a, double b, double t)
+        {
+            return a + (b - a) * t;
+        }
+
         public static float LerpRadian(float a, float b, float t)
         {
             return Mathf.LerpAngle(a * Mathf.Rad2Deg, b * Mathf.Rad2Deg, t) * Mathf.Deg2Rad;
