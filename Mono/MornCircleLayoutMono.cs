@@ -20,7 +20,7 @@ namespace MornLib.Mono
             {
                 var r = _curve.Evaluate(i * 1f / count);
                 var child = transform.GetChild(i);
-                child.position =
+                child.localPosition =
                     new Vector2(Mathf.Cos(angleOffset + angle * i * r), Mathf.Sin(angleOffset + angle * i * r)) *
                     _radius;
                 child.eulerAngles = new Vector3(0, 0, _rotOffset + degree * i * r);
