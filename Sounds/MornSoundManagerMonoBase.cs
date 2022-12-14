@@ -20,7 +20,8 @@ namespace MornLib.Sounds
         private bool _isPlayingBgmOnSourceA;
         private CancellationTokenSource _cachedBgmFadeTokenSource;
         private IMornSoundSaver _soundSaver = new MornSoundSaver();
-        private const float DefaultVolume = 1;
+        public float Time => _isPlayingBgmOnSourceA ? _bgmSourceA.time : _bgmSourceB.time;
+        private const float DefaultVolume = 0.1f;
         private const string MasterMixerKey = "MasterVolume";
         private const string SeMixerKey = "SeVolume";
         private const string BGMMixerKey = "BgmVolume";
