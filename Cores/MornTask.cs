@@ -11,9 +11,15 @@ namespace MornLib.Cores
             CancellationToken token)
         {
             var time = (float)duration.TotalSeconds;
-            if (time <= 0)
+            if (time < 0)
             {
                 throw new ArgumentException("durationは0以上の値を指定して下さい。");
+            }
+
+            if (time == 0)
+            {
+                action(1);
+                return;
             }
 
             var startTime = isUnscaledTime ? Time.unscaledTime : Time.time;
