@@ -14,6 +14,7 @@ namespace MornLib.Scenes
         public IObservable<TEnum> OnLoadScene => _loadSceneSubject;
         public IObservable<TEnum> OnAddScene => _addSceneSubject;
         public IObservable<TEnum> OnRemoveScene => _removeSceneSubject;
+        public abstract void MyAwake();
 
         protected void LoadScene(TEnum sceneType)
         {

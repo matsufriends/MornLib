@@ -8,7 +8,7 @@ namespace MornLib.Scenes
 {
     public abstract class MornSceneControllerMonoBase<TEnum> : MonoBehaviour where TEnum : Enum
     {
-        [SerializeField] private List<MornSceneMonoBase<TEnum>> _sceneList;
+        [SerializeField] protected List<MornSceneMonoBase<TEnum>> _sceneList;
         [SerializeField] private TEnum _firstSceneType;
         private readonly Dictionary<TEnum, MornSceneMonoBase<TEnum>> _sceneDictionary = new();
         private readonly Stack<TEnum> _sceneUpdateStack = new();
@@ -18,6 +18,7 @@ namespace MornLib.Scenes
             foreach (var scene in _sceneList)
             {
                 _sceneDictionary.Add(scene.SceneType, scene);
+                scene.MyAwake();
                 scene.OnLoadScene.Subscribe(LoadScene).AddTo(this);
                 scene.OnAddScene.Subscribe(AddScene).AddTo(this);
                 scene.OnRemoveScene.Subscribe(RemoveScene).AddTo(this);
