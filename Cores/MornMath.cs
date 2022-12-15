@@ -31,6 +31,23 @@ namespace MornLib.Cores
             return Mathf.LerpAngle(a * Mathf.Rad2Deg, b * Mathf.Rad2Deg, t) * Mathf.Deg2Rad;
         }
 
+        public static float NormalizeDegree(float degree, float centerValue = 0)
+        {
+            degree -= centerValue;
+            degree %= 360;
+            if (180 < degree)
+            {
+                degree -= 360;
+            }
+
+            if (degree < -180)
+            {
+                degree += 360;
+            }
+
+            return degree + centerValue;
+        }
+
         public static bool IsNearZero(float a)
         {
             return Mathf.Abs(a) <= 0.0001f;
