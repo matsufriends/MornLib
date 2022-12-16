@@ -9,7 +9,7 @@ namespace MornLib.Editor
     {
         private Vector2 _scrollPos;
 
-        [MenuItem("Window/Morn/" + nameof(MornCanvasSortWindow))]
+        [MenuItem("Morn/" + nameof(MornCanvasSortWindow))]
         private static void Open()
         {
             var window = GetWindow<MornCanvasSortWindow>();
