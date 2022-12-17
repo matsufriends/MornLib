@@ -14,6 +14,7 @@ namespace MornLib.Scenes
         public IObservable<TEnum> OnLoadScene => _loadSceneSubject;
         public IObservable<TEnum> OnAddScene => _addSceneSubject;
         public IObservable<TEnum> OnRemoveScene => _removeSceneSubject;
+        protected bool ActiveSelf { get; private set; }
         public abstract void MyAwake();
 
         protected void LoadScene(TEnum sceneType)
@@ -31,8 +32,27 @@ namespace MornLib.Scenes
             _removeSceneSubject.OnNext(sceneType);
         }
 
-        public abstract void OnEnterScene();
-        public abstract void SceneUpdate();
-        public abstract void OnExitScene();
+        public void OnEnterScene()
+        {
+            ActiveSelf = true;
+            OnEnterSceneImpl();
+        }
+
+        protected abstract void OnEnterSceneImpl();
+
+        public void OnUpdateScene()
+        {
+            OnUpdateSceneImpl();
+        }
+
+        protected abstract void OnUpdateSceneImpl();
+
+        public void OnExitScene()
+        {
+            ActiveSelf = false;
+            OnExitSceneImpl();
+        }
+
+        protected abstract void OnExitSceneImpl();
     }
 }
