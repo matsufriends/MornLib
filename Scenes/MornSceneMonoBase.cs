@@ -1,4 +1,5 @@
 ﻿using System;
+using MornLib.Mono;
 using UniRx;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ namespace MornLib.Scenes
 {
     public abstract class MornSceneMonoBase<TEnum> : MonoBehaviour where TEnum : Enum
     {
+        [SerializeField] private MornCanvasGroupSetterMono _canvasGroupSetter;
+        [SerializeField] private GameObject _parent;
         [SerializeField] private TEnum _sceneType;
         private readonly Subject<TEnum> _loadSceneSubject = new();
         private readonly Subject<TEnum> _addSceneSubject = new();
@@ -35,6 +38,8 @@ namespace MornLib.Scenes
         public void OnEnterScene()
         {
             ActiveSelf = true;
+            _canvasGroupSetter?.SetActiveImmediate(true);
+            _parent?.SetActive(true);
             OnEnterSceneImpl();
         }
 
@@ -50,6 +55,8 @@ namespace MornLib.Scenes
         public void OnExitScene()
         {
             ActiveSelf = false;
+            _canvasGroupSetter?.SetActiveImmediate(false);
+            _parent?.SetActive(false);
             OnExitSceneImpl();
         }
 
