@@ -6,8 +6,8 @@ using UnityEngine;
 
 namespace MornLib.Beats
 {
-    [CreateAssetMenu(fileName = nameof(BeatMemoSo), menuName = nameof(BeatMemoSo))]
-    public sealed class BeatMemoSo : ScriptableObject
+    [CreateAssetMenu(fileName = nameof(MornBeatMemoSo), menuName = nameof(MornBeatMemoSo))]
+    public sealed class MornBeatMemoSo : ScriptableObject
     {
         [Serializable]
         private struct BpmAndTimeInfo
@@ -86,14 +86,14 @@ namespace MornLib.Beats
     }
 
 #if UNITY_EDITOR
-    [CustomEditor(typeof(BeatMemoSo))]
+    [CustomEditor(typeof(MornBeatMemoSo))]
     public class BeatMemoSoEditor : Editor
     {
-        private BeatMemoSo _beatMemo;
+        private MornBeatMemoSo _mornBeatMemo;
 
         private void OnEnable()
         {
-            _beatMemo = (BeatMemoSo)target;
+            _mornBeatMemo = (MornBeatMemoSo)target;
         }
 
         public override void OnInspectorGUI()
@@ -101,7 +101,7 @@ namespace MornLib.Beats
             DrawDefaultInspector();
             if (GUILayout.Button("MakeBeat"))
             {
-                _beatMemo.MakeBeat();
+                _mornBeatMemo.MakeBeat();
             }
         }
     }

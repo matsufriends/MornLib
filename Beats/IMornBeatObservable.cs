@@ -3,7 +3,7 @@ using UniRx;
 
 namespace MornLib.Beats
 {
-    public interface IBeatObservable
+    public interface IMornBeatObservable
     {
         IObservable<int> OnBeat { get; }
         IObservable<Unit> OnEndBeat { get; }
