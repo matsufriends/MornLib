@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MornLib.Beats
 {
-    public sealed class BeatManagerMono<TBeatEnum> : MonoBehaviour, IBeatObservable, IBeatController<TBeatEnum> where TBeatEnum : Enum
+    public abstract class BeatManagerMonoBase<TBeatEnum> : MonoBehaviour, IBeatObservable, IBeatController<TBeatEnum> where TBeatEnum : Enum
     {
         [Header("MakeBeat")] [SerializeField] private MornSerializableDictionaryProvider<TBeatEnum, BeatMemoSo> _beatDictionary;
         private int _nextBeatIndex;
