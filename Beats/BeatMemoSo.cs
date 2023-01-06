@@ -19,7 +19,8 @@ namespace MornLib.Beats
         [SerializeField] private List<float> _timingList;
         [SerializeField] private List<BpmAndTimeInfo> _bpmAndTimeInfoList;
         [SerializeField] private int _aimTimingCount = 128;
-        [SerializeField] private double _interval;
+        [SerializeField] private int _beatCount = 4;
+        [SerializeField] private double _interval = 0.000001d;
         public int Timings => _timingList.Count;
 
         public float GetBeatTiming(int index)
@@ -41,7 +42,7 @@ namespace MornLib.Beats
             while (beat <= _aimTimingCount)
             {
                 var bpm = GetBpm(time);
-                var dif = bpm / 60 * _interval;
+                var dif = bpm / 60 * _beatCount / 4 * _interval;
                 if (Math.Floor(beat) < Math.Floor(beat + dif))
                 {
                     _timingList.Add((float)time);
