@@ -32,7 +32,6 @@ namespace MornLib.Beats
             return _timingList[index];
         }
 
-        [ContextMenu("MakeBeat")]
         public void MakeBeat()
         {
             var beat = 0d;
