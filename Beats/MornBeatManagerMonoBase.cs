@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace MornLib.Beats
 {
-    public abstract class MornMornMornBeatManagerMonoBase<TBeatEnum> : MonoBehaviour, IMornBeatObservable, IMornBeatController<TBeatEnum>
+    public abstract class MornBeatManagerMonoBase<TBeatEnum> : MonoBehaviour, IMornBeatObservable, IMornBeatController<TBeatEnum>
         where TBeatEnum : Enum
     {
-        [Header("MakeBeat")] [SerializeField] private MornSerializableDictionaryProvider<TBeatEnum, MornBeatMemoSo> _beatDictionary;
+        [Header("MakeBeat"), SerializeField]  private MornSerializableDictionaryProvider<TBeatEnum, MornBeatMemoSo> _beatDictionary;
         private int _nextBeatIndex;
         private MornBeatMemoSo _memo;
         private float _lastBgmTime;
@@ -48,7 +48,7 @@ namespace MornLib.Beats
             }
         }
 
-        public void BeatStart(TBeatEnum beatType)
+        public virtual void BeatStart(TBeatEnum beatType)
         {
             _nextBeatIndex = 0;
             _memo = _beatDictionary[beatType];
