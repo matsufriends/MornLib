@@ -40,7 +40,9 @@ namespace MornLib.StatePatterns
 
         public void ChangeState(TInterface state)
         {
+            _state?.OnExit();
             _state = state;
+            _state?.OnEnter();
             Frame = 0;
             _startTime = _useUnScaledTime ? Time.unscaledTime : Time.time;
         }
