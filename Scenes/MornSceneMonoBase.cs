@@ -2,12 +2,20 @@
 using MornLib.Mono;
 using UniRx;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace MornLib.Scenes
 {
-    public abstract class MornSceneMonoBase<TEnum> : MonoBehaviour where TEnum : Enum
+    public abstract class MornSceneMonoBaseBase : MonoBehaviour
     {
-        [SerializeField] private MornCanvasGroupSetterMono _canvasGroupSetter;
+        public abstract void SetSceneActive(bool isActive);
+    }
+
+    public abstract class MornSceneMonoBase<TEnum> : MornSceneMonoBaseBase where TEnum : Enum
+    {
+        [SerializeField] private MornCanvasSetterMono _canvasSetter;
         [SerializeField] private GameObject _parent;
         [SerializeField] private TEnum _sceneType;
         private readonly Subject<TEnum> _loadSceneSubject = new();
@@ -38,7 +46,7 @@ namespace MornLib.Scenes
         public void OnEnterScene()
         {
             ActiveSelf = true;
-            _canvasGroupSetter?.SetActiveImmediate(true);
+            _canvasSetter?.SetActiveImmediate(true);
             _parent?.SetActive(true);
             OnEnterSceneImpl();
         }
@@ -55,11 +63,54 @@ namespace MornLib.Scenes
         public void OnExitScene()
         {
             ActiveSelf = false;
-            _canvasGroupSetter?.SetActiveImmediate(false);
+            _canvasSetter?.SetActiveImmediate(false);
             _parent?.SetActive(false);
             OnExitSceneImpl();
         }
 
         protected abstract void OnExitSceneImpl();
+
+        public sealed override void SetSceneActive(bool isActive)
+        {
+            if (_canvasSetter != null)
+            {
+                _canvasSetter?.SetActiveImmediate(isActive);
+            }
+
+            if (_parent != null)
+            {
+                _parent.SetActive(isActive);
+                _parent.name = $"Parent({isActive})";
+            }
+
+            gameObject.name = $"Scene{_sceneType.ToString()}({isActive})";
+        }
     }
+
+#if UNITY_EDITOR
+    [CustomEditor(typeof(MornSceneMonoBaseBase), true)]
+    public class MornSceneMonoBaseBaseEditor : Editor
+    {
+        private MornSceneMonoBaseBase _target;
+
+        public void OnEnable()
+        {
+            _target = (MornSceneMonoBaseBase)target;
+        }
+
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector();
+            if (GUILayout.Button("SetSceneActive"))
+            {
+                _target.SetSceneActive(true);
+            }
+
+            if (GUILayout.Button("SetSceneInactive"))
+            {
+                _target.SetSceneActive(false);
+            }
+        }
+    }
+#endif
 }
