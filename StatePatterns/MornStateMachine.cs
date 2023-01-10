@@ -34,8 +34,6 @@ namespace MornLib.StatePatterns
             {
                 ChangeState(newState);
             }
-
-            Frame++;
         }
 
         public void RegisterState(TEnum type, Func<TArg, TEnum> task)
@@ -43,7 +41,7 @@ namespace MornLib.StatePatterns
             _taskDictionary.Add(type, task);
         }
 
-        private void ChangeState(TEnum type)
+        public void ChangeState(TEnum type)
         {
             CurState = type;
             Frame = 0;
