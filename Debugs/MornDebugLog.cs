@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace MornLib.Debugs
 {
-    public class DebugLog : MornSingleton<DebugLog>
+    public class MornDebugLog : MornSingleton<MornDebugLog>
     {
         [Serializable]
         private struct MyStruct
@@ -37,7 +37,7 @@ namespace MornLib.Debugs
             sb.Init('\n');
             foreach (var pair in _debugDictionary)
             {
-                sb.Append($"{pair.Key,20} | {pair.Value.Time,20} | {pair.Value.Message}");
+                sb.Append($"{pair.Key,20} | {pair.Value.Message} | {pair.Value.Time,20}");
             }
 
             var result = sb.Get();

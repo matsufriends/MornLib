@@ -22,7 +22,7 @@ namespace MornLib.Editor
 
         private void OnGUI()
         {
-            var text = DebugLog.Instance.GetLog();
+            var text = MornDebugLog.Instance.GetLog();
             if (text.Length > 0)
             {
                 GUILayout.Label(text);
