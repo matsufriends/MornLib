@@ -18,9 +18,10 @@ namespace MornLib.Beats
 
         [SerializeField] private List<float> _timingList;
         [SerializeField] private List<BpmAndTimeInfo> _bpmAndTimeInfoList;
-        [SerializeField] private int _aimTimingCount = 128;
         [SerializeField] private int _beatCount = 4;
         [SerializeField] private double _interval = 0.000001d;
+        [SerializeField] private AudioClip _clip;
+        [SerializeField] private float _offset;
         public int Timings => _timingList.Count;
 
         public float GetBeatTiming(int index)
@@ -35,21 +36,35 @@ namespace MornLib.Beats
 
         public void MakeBeat()
         {
+            if (_offset < 0)
+            {
+                MornLog.Error("負数のオフセットには未対応です");
+                return;
+            }
+
             var beat = 0d;
             var time = 0d;
             _interval = Math.Max(0.000001f, _interval);
             _timingList.Clear();
-            while (beat <= _aimTimingCount)
+            _timingList.Add(_offset);
+            var length = _clip.length;
+            while (time < length)
             {
                 var bpm = GetBpm(time);
                 var dif = bpm / 60 * _beatCount / 4 * _interval;
                 if (Math.Floor(beat) < Math.Floor(beat + dif))
                 {
-                    _timingList.Add((float)time);
+                    _timingList.Add(((float)time + _offset) % length);
                 }
 
                 beat += dif;
                 time += _interval;
+            }
+
+            var remove = _timingList.Count % _beatCount;
+            for (var i = 0; i < remove; i++)
+            {
+                _timingList.RemoveAt(_timingList.Count - 1);
             }
         }
 

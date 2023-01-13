@@ -1,16 +1,19 @@
 ﻿using System;
 using MornLib.Cores;
+using MornLib.Singletons;
 using UniRx;
 using UnityEngine;
 
 namespace MornLib.Beats
 {
-    public abstract class MornBeatManagerMonoBase<TBeatEnum> : MonoBehaviour, IMornBeatObservable where TBeatEnum : Enum
+    public abstract class MornBeatManagerMonoBase<TBeatEnum> : MornSingletonMono<MornBeatManagerMonoBase<TBeatEnum>>, IMornBeatObservable
+        where TBeatEnum : Enum
     {
         [Header("MakeBeat"), SerializeField] private MornSerializableDictionaryProvider<TBeatEnum, MornBeatMemoSo> _beatDictionary;
         private int _nextBeatIndex;
         private MornBeatMemoSo _memo;
         private float _lastBgmTime;
+        private bool _waitLoop;
         private readonly Subject<int> _beatSubject = new();
         private readonly Subject<Unit> _endBeatSubject = new();
         public IObservable<int> OnBeat => _beatSubject;
@@ -27,10 +30,14 @@ namespace MornLib.Beats
                 return;
             }
 
-            if (time < _lastBgmTime)
+            if (_waitLoop)
             {
-                _nextBeatIndex = 0;
-                _beatSubject.OnNext(0);
+                if (_lastBgmTime <= time)
+                {
+                    return;
+                }
+
+                _waitLoop = false;
             }
 
             _lastBgmTime = time;
@@ -40,10 +47,13 @@ namespace MornLib.Beats
                 return;
             }
 
-            _beatSubject.OnNext(_nextBeatIndex + 1);
+            _beatSubject.OnNext(_nextBeatIndex);
+            _waitLoop = _memo.GetBeatTiming(_nextBeatIndex) > _memo.GetBeatTiming(_nextBeatIndex + 1);
             _nextBeatIndex++;
             if (_nextBeatIndex == _memo.Timings)
             {
+                _nextBeatIndex = 0;
+                _waitLoop = false;
                 _endBeatSubject.OnNext(Unit.Default);
             }
         }
@@ -54,6 +64,7 @@ namespace MornLib.Beats
         {
             _nextBeatIndex = 0;
             _memo = _beatDictionary[beatType];
+            _waitLoop = false;
         }
     }
 }
