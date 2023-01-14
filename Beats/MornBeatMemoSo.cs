@@ -23,6 +23,7 @@ namespace MornLib.Beats
         [SerializeField] private AudioClip _clip;
         [SerializeField] private float _offset;
         public int Timings => _timingList.Count;
+        public AudioClip clip => _clip;
 
         public float GetBeatTiming(int index)
         {

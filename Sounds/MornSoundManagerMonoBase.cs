@@ -9,8 +9,7 @@ using UnityEngine.Audio;
 
 namespace MornLib.Sounds
 {
-    public abstract class MornSoundManagerMonoBase<TEnum> : MornSingletonMono<MornSoundManagerMonoBase<TEnum>>
-        where TEnum : Enum
+    public abstract class MornSoundManagerMonoBase<TEnum> : MornSingletonMono<MornSoundManagerMonoBase<TEnum>> where TEnum : Enum
     {
         [SerializeField] private MornSerializableDictionaryProvider<TEnum, AudioClip> _soundClipDictionaryProvider;
         [SerializeField] private AudioSource _bgmSourceA;
@@ -42,12 +41,17 @@ namespace MornLib.Sounds
 
         public void PlayBgm(TEnum soundType, TimeSpan duration)
         {
+            PlayBgm(_soundClipDictionaryProvider.GetDictionary()[soundType], duration);
+        }
+
+        public void PlayBgm(AudioClip clip, TimeSpan duration)
+        {
             _cachedBgmFadeTokenSource?.Cancel();
             _cachedBgmFadeTokenSource?.Dispose();
             _cachedBgmFadeTokenSource = new CancellationTokenSource();
             var fadeInSource = _isPlayingBgmOnSourceA ? _bgmSourceB : _bgmSourceA;
             var fadeOutSource = _isPlayingBgmOnSourceA ? _bgmSourceA : _bgmSourceB;
-            fadeInSource.clip = _soundClipDictionaryProvider.GetDictionary()[soundType];
+            fadeInSource.clip = clip;
             fadeInSource.Play();
             MornTask.TransitionAsync(duration, true, rate =>
                 {

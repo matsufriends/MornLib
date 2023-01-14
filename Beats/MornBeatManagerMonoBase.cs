@@ -9,7 +9,7 @@ namespace MornLib.Beats
     public abstract class MornBeatManagerMonoBase<TBeatEnum> : MornSingletonMono<MornBeatManagerMonoBase<TBeatEnum>>, IMornBeatObservable
         where TBeatEnum : Enum
     {
-        [Header("MakeBeat"), SerializeField] private MornSerializableDictionaryProvider<TBeatEnum, MornBeatMemoSo> _beatDictionary;
+        [Header("MakeBeat"), SerializeField] protected MornSerializableDictionaryProvider<TBeatEnum, MornBeatMemoSo> _beatDictionary;
         private int _nextBeatIndex;
         private MornBeatMemoSo _memo;
         private float _lastBgmTime;
