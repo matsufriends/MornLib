@@ -1,4 +1,5 @@
-﻿#if USE_TEXTMESHPRO
+﻿/*
+#if USE_TEXTMESHPRO
 #if UNITY_EDITOR
 using MornLib.Extensions;
 using TMPro;
@@ -51,3 +52,4 @@ namespace MornLib.Mono
 #endif
 }
 #endif
+*/
