@@ -64,9 +64,15 @@ namespace MornLib.Scenes
 
         public void MyUpdate()
         {
-            foreach (var sceneType in _sceneUpdateStack)
+            try
             {
-                _sceneDictionary[sceneType].OnUpdateScene();
+                foreach (var sceneType in _sceneUpdateStack)
+                {
+                    _sceneDictionary[sceneType].OnUpdateScene();
+                }
+            }
+            catch
+            {
             }
         }
     }
