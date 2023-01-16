@@ -6,7 +6,7 @@ namespace MornLib.StatePatterns
 {
     public sealed class MornStateMachine<TEnum, TArg> where TEnum : Enum
     {
-        private readonly Dictionary<TEnum, Action> _enterDictionary = new();
+        private readonly Dictionary<TEnum, Action<TEnum>> _enterDictionary = new();
         private readonly Dictionary<TEnum, Func<TArg, TEnum>> _handleDictionary = new();
         private float _startTime = -1;
         private readonly bool _useUnScaledTime;
@@ -43,18 +43,19 @@ namespace MornLib.StatePatterns
             }
         }
 
-        public void RegisterState(TEnum type, Action enter, Func<TArg, TEnum> task)
+        public void RegisterState(TEnum type, Action<TEnum> enter, Func<TArg, TEnum> task)
         {
             _enterDictionary.Add(type, enter);
             _handleDictionary.Add(type, task);
         }
 
-        private void ChangeState(TEnum type)
+        public void ChangeState(TEnum type)
         {
+            var old = CurState;
             CurState = type;
             Frame = 0;
             _startTime = _useUnScaledTime ? Time.unscaledTime : Time.time;
-            _enterDictionary[CurState]();
+            _enterDictionary[CurState](old);
         }
 
         public bool IsState(TEnum type)
