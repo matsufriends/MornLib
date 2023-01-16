@@ -1,6 +1,6 @@
 ﻿namespace MornLib.Sounds
 {
-    public enum MornSoundSliderType
+    public enum MornSoundVolumeType
     {
         Master,
         Se,

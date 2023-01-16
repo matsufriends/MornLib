@@ -9,25 +9,25 @@ namespace MornLib.Sounds
         private const string SeVolumeKey = "SeVolume";
         private const string BGMVolumeKey = "BgmVolume";
 
-        public float LoadVolume(MornSoundSliderType sliderType,float defaultVolume)
+        public float LoadVolume(MornSoundVolumeType volumeType, float defaultVolume)
         {
-            return PlayerPrefs.GetFloat(MornSoundSlideTypeToKey(sliderType), defaultVolume);
+            return PlayerPrefs.GetFloat(MornSoundSlideTypeToKey(volumeType), defaultVolume);
         }
 
-        public void SaveVolume(MornSoundSliderType sliderType, float volume)
+        public void SaveVolume(MornSoundVolumeType volumeType, float volume)
         {
-            PlayerPrefs.SetFloat(MornSoundSlideTypeToKey(sliderType), volume);
+            PlayerPrefs.SetFloat(MornSoundSlideTypeToKey(volumeType), volume);
             PlayerPrefs.Save();
         }
 
-        private static string MornSoundSlideTypeToKey(MornSoundSliderType sliderType)
+        private static string MornSoundSlideTypeToKey(MornSoundVolumeType volumeType)
         {
-            return sliderType switch
+            return volumeType switch
             {
-                MornSoundSliderType.Master => MasterVolumeKey,
-                MornSoundSliderType.Se => SeVolumeKey,
-                MornSoundSliderType.Bgm => BGMVolumeKey,
-                _ => throw new ArgumentOutOfRangeException(nameof(sliderType), sliderType, null),
+                MornSoundVolumeType.Master => MasterVolumeKey,
+                MornSoundVolumeType.Se => SeVolumeKey,
+                MornSoundVolumeType.Bgm => BGMVolumeKey,
+                _ => throw new ArgumentOutOfRangeException(nameof(volumeType), volumeType, null),
             };
         }
     }

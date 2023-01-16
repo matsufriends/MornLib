@@ -2,7 +2,7 @@
 {
     public interface IMornSoundSaver
     {
-        public float LoadVolume(MornSoundSliderType sliderType, float defaultVolume);
-        public void SaveVolume(MornSoundSliderType sliderType, float volume);
+        public float LoadVolume(MornSoundVolumeType volumeType, float defaultVolume);
+        public void SaveVolume(MornSoundVolumeType volumeType, float volume);
     }
 }
