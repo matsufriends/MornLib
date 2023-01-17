@@ -53,12 +53,12 @@ namespace MornLib.Scenes
 
         protected abstract void OnEnterSceneImpl();
 
-        public void OnUpdateScene()
+        public void OnUpdateScene(bool isTopMost)
         {
-            OnUpdateSceneImpl();
+            OnUpdateSceneImpl(isTopMost);
         }
 
-        protected abstract void OnUpdateSceneImpl();
+        protected abstract void OnUpdateSceneImpl(bool isTopMost);
 
         public void OnExitScene()
         {

@@ -12,6 +12,7 @@ namespace MornLib.Scenes
         [SerializeField] private TEnum _firstSceneType;
         private readonly Dictionary<TEnum, MornSceneMonoBase<TEnum>> _sceneDictionary = new();
         private readonly Stack<TEnum> _sceneUpdateStack = new();
+        private readonly List<TEnum> _cachedUpdateList = new();
 
         private void Awake()
         {
@@ -48,7 +49,7 @@ namespace MornLib.Scenes
             {
                 if (EqualityComparer<TEnum>.Default.Equals(sceneType, lastSceneType) == false)
                 {
-                    MornLog.Log($"{sceneType}=>最新のシーン{lastSceneType}から除去してください。");
+                    MornLog.Log($"{sceneType}=>最前のシーン{lastSceneType}から除去してください。");
                 }
             }
             else
@@ -64,15 +65,11 @@ namespace MornLib.Scenes
 
         public void MyUpdate()
         {
-            try
+            _cachedUpdateList.Clear();
+            _cachedUpdateList.AddRange(_sceneUpdateStack);
+            for (var i = 0; i < _cachedUpdateList.Count; i++)
             {
-                foreach (var sceneType in _sceneUpdateStack)
-                {
-                    _sceneDictionary[sceneType].OnUpdateScene();
-                }
-            }
-            catch
-            {
+                _sceneDictionary[_cachedUpdateList[i]].OnUpdateScene(i == 0);
             }
         }
     }
