@@ -9,7 +9,7 @@ namespace MornLib.Beats
     public abstract class MornBeatManagerMonoBase<TBeatEnum> : MornSingletonMono<MornBeatManagerMonoBase<TBeatEnum>>, IMornBeatObservable
         where TBeatEnum : Enum
     {
-        [Header("MakeBeat"), SerializeField] protected MornSerializableDictionaryProvider<TBeatEnum, MornBeatMemoSo> _beatDictionary;
+        [Header("MakeBeat"), SerializeField] private MornSerializableDictionaryProvider<TBeatEnum, MornBeatMemoSo> _beatDictionary;
         private int _nextBeatIndex;
         private MornBeatMemoSo _memo;
         private float _lastBgmTime;
@@ -20,10 +20,15 @@ namespace MornLib.Beats
         public IObservable<Unit> OnEndBeat => _endBeatSubject;
 
         //次の小節までの時間
-        public float LeftTime { get; private set; }
-        public abstract void MyUpdate();
+        public float LeftMeasureTime { get; private set; }
+        protected abstract float MusicPlayingTime { get; }
 
-        protected void MyUpdateImpl(float time)
+        public void MyUpdate()
+        {
+            MyUpdateImpl(MusicPlayingTime);
+        }
+
+        private void MyUpdateImpl(float time)
         {
             if (_memo == null)
             {
@@ -41,7 +46,7 @@ namespace MornLib.Beats
             }
 
             _lastBgmTime = time;
-            LeftTime = _memo.GetBeatTiming(Mathf.FloorToInt(_nextBeatIndex / 8f) * 8 + 7) - _lastBgmTime;
+            LeftMeasureTime = _memo.GetBeatTiming(Mathf.FloorToInt(_nextBeatIndex / 8f) * 8 + 7) - _lastBgmTime;
             if (_lastBgmTime < _memo.GetBeatTiming(_nextBeatIndex))
             {
                 return;
@@ -58,13 +63,14 @@ namespace MornLib.Beats
             }
         }
 
-        public abstract void BeatStart(TBeatEnum beatType);
-
-        protected void BeatStartImpl(TBeatEnum beatType)
+        public void BeatStart(TBeatEnum beatType)
         {
             _nextBeatIndex = 0;
             _memo = _beatDictionary[beatType];
             _waitLoop = false;
+            BeatStartImpl(beatType, _memo.clip);
         }
+
+        protected abstract void BeatStartImpl(TBeatEnum beatType, AudioClip clip);
     }
 }

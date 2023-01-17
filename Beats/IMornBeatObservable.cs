@@ -7,6 +7,6 @@ namespace MornLib.Beats
     {
         IObservable<int> OnBeat { get; }
         IObservable<Unit> OnEndBeat { get; }
-        float LeftTime { get; }
+        float LeftMeasureTime { get; }
     }
 }
