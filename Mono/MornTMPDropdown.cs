@@ -1,15 +1,16 @@
-﻿/*
-#if USE_TEXTMESHPRO
-#if UNITY_EDITOR
-using MornLib.Extensions;
+﻿#if USE_TEXTMESHPRO
 using TMPro;
-using TMPro.EditorUtilities;
-using UnityEditor;
+using MornLib.Extensions;
 using UnityEngine.EventSystems;
+#endif
+#if UNITY_EDITOR && USE_TEXTMESHPRO
+using UnityEditor;
+using TMPro.EditorUtilities;
 #endif
 
 namespace MornLib.Mono
 {
+#if USE_TEXTMESHPRO
     public class MornTMPDropdown : TMP_Dropdown
     {
         public bool IsClickOnMouseRight;
@@ -34,7 +35,8 @@ namespace MornLib.Mono
             }
         }
     }
-#if UNITY_EDITOR
+#endif
+#if USE_TEXTMESHPRO && UNITY_EDITOR
     [CustomEditor(typeof(MornTMPDropdown))]
     public class MornTMPDropdownEditor : DropdownEditor
     {
@@ -42,8 +44,7 @@ namespace MornLib.Mono
         {
             var dropdown = (MornTMPDropdown)target;
             dropdown.IsClickOnMouseRight = EditorGUILayout.Toggle("IsClickOnMouseRight", dropdown.IsClickOnMouseRight);
-            dropdown.IsClickOnMouseMiddle =
-                EditorGUILayout.Toggle("IsClickOnMouseMiddle", dropdown.IsClickOnMouseMiddle);
+            dropdown.IsClickOnMouseMiddle = EditorGUILayout.Toggle("IsClickOnMouseMiddle", dropdown.IsClickOnMouseMiddle);
             dropdown.IsClickOnMouseLeft = EditorGUILayout.Toggle("IsClickOnMouseLeft", dropdown.IsClickOnMouseLeft);
             EditorGUILayout.Space();
             base.OnInspectorGUI();
@@ -51,5 +52,3 @@ namespace MornLib.Mono
     }
 #endif
 }
-#endif
-*/
