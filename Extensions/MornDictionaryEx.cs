@@ -13,7 +13,7 @@ namespace MornLib.Extensions
                 dictionary = new Dictionary<TEnum, T>();
             }
 
-            foreach (var type in MornEnum<TEnum>.Values())
+            foreach (var type in MornEnum<TEnum>.Values)
             {
                 if (dictionary.ContainsKey(type) == false)
                 {

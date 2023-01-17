@@ -5,21 +5,36 @@ namespace MornLib.Cores
 {
     public static class MornEnum<T> where T : Enum
     {
+        private static readonly Dictionary<T, string> _toStringDictionary = new();
         private static List<T> s_enumList;
-        public static int Count => Values().Count;
+        public static int Count => Values.Count;
 
-        public static IReadOnlyList<T> Values()
+        public static IReadOnlyList<T> Values
         {
-            if (s_enumList == null)
+            get
             {
-                s_enumList = new List<T>();
-                foreach (var value in Enum.GetValues(typeof(T)))
+                if (s_enumList == null)
                 {
-                    s_enumList.Add((T)value);
+                    s_enumList = new List<T>();
+                    foreach (var value in Enum.GetValues(typeof(T)))
+                    {
+                        s_enumList.Add((T)value);
+                    }
                 }
+
+                return s_enumList;
+            }
+        }
+
+        public static string MyToString(T value)
+        {
+            if (_toStringDictionary.TryGetValue(value, out var st))
+            {
+                return st;
             }
 
-            return s_enumList;
+            _toStringDictionary.Add(value, value.ToString());
+            return _toStringDictionary[value];
         }
     }
 }
