@@ -1,4 +1,4 @@
-﻿using MornLib.Cores;
+﻿using MornLib.Extensions;
 using UnityEditor;
 using UnityEngine;
 
@@ -40,12 +40,12 @@ namespace MornLib.Editor
             if ((instance.IsCutBeginningSilence || instance.IsNormalizeAmplitude) && GUILayout.Button("Generate"))
             {
                 var length = instance.ClipList.Count;
-                instance.OutputList.Clear();
+                instance.ClearOutput();
                 for (var i = 0; i < length; i++)
                 {
                     var clip = instance.ClipList[i];
                     EditorUtility.DisplayProgressBar("変換中", clip.name, i * 1f / length);
-                    instance.OutputList.Add(SaveClip(ConvertClip(clip)));
+                    instance.AddOutput(SaveClip(ConvertClip(clip)));
                 }
 
                 EditorUtility.ClearProgressBar();
@@ -77,8 +77,7 @@ namespace MornLib.Editor
         private static AudioClip CutBeginningSilence(AudioClip clip)
         {
             var instance = MornSoundProcessorSettings.instance;
-            return MornSoundProcessor.CutBeginningSilence(clip, instance.BeginningOffsetSample,
-                instance.BeginningAmplitude);
+            return MornSoundProcessor.CutBeginningSilence(clip, instance.BeginningOffsetSample, instance.BeginningAmplitude);
         }
 
         private static AudioClip CutEndingSilence(AudioClip clip)
@@ -96,23 +95,20 @@ namespace MornLib.Editor
         private static AudioClip SaveClip(AudioClip clip)
         {
             var instance = MornSoundProcessorSettings.instance;
-            string path;
-            if (instance.IsSaveInUnderAssetsFolder)
+            var dirs = instance.UnderAssetsFolderName.Split('/');
+            var combinePath = "Assets";
+            foreach (var dir in dirs)
             {
-                if (AssetDatabase.IsValidFolder($"Assets/{instance.UnderAssetsFolderName}") == false)
+                if (AssetDatabase.IsValidFolder($"{combinePath}/{dir}") == false)
                 {
-                    AssetDatabase.CreateFolder("Assets", instance.UnderAssetsFolderName);
+                    AssetDatabase.CreateFolder(combinePath, dir);
+                    Debug.Log($"フォルダー {combinePath}/{dir} を作成しました");
                 }
 
-                path = $"Assets/{instance.UnderAssetsFolderName}/{clip.name}_Converted.wav";
-            }
-            else
-            {
-                path = AssetDatabase.GetAssetPath(clip);
-                var lastIndex = path.LastIndexOf('.');
-                path = $"{path.Substring(0, lastIndex)}_Converted.wav";
+                combinePath += $"/{dir}";
             }
 
+            var path = $"Assets/{instance.UnderAssetsFolderName}/{clip.name}_Converted.wav";
             MornSoundProcessor.SaveAudioClipToWave(clip, path);
             AssetDatabase.Refresh(ImportAssetOptions.Default);
             return AssetDatabase.LoadAssetAtPath<AudioClip>(path);

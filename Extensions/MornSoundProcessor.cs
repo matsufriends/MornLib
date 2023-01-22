@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-namespace MornLib.Cores
+namespace MornLib.Extensions
 {
     public static class MornSoundProcessor
     {
@@ -21,8 +21,7 @@ namespace MornLib.Cores
                 data[i] *= rate;
             }
 
-            var normalizeClip = AudioClip.Create(clip.name, samples, channels, frequency,
-                clip.loadType == AudioClipLoadType.Streaming);
+            var normalizeClip = AudioClip.Create(clip.name, samples, channels, frequency, clip.loadType == AudioClipLoadType.Streaming);
             normalizeClip.SetData(data, 0);
             return normalizeClip;
         }
@@ -37,8 +36,7 @@ namespace MornLib.Cores
             var startIndex = GetSoundBeginningIndex(data, beginAmplitude, channels);
             startIndex = Mathf.Max(startIndex - beginOffsetSample * channels, 0);
             var newSamples = samples - startIndex / channels;
-            var cutClip = AudioClip.Create(clip.name, newSamples, channels, frequency,
-                clip.loadType == AudioClipLoadType.Streaming);
+            var cutClip = AudioClip.Create(clip.name, newSamples, channels, frequency, clip.loadType == AudioClipLoadType.Streaming);
             var cachedArray = new float[newSamples * channels];
             for (var i = 0; i < newSamples * channels; i++)
             {
@@ -59,8 +57,7 @@ namespace MornLib.Cores
             var endIndex = GetSoundEndingIndex(data, endAmplitude, channels);
             endIndex = Mathf.Min(endIndex + endOffsetSample * channels, samples * channels);
             var newSamples = endIndex / channels;
-            var cutClip = AudioClip.Create(clip.name, newSamples, channels, frequency,
-                clip.loadType == AudioClipLoadType.Streaming);
+            var cutClip = AudioClip.Create(clip.name, newSamples, channels, frequency, clip.loadType == AudioClipLoadType.Streaming);
             var cachedArray = new float[newSamples * channels];
             for (var i = 0; i < newSamples * channels; i++)
             {
@@ -108,7 +105,7 @@ namespace MornLib.Cores
             // 1~4バイト
             // 右チャンネル2バイト 左チャンネル2バイト
             //16bit：符号ビットあり 補数表現
-            //2の補数表現 反転して+1 
+            //2の補数表現 反転して+1
             //AudioClip流 -1.0 ~ 1.0
             //総データ数 ... 4byte * samples + 固定
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
