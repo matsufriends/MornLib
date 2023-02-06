@@ -22,6 +22,7 @@ namespace MornLib.Beats
         [SerializeField] private double _interval = 0.000001d;
         [SerializeField] private AudioClip _clip;
         [SerializeField] private float _offset;
+        public int BeatCount => _beatCount;
         public int Timings => _timingList.Count;
         public AudioClip clip => _clip;
 

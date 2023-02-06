@@ -14,9 +14,9 @@ namespace MornLib.Beats
         private MornBeatMemoSo _memo;
         private float _lastBgmTime;
         private bool _waitLoop;
-        private readonly Subject<int> _beatSubject = new();
+        private readonly Subject<BeatTimingInfo> _beatSubject = new();
         private readonly Subject<Unit> _endBeatSubject = new();
-        public IObservable<int> OnBeat => _beatSubject;
+        public IObservable<BeatTimingInfo> OnBeat => _beatSubject;
         public IObservable<Unit> OnEndBeat => _endBeatSubject;
 
         //次の小節までの時間
@@ -52,7 +52,7 @@ namespace MornLib.Beats
                 return;
             }
 
-            _beatSubject.OnNext(_nextBeatIndex);
+            _beatSubject.OnNext(new BeatTimingInfo(_nextBeatIndex, _memo.BeatCount));
             _waitLoop = _memo.GetBeatTiming(_nextBeatIndex) > _memo.GetBeatTiming(_nextBeatIndex + 1);
             _nextBeatIndex++;
             if (_nextBeatIndex == _memo.Timings)

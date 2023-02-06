@@ -5,7 +5,7 @@ namespace MornLib.Beats
 {
     public interface IMornBeatObservable
     {
-        IObservable<int> OnBeat { get; }
+        IObservable<BeatTimingInfo> OnBeat { get; }
         IObservable<Unit> OnEndBeat { get; }
         float LeftMeasureTime { get; }
     }
