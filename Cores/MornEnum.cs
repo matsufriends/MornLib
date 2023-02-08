@@ -26,7 +26,7 @@ namespace MornLib.Cores
             }
         }
 
-        public static string MyToString(T value)
+        public static string CachedToString(T value)
         {
             if (_toStringDictionary.TryGetValue(value, out var st))
             {
