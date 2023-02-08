@@ -7,10 +7,10 @@ using UnityEngine.InputSystem;
 namespace MornLib.Inputs
 {
     /// <summary>
-    ///     InputSystemの拡張。入力を指定時間キャッシュする。
+    ///     InputSystemの拡張。入力を指定時間キャッシュできる。
     /// </summary>
     /// <typeparam name="TActionEnum">入力を判別するenum</typeparam>
-    public sealed class MornCachedInputSystemUtil<TActionEnum> where TActionEnum : Enum
+    public sealed class MornInputSystemUtil<TActionEnum> where TActionEnum : Enum
     {
         /// <summary>
         ///     入力判定に用いるInputActionMap
@@ -23,9 +23,14 @@ namespace MornLib.Inputs
         private readonly float _keepCacheTime;
 
         /// <summary>
-        ///     入力の残り有効時間
+        ///     Button入力の残り有効時間
         /// </summary>
-        private readonly Dictionary<TActionEnum, float> _inputValidTimeDictionary = new();
+        private readonly Dictionary<TActionEnum, float> _buttonValidTimeDictionary = new();
+
+        /// <summary>
+        ///     Axis入力の残り有効時間
+        /// </summary>
+        private readonly Dictionary<TActionEnum, bool> _axisActiveDictionary = new();
 
         /// <summary>
         ///     Button入力List
@@ -42,7 +47,7 @@ namespace MornLib.Inputs
         /// </summary>
         /// <param name="actionMap">利用するInputActionMap</param>
         /// <param name="keepCacheTime">入力の有効時間</param>
-        public MornCachedInputSystemUtil(InputActionMap actionMap, float keepCacheTime)
+        public MornInputSystemUtil(InputActionMap actionMap, float keepCacheTime)
         {
             Assert.IsNotNull(actionMap);
             Assert.IsTrue(keepCacheTime >= 0);
@@ -55,45 +60,22 @@ namespace MornLib.Inputs
         /// </summary>
         /// <param name="actionEnum">登録するEnum</param>
         /// <param name="isButton">ButtonかAxisか</param>
-        public void RegisterCacheAction(TActionEnum actionEnum, bool isButton)
+        public void RegisterAction(TActionEnum actionEnum, bool isButton)
         {
             Assert.IsFalse(_buttonList.Contains(actionEnum));
             Assert.IsFalse(_axisList.Contains(actionEnum));
-            Assert.IsFalse(_inputValidTimeDictionary.ContainsKey(actionEnum));
+            Assert.IsFalse(_buttonValidTimeDictionary.ContainsKey(actionEnum));
+            Assert.IsFalse(_axisActiveDictionary.ContainsKey(actionEnum));
             if (isButton)
             {
                 _buttonList.Add(actionEnum);
+                _buttonValidTimeDictionary.Add(actionEnum, 0);
             }
             else
             {
                 _axisList.Add(actionEnum);
+                _axisActiveDictionary.Add(actionEnum, false);
             }
-
-            _inputValidTimeDictionary.Add(actionEnum, 0);
-        }
-
-        /// <summary>
-        ///     キャッシュしたAxis入力を返す
-        /// </summary>
-        /// <param name="negativeActionEnum">負値の判定をするActionEnum</param>
-        /// <param name="positiveActionEnum">正値の判定をするActionEnum</param>
-        /// <returns>{-1,0,1}のいずれかを返す</returns>
-        public float GetCachedAxisRaw(TActionEnum negativeActionEnum, TActionEnum positiveActionEnum)
-        {
-            Assert.IsTrue(_inputValidTimeDictionary.ContainsKey(negativeActionEnum));
-            Assert.IsTrue(_inputValidTimeDictionary.ContainsKey(positiveActionEnum));
-            var hor = 0;
-            if (_inputValidTimeDictionary[negativeActionEnum] > 0)
-            {
-                hor--;
-            }
-
-            if (_inputValidTimeDictionary[positiveActionEnum] > 0)
-            {
-                hor++;
-            }
-
-            return hor;
         }
 
         /// <summary>
@@ -104,12 +86,12 @@ namespace MornLib.Inputs
         /// <returns>Button入力の有無</returns>
         public bool GetCachedButton(TActionEnum actionEnum, bool disposeCacheIfUseCache = true)
         {
-            Assert.IsTrue(_inputValidTimeDictionary.ContainsKey(actionEnum));
-            if (_inputValidTimeDictionary[actionEnum] > 0)
+            Assert.IsTrue(_buttonValidTimeDictionary.ContainsKey(actionEnum));
+            if (_buttonValidTimeDictionary[actionEnum] > 0)
             {
                 if (disposeCacheIfUseCache)
                 {
-                    _inputValidTimeDictionary[actionEnum] = 0;
+                    _buttonValidTimeDictionary[actionEnum] = 0;
                 }
 
                 return true;
@@ -119,31 +101,55 @@ namespace MornLib.Inputs
         }
 
         /// <summary>
-        ///     キャッシュを更新する
+        ///     キャッシュしたAxis入力を返す
+        /// </summary>
+        /// <param name="negativeActionEnum">負値の判定をするActionEnum</param>
+        /// <param name="positiveActionEnum">正値の判定をするActionEnum</param>
+        /// <returns>{-1,0,1}のいずれかを返す</returns>
+        public float GetAxisRaw(TActionEnum negativeActionEnum, TActionEnum positiveActionEnum)
+        {
+            Assert.IsTrue(_axisActiveDictionary.ContainsKey(negativeActionEnum));
+            Assert.IsTrue(_axisActiveDictionary.ContainsKey(positiveActionEnum));
+            var hor = 0;
+            if (_axisActiveDictionary[negativeActionEnum])
+            {
+                hor--;
+            }
+
+            if (_axisActiveDictionary[positiveActionEnum])
+            {
+                hor++;
+            }
+
+            return hor;
+        }
+
+        /// <summary>
+        ///     入力を更新する
         /// </summary>
         /// <param name="deltaTime">キャッシュ更新に用いるdeltaTime</param>
-        public void UpdateCache(float deltaTime)
+        public void UpdateInput(float deltaTime)
         {
             Assert.IsTrue(deltaTime >= 0);
             foreach (var buttonEnum in _buttonList)
             {
-                Assert.IsTrue(_inputValidTimeDictionary.ContainsKey(buttonEnum));
+                Assert.IsTrue(_buttonValidTimeDictionary.ContainsKey(buttonEnum));
                 var name = MornEnum<TActionEnum>.CachedToString(buttonEnum);
                 if (_actionMap[name].WasPressedThisFrame())
                 {
-                    _inputValidTimeDictionary[buttonEnum] = _keepCacheTime;
+                    _buttonValidTimeDictionary[buttonEnum] = _keepCacheTime;
                 }
                 else
                 {
-                    _inputValidTimeDictionary[buttonEnum] -= deltaTime;
+                    _buttonValidTimeDictionary[buttonEnum] -= deltaTime;
                 }
             }
 
             foreach (var axisEnum in _axisList)
             {
-                Assert.IsTrue(_inputValidTimeDictionary.ContainsKey(axisEnum));
+                Assert.IsTrue(_axisActiveDictionary.ContainsKey(axisEnum));
                 var name = MornEnum<TActionEnum>.CachedToString(axisEnum);
-                _inputValidTimeDictionary[axisEnum] = _actionMap[name].IsPressed() ? 1 : 0;
+                _axisActiveDictionary[axisEnum] = _actionMap[name].IsPressed();
             }
         }
     }
