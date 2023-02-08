@@ -10,7 +10,7 @@ namespace MornLib.Inputs
     ///     InputSystemの拡張。入力を指定時間キャッシュできる。
     /// </summary>
     /// <typeparam name="TActionEnum">入力を判別するenum</typeparam>
-    public sealed class MornInputSystemUtil<TActionEnum> where TActionEnum : Enum
+    public sealed class MornInputSystemUtil<TActionEnum> : IUseMornInputSystemUtil<TActionEnum> where TActionEnum : Enum
     {
         /// <summary>
         ///     入力判定に用いるInputActionMap
@@ -78,12 +78,7 @@ namespace MornLib.Inputs
             }
         }
 
-        /// <summary>
-        ///     キャッシュしたButton入力を返す
-        /// </summary>
-        /// <param name="actionEnum">取得するキャッシュのActionEnum</param>
-        /// <param name="disposeCacheIfUseCache">キャッシュ利用時、キャッシュを破棄するか</param>
-        /// <returns>Button入力の有無</returns>
+        /// <inheritdoc />
         public bool GetCachedButton(TActionEnum actionEnum, bool disposeCacheIfUseCache = true)
         {
             Assert.IsTrue(_buttonValidTimeDictionary.ContainsKey(actionEnum));
@@ -100,12 +95,7 @@ namespace MornLib.Inputs
             return false;
         }
 
-        /// <summary>
-        ///     キャッシュしたAxis入力を返す
-        /// </summary>
-        /// <param name="negativeActionEnum">負値の判定をするActionEnum</param>
-        /// <param name="positiveActionEnum">正値の判定をするActionEnum</param>
-        /// <returns>{-1,0,1}のいずれかを返す</returns>
+        /// <inheritdoc />
         public float GetAxisRaw(TActionEnum negativeActionEnum, TActionEnum positiveActionEnum)
         {
             Assert.IsTrue(_axisActiveDictionary.ContainsKey(negativeActionEnum));
@@ -124,10 +114,7 @@ namespace MornLib.Inputs
             return hor;
         }
 
-        /// <summary>
-        ///     入力を更新する
-        /// </summary>
-        /// <param name="deltaTime">キャッシュ更新に用いるdeltaTime</param>
+        /// <inheritdoc />
         public void UpdateInput(float deltaTime)
         {
             Assert.IsTrue(deltaTime >= 0);
