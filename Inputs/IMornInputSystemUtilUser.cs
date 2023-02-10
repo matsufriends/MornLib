@@ -2,7 +2,11 @@
 
 namespace MornLib.Inputs
 {
-    public interface IUseMornInputSystemUtil<in TActionEnum> where TActionEnum : Enum
+    /// <summary>
+    ///     MornInputSystemUtilから入力を取得するInterface
+    /// </summary>
+    /// <typeparam name="TActionEnum">入力を判別するenum</typeparam>
+    public interface IMornInputSystemUtilUser<in TActionEnum> where TActionEnum : Enum
     {
         /// <summary>
         ///     キャッシュしたAxis入力を返す
