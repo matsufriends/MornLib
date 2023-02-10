@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using MornLib.Cores;
 using UnityEngine.Assertions;
-using UnityEngine.InputSystem;
 
 namespace MornLib.Inputs
 {
@@ -10,17 +9,12 @@ namespace MornLib.Inputs
     ///     InputSystemの拡張。入力を指定時間キャッシュできる。
     /// </summary>
     /// <typeparam name="TActionEnum">入力を判別するenum</typeparam>
-    public sealed class MornInputSystemUtil<TActionEnum> : IUseMornInputSystemUtil<TActionEnum> where TActionEnum : Enum
+    public sealed class MornInputSystemUtil<TActionEnum> : IMornInputSystemUtilUser<TActionEnum> where TActionEnum : Enum
     {
         /// <summary>
-        ///     入力判定に用いるInputActionMap
+        ///     初期化時に受け取る設定データ
         /// </summary>
-        private readonly InputActionMap _actionMap;
-
-        /// <summary>
-        ///     入力をキャッシュする時間
-        /// </summary>
-        private readonly float _keepCacheTime;
+        private readonly MornInputSystemUtilSettings _settings;
 
         /// <summary>
         ///     Button入力の残り有効時間
@@ -45,14 +39,10 @@ namespace MornLib.Inputs
         /// <summary>
         ///     コンストラクタ
         /// </summary>
-        /// <param name="actionMap">利用するInputActionMap</param>
-        /// <param name="keepCacheTime">入力の有効時間</param>
-        public MornInputSystemUtil(InputActionMap actionMap, float keepCacheTime)
+        /// <param name="settings">設定データ</param>
+        public MornInputSystemUtil(MornInputSystemUtilSettings settings)
         {
-            Assert.IsNotNull(actionMap);
-            Assert.IsTrue(keepCacheTime >= 0);
-            _actionMap = actionMap;
-            _keepCacheTime = keepCacheTime;
+            _settings = settings;
         }
 
         /// <summary>
@@ -122,9 +112,9 @@ namespace MornLib.Inputs
             {
                 Assert.IsTrue(_buttonValidTimeDictionary.ContainsKey(buttonEnum));
                 var name = MornEnum<TActionEnum>.CachedToString(buttonEnum);
-                if (_actionMap[name].WasPressedThisFrame())
+                if (_settings.InputActionMap[name].WasPressedThisFrame())
                 {
-                    _buttonValidTimeDictionary[buttonEnum] = _keepCacheTime;
+                    _buttonValidTimeDictionary[buttonEnum] = _settings.KeepCacheTime;
                 }
                 else
                 {
@@ -136,7 +126,7 @@ namespace MornLib.Inputs
             {
                 Assert.IsTrue(_axisActiveDictionary.ContainsKey(axisEnum));
                 var name = MornEnum<TActionEnum>.CachedToString(axisEnum);
-                _axisActiveDictionary[axisEnum] = _actionMap[name].IsPressed();
+                _axisActiveDictionary[axisEnum] = _settings.InputActionMap[name].IsPressed();
             }
         }
     }
