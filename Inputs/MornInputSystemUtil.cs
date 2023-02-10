@@ -102,7 +102,11 @@ namespace MornLib.Inputs
             return hor;
         }
 
-        void IMornInputSystemUtilUser<TActionEnum>.UpdateInput(float deltaTime)
+        /// <summary>
+        ///     入力を更新する
+        /// </summary>
+        /// <param name="deltaTime">キャッシュ更新に用いるdeltaTime</param>
+        public void UpdateInput(float deltaTime)
         {
             Assert.IsTrue(deltaTime >= 0);
             foreach (var buttonEnum in _buttonList)

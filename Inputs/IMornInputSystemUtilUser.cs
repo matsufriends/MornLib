@@ -23,11 +23,5 @@ namespace MornLib.Inputs
         /// <param name="disposeCacheIfUseCache">キャッシュ利用時、キャッシュを破棄するか</param>
         /// <returns>Button入力の有無</returns>
         bool GetCachedButton(TActionEnum actionEnum, bool disposeCacheIfUseCache = true);
-
-        /// <summary>
-        ///     入力を更新する
-        /// </summary>
-        /// <param name="deltaTime">キャッシュ更新に用いるdeltaTime</param>
-        void UpdateInput(float deltaTime);
     }
 }
