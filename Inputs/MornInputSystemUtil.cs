@@ -68,8 +68,7 @@ namespace MornLib.Inputs
             }
         }
 
-        /// <inheritdoc />
-        public bool GetCachedButton(TActionEnum actionEnum, bool disposeCacheIfUseCache = true)
+        bool IMornInputSystemUtilUser<TActionEnum>.GetCachedButton(TActionEnum actionEnum, bool disposeCacheIfUseCache = true)
         {
             Assert.IsTrue(_buttonValidTimeDictionary.ContainsKey(actionEnum));
             if (_buttonValidTimeDictionary[actionEnum] > 0)
@@ -85,8 +84,7 @@ namespace MornLib.Inputs
             return false;
         }
 
-        /// <inheritdoc />
-        public float GetAxisRaw(TActionEnum negativeActionEnum, TActionEnum positiveActionEnum)
+        float IMornInputSystemUtilUser<TActionEnum>.GetAxisRaw(TActionEnum negativeActionEnum, TActionEnum positiveActionEnum)
         {
             Assert.IsTrue(_axisActiveDictionary.ContainsKey(negativeActionEnum));
             Assert.IsTrue(_axisActiveDictionary.ContainsKey(positiveActionEnum));
@@ -104,8 +102,7 @@ namespace MornLib.Inputs
             return hor;
         }
 
-        /// <inheritdoc />
-        public void UpdateInput(float deltaTime)
+        void IMornInputSystemUtilUser<TActionEnum>.UpdateInput(float deltaTime)
         {
             Assert.IsTrue(deltaTime >= 0);
             foreach (var buttonEnum in _buttonList)
