@@ -2,6 +2,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using MornLib.Cores;
+using MornLib.Extensions;
 using MornLib.Singletons;
 using UniRx;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace MornLib.Sounds
 {
     public abstract class MornSoundManagerMonoBase<TEnum> : MornSingletonMono<MornSoundManagerMonoBase<TEnum>> where TEnum : Enum
     {
-        [SerializeField] private MornSerializableDictionaryProvider<TEnum, AudioClip> _soundClipDictionaryProvider;
+        [SerializeField] private MornSerializableDictionaryProvider<TEnum, AudioClip[]> _soundClipDictionaryProvider;
         [SerializeField] private AudioSource _bgmSourceA;
         [SerializeField] private AudioSource _bgmSourceB;
         [SerializeField] private AudioSource _seSource;
@@ -41,7 +42,7 @@ namespace MornLib.Sounds
 
         public void PlayBgm(TEnum soundType, TimeSpan duration)
         {
-            PlayBgm(_soundClipDictionaryProvider.GetDictionary()[soundType], duration);
+            PlayBgm(_soundClipDictionaryProvider.GetDictionary()[soundType].GetRandomValue(), duration);
         }
 
         public void PlayBgm(AudioClip clip, TimeSpan duration)
@@ -64,7 +65,7 @@ namespace MornLib.Sounds
 
         public void PlaySe(TEnum soundType)
         {
-            var clip = _soundClipDictionaryProvider.GetDictionary()[soundType];
+            var clip = _soundClipDictionaryProvider.GetDictionary()[soundType].GetRandomValue();
             _seSource.PlayOneShot(clip);
         }
 
