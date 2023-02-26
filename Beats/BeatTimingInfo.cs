@@ -41,7 +41,7 @@
         /// </summary>
         /// <param name="tick">チック</param>
         /// <returns>作成したインスタンス</returns>
-        public BeatTimingInfo CloneWithTickOverride(int tick)
+        public BeatTimingInfo CloneWithOverridingTick(int tick)
         {
             return new BeatTimingInfo(tick, TickCountPerMeasure);
         }
