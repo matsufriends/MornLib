@@ -10,7 +10,7 @@ namespace MornLib.Extensions
             return Array.IndexOf(array, value) >= 0;
         }
 
-        public static T RandomValue<T>(this T[] array)
+        public static T GetRandomValue<T>(this T[] array)
         {
             return array[Random.Range(0, array.Length)];
         }
