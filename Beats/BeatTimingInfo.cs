@@ -58,6 +58,25 @@
         }
 
         /// <summary>
+        ///     <paramref name="beat" />ビートで何拍目か返す
+        /// </summary>
+        /// <param name="beat">1小節に何拍あるか</param>
+        /// <param name="offsetTick">オフセットチック</param>
+        /// <returns>
+        ///     拍に丁度合うときは何拍目か返す
+        ///     拍に合わないときは-1を返す
+        /// </returns>
+        public int GetBeatCountBySpecificBeat(int beat, int offsetTick = 0)
+        {
+            if ((_currentTick + offsetTick) % (TickCountPerMeasure / beat) != 0)
+            {
+                return -1;
+            }
+
+            return (_currentTick + offsetTick) / (TickCountPerMeasure / beat);
+        }
+
+        /// <summary>
         ///     <paramref name="beat" />ビートの<paramref name="numerator" />拍目に合うかどうか
         /// </summary>
         /// <param name="numerator">特定の拍目</param>
