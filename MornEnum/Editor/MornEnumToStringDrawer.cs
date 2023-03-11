@@ -5,27 +5,37 @@ using UnityEngine;
 
 namespace MornEnum.Editor
 {
+    /// <summary><see cref="MornEnumToStringAttribute"/>を表示するEditor拡張</summary>
     [CustomPropertyDrawer(typeof(MornEnumToStringAttribute))]
-    public class MornEnumToStringDrawer : PropertyDrawer
+    public sealed class MornEnumToStringDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            if (property.propertyType == SerializedPropertyType.String)
+            var enumType = ((MornEnumToStringAttribute)attribute).EnumType;
+            if (enumType == null || enumType.IsEnum == false)
             {
-                var enumType = ((MornEnumToStringAttribute)attribute).EnumType;
-                Enum cur;
-                if (Enum.IsDefined(enumType, property.stringValue))
-                {
-                    cur = (Enum)Enum.Parse(enumType, property.stringValue);
-                }
-                else
-                {
-                    cur = (Enum)Activator.CreateInstance(enumType);
-                }
-
-                var value = EditorGUI.EnumPopup(position, label, cur);
-                property.stringValue = value.ToString();
+                EditorGUI.HelpBox(position, $"Attribute argument must be enum: {enumType}", MessageType.Error);
+                return;
             }
+
+            if (property.propertyType != SerializedPropertyType.String)
+            {
+                EditorGUI.HelpBox(position, $"Property type must be string: {property.propertyType}", MessageType.Error);
+                return;
+            }
+
+            Enum selected;
+            if (Enum.IsDefined(enumType, property.stringValue))
+            {
+                selected = (Enum)Enum.Parse(enumType, property.stringValue);
+            }
+            else
+            {
+                selected = (Enum)Activator.CreateInstance(enumType);
+            }
+
+            var value = EditorGUI.EnumPopup(position, label, selected);
+            property.stringValue = value.ToString();
         }
     }
 }

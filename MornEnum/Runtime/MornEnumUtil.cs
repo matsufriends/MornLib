@@ -3,12 +3,20 @@ using System.Collections.Generic;
 
 namespace MornEnum.Runtime
 {
+    /// <summary>enumに関するUtility</summary>
+    /// <typeparam name="T">enum</typeparam>
     public static class MornEnumUtil<T> where T : Enum
     {
-        private static readonly Dictionary<T, string> s_ToStringDictionary = new();
+        /// <summary>enumの全要素リスト</summary>
         private static List<T> s_enumList;
+
+        /// <summary>enumをstring化した結果を保存するDictionary</summary>
+        private static readonly Dictionary<T, string> s_toStringDictionary = new();
+
+        /// <summary>enumの全項目数</summary>
         public static int Count => Values.Count;
 
+        /// <summary>全項目を含むIReadOnlyListを返す</summary>
         public static IReadOnlyList<T> Values
         {
             get
@@ -28,15 +36,18 @@ namespace MornEnum.Runtime
             }
         }
 
+        /// <summary>ToStringの結果をキャッシュして返す</summary>
+        /// <param name="value">enum</param>
+        /// <returns>文字列</returns>
         public static string CachedToString(T value)
         {
-            if (s_ToStringDictionary.TryGetValue(value, out var st))
+            if (s_toStringDictionary.TryGetValue(value, out var st))
             {
                 return st;
             }
 
-            s_ToStringDictionary.Add(value, value.ToString());
-            return s_ToStringDictionary[value];
+            s_toStringDictionary.Add(value, value.ToString());
+            return s_toStringDictionary[value];
         }
     }
 }
