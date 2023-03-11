@@ -9,4 +9,4 @@
 - `enum`を`string`でシリアライズする`[MornEnumToString]`の追加
 - `enum`の全要素列挙や`ToString`結果をキャッシュする`MornEnumUtil`
 
-[MornEnumドキュメント](README_MornEnum.md)
+[MornEnumドキュメント](MornEnum/README_MornEnum.md)
