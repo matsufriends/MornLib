@@ -19,7 +19,10 @@
 ### 使い方
 ```
 //enumを文字列でシリアライズする
-[MornEnumToString(typeof(HogeType))] private string hoge;
+[SerializeField, MornEnumToString(typeof(HogeType))] private string hoge;
+
+//enumの要素数を取得する
+MornEnumUtil<HogeType>.Count;
 
 //enumの全要素を取得する
 MornEnumUtil<HogeType>.Values;
