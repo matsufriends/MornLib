@@ -1,9 +1,9 @@
 ﻿using System;
-using MornLib.Attribute;
+using MornEnum.Runtime;
 using UnityEditor;
 using UnityEngine;
 
-namespace MornLib.Editor
+namespace MornEnum.Editor
 {
     [CustomPropertyDrawer(typeof(MornEnumToStringAttribute))]
     public class MornEnumToStringDrawer : PropertyDrawer

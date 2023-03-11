@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace MornLib.Attribute
+namespace MornEnum.Runtime
 {
     public sealed class MornEnumToStringAttribute : PropertyAttribute
     {

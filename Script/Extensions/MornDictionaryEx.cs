@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MornLib.Cores;
+using MornEnum.Runtime;
 
 namespace MornLib.Extensions
 {
@@ -13,7 +13,7 @@ namespace MornLib.Extensions
                 dictionary = new Dictionary<TEnum, T>();
             }
 
-            foreach (var type in MornEnum<TEnum>.Values)
+            foreach (var type in MornEnumUtil<TEnum>.Values)
             {
                 if (dictionary.ContainsKey(type) == false)
                 {

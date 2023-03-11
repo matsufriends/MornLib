@@ -1,53 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using MornLib.Cores;
+using MornEnum.Runtime;
 using UnityEngine.Assertions;
 
 namespace MornLib.Inputs
 {
-    /// <summary>
-    ///     InputSystemの拡張。入力を指定時間キャッシュできる。
-    /// </summary>
+    /// <summary>InputSystemの拡張。入力を指定時間キャッシュできる。</summary>
     /// <typeparam name="TActionEnum">入力を判別するenum</typeparam>
     public sealed class MornInputSystemUtil<TActionEnum> : IMornInputSystemUtilUser<TActionEnum> where TActionEnum : Enum
     {
-        /// <summary>
-        ///     初期化時に受け取る設定データ
-        /// </summary>
+        /// <summary>初期化時に受け取る設定データ</summary>
         private readonly MornInputSystemUtilSettings _settings;
 
-        /// <summary>
-        ///     Button入力の残り有効時間
-        /// </summary>
+        /// <summary>Button入力の残り有効時間</summary>
         private readonly Dictionary<TActionEnum, float> _buttonValidTimeDictionary = new();
 
-        /// <summary>
-        ///     Axis入力の残り有効時間
-        /// </summary>
+        /// <summary>Axis入力の残り有効時間</summary>
         private readonly Dictionary<TActionEnum, bool> _axisActiveDictionary = new();
 
-        /// <summary>
-        ///     Button入力List
-        /// </summary>
+        /// <summary>Button入力List</summary>
         private readonly List<TActionEnum> _buttonList = new();
 
-        /// <summary>
-        ///     Axis入力List
-        /// </summary>
+        /// <summary>Axis入力List</summary>
         private readonly List<TActionEnum> _axisList = new();
 
-        /// <summary>
-        ///     コンストラクタ
-        /// </summary>
+        /// <summary>コンストラクタ</summary>
         /// <param name="settings">設定データ</param>
         public MornInputSystemUtil(MornInputSystemUtilSettings settings)
         {
             _settings = settings;
         }
 
-        /// <summary>
-        ///     キャッシュするActionをEnumで指定
-        /// </summary>
+        /// <summary>キャッシュするActionをEnumで指定</summary>
         /// <param name="actionEnum">登録するEnum</param>
         /// <param name="isButton">ButtonかAxisか</param>
         public void RegisterAction(TActionEnum actionEnum, bool isButton)
@@ -102,9 +86,7 @@ namespace MornLib.Inputs
             return hor;
         }
 
-        /// <summary>
-        ///     入力を更新する
-        /// </summary>
+        /// <summary>入力を更新する</summary>
         /// <param name="deltaTime">キャッシュ更新に用いるdeltaTime</param>
         public void UpdateInput(float deltaTime)
         {
@@ -112,7 +94,7 @@ namespace MornLib.Inputs
             foreach (var buttonEnum in _buttonList)
             {
                 Assert.IsTrue(_buttonValidTimeDictionary.ContainsKey(buttonEnum));
-                var name = MornEnum<TActionEnum>.CachedToString(buttonEnum);
+                var name = MornEnumUtil<TActionEnum>.CachedToString(buttonEnum);
                 if (_settings.InputActionMap[name].WasPressedThisFrame())
                 {
                     _buttonValidTimeDictionary[buttonEnum] = _settings.KeepCacheTime;
@@ -126,7 +108,7 @@ namespace MornLib.Inputs
             foreach (var axisEnum in _axisList)
             {
                 Assert.IsTrue(_axisActiveDictionary.ContainsKey(axisEnum));
-                var name = MornEnum<TActionEnum>.CachedToString(axisEnum);
+                var name = MornEnumUtil<TActionEnum>.CachedToString(axisEnum);
                 _axisActiveDictionary[axisEnum] = _settings.InputActionMap[name].IsPressed();
             }
         }
