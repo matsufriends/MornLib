@@ -1,32 +1,12 @@
-# README ... 準備中
+# README
+
+現在準備中です。
+
+以下、随時執筆中。
 
 ## MornEnum
-### 概要
 `enum`に関する機能を提供します
 - `enum`を`string`でシリアライズする`[MornEnumToString]`の追加
 - `enum`の全要素列挙や`ToString`結果をキャッシュする`MornEnumUtil`
 
-### 導入
-
-- `PackageManager`の "Add package from git URL... " で以下のURLを入力
-    - https://github.com/matsufriends/MornLib.git?path=MornEnum
-
-- `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記
-```
-"com.matsufriends.mornenum": "https://github.com/matsufriends/MornLib.git?path=MornEnum",
-```
-
-### 使い方
-```
-//enumを文字列でシリアライズする
-[SerializeField, MornEnumToString(typeof(HogeType))] private string hoge;
-
-//enumの要素数を取得する
-MornEnumUtil<HogeType>.Count;
-
-//enumの全要素を取得する
-MornEnumUtil<HogeType>.Values;
-
-//ToString結果をキャッシュし、Boxingを抑える
-MornEnumUtil<HogeType>.CachedToString(HogeType.A);
-```
+[MornEnumドキュメント](README_MornEnum.md)
