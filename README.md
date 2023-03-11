@@ -6,7 +6,7 @@
 
 ## MornEnum
 `enum`に関する機能を提供します
-- `enum`を`string`でシリアライズする`[MornEnumToString]`の追加
-- `enum`の全要素列挙や`ToString`結果をキャッシュする`MornEnumUtil`
-
+```
+"com.matsufriends.mornenum": "https://github.com/matsufriends/MornLib.git?path=MornEnum",
+```
 [MornEnumドキュメント](MornEnum/README_MornEnum.md)
