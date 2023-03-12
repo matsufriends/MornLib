@@ -1,15 +1,15 @@
 # MornEnum
 ## 概要
-`enum`に関する機能を提供します
-- `enum`を`string`でシリアライズする`[MornEnumToString]`
-- `enum`の全要素取得や`ToString`結果のキャッシュなどの機能を提供する`MornEnumUtil`
+`enum`に関する機能を提供します。
+- `enum`を`string`でシリアライズする`Attribute`
+- `enum`の全要素取得や`ToString`結果のキャッシュ機能。
 
 ## 導入
 
-- `PackageManager`の "Add package from git URL... " で以下のURLを入力
+- `PackageManager`の "Add package from git URL... " で以下のURLを入力。
     - https://github.com/matsufriends/MornLib.git?path=MornEnum
 
-- `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記
+- `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記。
 ```
 "com.matsufriends.mornenum": "https://github.com/matsufriends/MornLib.git?path=MornEnum",
 ```
