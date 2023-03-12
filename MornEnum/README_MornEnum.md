@@ -1,8 +1,8 @@
 # MornEnum
 ## 概要
 `enum`に関する機能を提供します。
-- `enum`を`string`でシリアライズする`Attribute`
-- `enum`の全要素取得や`ToString`結果のキャッシュ機能。
+- `enum`を`string`でシリアライズする`Attribute`の追加。
+- `enum`の全要素取得や`ToString`結果をキャッシュする`Generic`クラス。
 
 ## 導入
 
