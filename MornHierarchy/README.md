@@ -33,5 +33,5 @@
 ---
 
 `Preferences/MornHierarchy`より、下記の設定を変更可能です。
-- 背景色の透明度 (default: 0.3f)
-- Tagを表示するか (default: false)
+- 背景色の透明度 (`default: 0.3f`)
+- Tagを表示するか (`default: false`)
