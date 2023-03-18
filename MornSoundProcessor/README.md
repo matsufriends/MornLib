@@ -2,7 +2,7 @@
 
 ## 概要
 
-`AudioClip`に関する機能を提供します。
+`AudioClip`に関する機能を提供します
 
 - `AudioClip`の最初の無音区間を削除する
 - `AudioClip`の最後の無音区間を削除する
@@ -10,10 +10,10 @@
 
 ## 導入
 
-- `PackageManager`の "Add package from git URL... " で以下のURLを入力。
+- `PackageManager`の "Add package from git URL... " で以下のURLを入力
     - https://github.com/matsufriends/MornLib.git?path=MornSoundProcessor
 
-- `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記。
+- `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記
 
 ```
 "com.matsufriends.mornsoundprocessor": "https://github.com/matsufriends/MornLib.git?path=MornSoundProcessor",
@@ -21,7 +21,7 @@
 
 ## 使い方
 
-ツールバーの`Morn/MornSoundProcessor`よりウィンドウを開く。
+ツールバーの`Morn/MornSoundProcessor`よりウィンドウを開く
 
 ### Input
 
