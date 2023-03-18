@@ -1,0 +1,8 @@
+﻿{
+  "name": "com.matsufriends.mornsoundprocessor",
+  "displayName": "Morn Sound Processor",
+  "version": "1.0.0",
+  "unity": "2021.3",
+  "description": "AudioClip Extension for Unity.",
+  "license": "Unlicense"
+}

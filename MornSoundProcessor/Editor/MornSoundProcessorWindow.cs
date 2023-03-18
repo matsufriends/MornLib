@@ -1,14 +1,13 @@
-﻿using MornLib.Extensions;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-namespace MornLib.Editor
+namespace MornSoundProcessor
 {
-    public sealed class MornSoundProcessorWindow : EditorWindow
+    internal sealed class MornSoundProcessorWindow : EditorWindow
     {
-        private static UnityEditor.Editor s_editor;
+        private static Editor s_editor;
 
-        [MenuItem("Morn/SoundProcessor")]
+        [MenuItem("Morn/MornSoundProcessor")]
         private static void Open()
         {
             Init();
@@ -17,14 +16,9 @@ namespace MornLib.Editor
         private static void Init()
         {
             var instance = MornSoundProcessorSettings.instance;
-            if (instance.Window == null)
-            {
-                instance.Window = CreateInstance<MornSoundProcessorWindow>();
-            }
-
-            instance.Window.Show();
+            instance.Init();
             instance.hideFlags = HideFlags.HideAndDontSave & ~HideFlags.NotEditable;
-            UnityEditor.Editor.CreateCachedEditor(instance, null, ref s_editor);
+            Editor.CreateCachedEditor(instance, null, ref s_editor);
         }
 
         private void OnGUI()
@@ -37,15 +31,15 @@ namespace MornLib.Editor
             EditorGUI.BeginChangeCheck();
             s_editor.OnInspectorGUI();
             var instance = MornSoundProcessorSettings.instance;
-            if ((instance.IsCutBeginningSilence || instance.IsNormalizeAmplitude) && GUILayout.Button("Generate"))
+            if ((instance.UseCutBeginningSilence || instance.UseNormalizeAmplitude) && GUILayout.Button("Generate"))
             {
                 var length = instance.ClipList.Count;
-                instance.ClearOutput();
+                instance.ClearResult();
                 for (var i = 0; i < length; i++)
                 {
                     var clip = instance.ClipList[i];
                     EditorUtility.DisplayProgressBar("変換中", clip.name, i * 1f / length);
-                    instance.AddOutput(SaveClip(ConvertClip(clip)));
+                    instance.AddResult(SaveClip(ConvertClip(clip)));
                 }
 
                 EditorUtility.ClearProgressBar();
@@ -56,17 +50,17 @@ namespace MornLib.Editor
         private static AudioClip ConvertClip(AudioClip clip)
         {
             var instance = MornSoundProcessorSettings.instance;
-            if (instance.IsCutBeginningSilence)
+            if (instance.UseCutBeginningSilence)
             {
                 clip = CutBeginningSilence(clip);
             }
 
-            if (instance.IsCutEndingSilence)
+            if (instance.UseCutEndingSilence)
             {
                 clip = CutEndingSilence(clip);
             }
 
-            if (instance.IsNormalizeAmplitude)
+            if (instance.UseNormalizeAmplitude)
             {
                 clip = Normalize(clip);
             }
@@ -83,7 +77,7 @@ namespace MornLib.Editor
         private static AudioClip CutEndingSilence(AudioClip clip)
         {
             var instance = MornSoundProcessorSettings.instance;
-            return MornSoundProcessor.CutEndSilence(clip, instance.EndingOffsetSample, instance.EndingAmplitude);
+            return MornSoundProcessor.CutEndingSilence(clip, instance.EndingOffsetSample, instance.EndingAmplitude);
         }
 
         private static AudioClip Normalize(AudioClip clip)
@@ -109,7 +103,7 @@ namespace MornLib.Editor
             }
 
             var path = $"Assets/{instance.UnderAssetsFolderName}/{clip.name}_Converted.wav";
-            MornSoundProcessor.SaveAudioClipToWave(clip, path);
+            MornSoundProcessor.SaveAudioClipToWav(clip, path);
             AssetDatabase.Refresh(ImportAssetOptions.Default);
             return AssetDatabase.LoadAssetAtPath<AudioClip>(path);
         }

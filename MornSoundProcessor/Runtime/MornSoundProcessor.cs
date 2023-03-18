@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-namespace MornLib.Extensions
+namespace MornSoundProcessor
 {
     public static class MornSoundProcessor
     {
@@ -47,7 +47,7 @@ namespace MornLib.Extensions
             return cutClip;
         }
 
-        public static AudioClip CutEndSilence(AudioClip clip, int endOffsetSample, float endAmplitude)
+        public static AudioClip CutEndingSilence(AudioClip clip, int endOffsetSample, float endAmplitude)
         {
             var samples = clip.samples; //サンプル数（波形の個数）
             var frequency = clip.frequency; //周波数（1秒あたりの分割数）
@@ -68,11 +68,11 @@ namespace MornLib.Extensions
             return cutClip;
         }
 
-        private static int GetSoundBeginningIndex(IReadOnlyList<float> span, float minAmplitude, int channels)
+        private static int GetSoundBeginningIndex(IReadOnlyList<float> list, float minAmplitude, int channels)
         {
-            for (var i = 0; i < span.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
-                if (Mathf.Abs(span[i]) > minAmplitude)
+                if (Mathf.Abs(list[i]) > minAmplitude)
                 {
                     return i - i % channels;
                 }
@@ -81,20 +81,20 @@ namespace MornLib.Extensions
             return 0;
         }
 
-        private static int GetSoundEndingIndex(IReadOnlyList<float> span, float minAmplitude, int channels)
+        private static int GetSoundEndingIndex(IReadOnlyList<float> list, float minAmplitude, int channels)
         {
-            for (var i = span.Count - 1; i >= 0; i--)
+            for (var i = list.Count - 1; i >= 0; i--)
             {
-                if (Mathf.Abs(span[i]) > minAmplitude)
+                if (Mathf.Abs(list[i]) > minAmplitude)
                 {
                     return i - i % channels;
                 }
             }
 
-            return span.Count - 1 - (span.Count - 1) % channels;
+            return list.Count - 1 - (list.Count - 1) % channels;
         }
 
-        public static void SaveAudioClipToWave(AudioClip clip, string path)
+        public static void SaveAudioClipToWav(AudioClip clip, string path)
         {
             var samples = clip.samples; //サンプル数（波形の個数）
             var frequency = clip.frequency; //周波数（1秒あたりの分割数）
@@ -108,87 +108,84 @@ namespace MornLib.Extensions
             //2の補数表現 反転して+1
             //AudioClip流 -1.0 ~ 1.0
             //総データ数 ... 4byte * samples + 固定
-            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            WriteWavHeader(fileStream, samples, (short)channels, frequency);
+            foreach (var value in data)
             {
-                WriteWavHeader(fileStream, samples, (short)channels, frequency);
-                foreach (var d in data)
-                {
-                    //符号bitあり
-                    var a = d > 0 ? (short)(short.MaxValue * d) : (short)(short.MinValue * -d);
-                    WriteShortLittleEndian(fileStream, a);
-                }
+                //符号bitあり
+                WriteShortLittleEndian(fileStream, value > 0 ? (short)(short.MaxValue * value) : (short)(short.MinValue * -value));
             }
         }
 
-        private static void WriteWavHeader(Stream fileStream, int samples, short channels, int frequency)
+        private static void WriteWavHeader(Stream stream, int samples, short channels, int frequency)
         {
             var fileSize = 2 * samples * channels + 44;
-            fileStream.Seek(0, SeekOrigin.Begin);
+            stream.Seek(0, SeekOrigin.Begin);
 
             //RIFF識別子 4byte
-            fileStream.WriteByte((byte)'R');
-            fileStream.WriteByte((byte)'I');
-            fileStream.WriteByte((byte)'F');
-            fileStream.WriteByte((byte)'F');
+            stream.WriteByte((byte)'R');
+            stream.WriteByte((byte)'I');
+            stream.WriteByte((byte)'F');
+            stream.WriteByte((byte)'F');
 
             //チャンクサイズ 4byte
-            WriteIntLittleEndian(fileStream, fileSize - 8);
+            WriteIntLittleEndian(stream, fileSize - 8);
 
             //フォーマット 4byte
-            fileStream.WriteByte((byte)'W');
-            fileStream.WriteByte((byte)'A');
-            fileStream.WriteByte((byte)'V');
-            fileStream.WriteByte((byte)'E');
+            stream.WriteByte((byte)'W');
+            stream.WriteByte((byte)'A');
+            stream.WriteByte((byte)'V');
+            stream.WriteByte((byte)'E');
 
             //fmt識別子 4byte
-            fileStream.WriteByte((byte)'f');
-            fileStream.WriteByte((byte)'m');
-            fileStream.WriteByte((byte)'t');
-            fileStream.WriteByte((byte)' ');
+            stream.WriteByte((byte)'f');
+            stream.WriteByte((byte)'m');
+            stream.WriteByte((byte)'t');
+            stream.WriteByte((byte)' ');
 
             //fmtチャンクのバイト数 4byte
-            WriteIntLittleEndian(fileStream, 16);
+            WriteIntLittleEndian(stream, 16);
 
             //音声フォーマット 2byte
-            WriteShortLittleEndian(fileStream, 1);
+            WriteShortLittleEndian(stream, 1);
 
             //チャンネル数 2byte
-            WriteShortLittleEndian(fileStream, channels);
+            WriteShortLittleEndian(stream, channels);
 
             //サンプリング周波数 4byte
-            WriteIntLittleEndian(fileStream, frequency);
+            WriteIntLittleEndian(stream, frequency);
 
             //1秒あたりバイト数の平均 4byte （サンプリング周波数*ブロックサイズ）
-            WriteIntLittleEndian(fileStream, frequency * 2 * channels);
+            WriteIntLittleEndian(stream, frequency * 2 * channels);
 
             //ブロックサイズ 2byte （チャンネル数*1サンプルあたりのビット数/8）
-            WriteShortLittleEndian(fileStream, (short)(2 * channels));
+            WriteShortLittleEndian(stream, (short)(2 * channels));
 
             //ビット/サンプル 2byte
-            WriteShortLittleEndian(fileStream, 16);
+            WriteShortLittleEndian(stream, 16);
 
             //サブチャンク識別子 4byte
-            fileStream.WriteByte((byte)'d');
-            fileStream.WriteByte((byte)'a');
-            fileStream.WriteByte((byte)'t');
-            fileStream.WriteByte((byte)'a');
+            stream.WriteByte((byte)'d');
+            stream.WriteByte((byte)'a');
+            stream.WriteByte((byte)'t');
+            stream.WriteByte((byte)'a');
 
             //サブチャンクサイズ 4byte
-            WriteIntLittleEndian(fileStream, 2 * samples * channels);
+            WriteIntLittleEndian(stream, 2 * samples * channels);
         }
 
-        private static void WriteIntLittleEndian(Stream fileStream, int value)
+        private static void WriteIntLittleEndian(Stream stream, int value)
         {
-            fileStream.WriteByte((byte)value); // 8~1bit
-            fileStream.WriteByte((byte)(value >> 8)); //16~9bit
-            fileStream.WriteByte((byte)(value >> 16)); //24~17bit
-            fileStream.WriteByte((byte)(value >> 24)); //32~25bit
+            stream.WriteByte((byte)value); // 8~1bit
+            stream.WriteByte((byte)(value >> 8)); //16~9bit
+            stream.WriteByte((byte)(value >> 16)); //24~17bit
+            stream.WriteByte((byte)(value >> 24)); //32~25bit
         }
 
-        private static void WriteShortLittleEndian(Stream fileStream, short value)
+        private static void WriteShortLittleEndian(Stream stream, short value)
         {
-            fileStream.WriteByte((byte)value); // 8~1bit
-            fileStream.WriteByte((byte)(value >> 8)); //16~9bit
+            stream.WriteByte((byte)value); // 8~1bit
+            stream.WriteByte((byte)(value >> 8)); //16~9bit
         }
     }
 }
