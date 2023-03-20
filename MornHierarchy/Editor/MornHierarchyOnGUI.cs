@@ -3,26 +3,18 @@ using UnityEngine;
 
 namespace MornHierarchy
 {
-    /// <summary>Hierarchyの表示を書き換えるEditor拡張</summary>
-    public static class MornHierarchyOnGUI
+    internal static class MornHierarchyOnGUI
     {
-        /// <summary>通常の背景色</summary>
         private static readonly Color s_normalBackColor = new Color32(56, 56, 56, 255);
-
-        /// <summary>オンカーソル中の背景色</summary>
         private static readonly Color s_highlightedBackColor = new Color32(68, 68, 68, 255);
-
-        /// <summary>選択中の背景色</summary>
         private static readonly Color s_selectedBackColor = new Color32(44, 93, 134, 255);
 
-        /// <summary>Hierarchy描画処理の拡張</summary>
         [InitializeOnLoadMethod]
         private static void AddHierarchyItemOnGUI()
         {
             EditorApplication.hierarchyWindowItemOnGUI += HierarchyWindowItemOnGUI;
         }
 
-        /// <inheritdoc cref="EditorApplication.HierarchyWindowItemCallback"/>
         private static void HierarchyWindowItemOnGUI(int instanceId, Rect selectionRect)
         {
             var gameObject = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
@@ -44,9 +36,6 @@ namespace MornHierarchy
             }
         }
 
-        /// <summary>背景色の描画</summary>
-        /// <param name="selectionRect">描画範囲</param>
-        /// <param name="gameObject">描画するGameObject</param>
         private static void DrawColor(Rect selectionRect, GameObject gameObject)
         {
             var hasDrawn = false;
@@ -102,9 +91,6 @@ namespace MornHierarchy
             }
         }
 
-        /// <summary>項目名の描画</summary>
-        /// <param name="selectionRect">描画範囲</param>
-        /// <param name="gameObject">描画するGameObject</param>
         private static void DrawLabel(Rect selectionRect, GameObject gameObject)
         {
             selectionRect.xMin += 18;
@@ -125,9 +111,6 @@ namespace MornHierarchy
             EditorGUI.LabelField(selectionRect, tag, style);
         }
 
-        /// <summary>区切り線の描画</summary>
-        /// <param name="selectionRect">描画範囲</param>
-        /// <param name="gameObject">描画するGameObject</param>
         private static void DrawLine(Rect selectionRect, GameObject gameObject)
         {
             //DrawBack
@@ -151,19 +134,12 @@ namespace MornHierarchy
             EditorGUI.LabelField(selectionRect, gameObject.name, style);
         }
 
-        /// <summary>半透明の矩形を描画する</summary>
-        /// <param name="rect">描画範囲</param>
-        /// <param name="color">描画色</param>
         private static void DrawTransparentRect(Rect rect, Color color)
         {
             color.a = MornHierarchySettings.instance.Transparent;
             EditorGUI.DrawRect(rect, color);
         }
 
-        /// <summary>Transformからの深さを求め、0~1で返す</summary>
-        /// <param name="home">基準のTransform</param>
-        /// <param name="own">自身のTransform</param>
-        /// <returns>深さを0~1で返す</returns>
         private static float GetTransformDepth(Transform home, Transform own)
         {
             if (home == own)
@@ -175,10 +151,6 @@ namespace MornHierarchy
             return Mathf.InverseLerp(pare.childCount + 2, -1, own.GetSiblingIndex()) * GetTransformDepth(home, pare);
         }
 
-        /// <summary>Hierarchyの背景色を返す</summary>
-        /// <param name="instanceID">描画するGameObjectのInstanceId</param>
-        /// <param name="rect">描画範囲</param>
-        /// <returns>背景色</returns>
         private static Color GetBackGroundColor(int instanceID, Rect rect)
         {
             if (Selection.Contains(instanceID))

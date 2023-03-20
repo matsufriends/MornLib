@@ -1,15 +1,15 @@
 # MornHierarchy
 ## 概要
 `Hierarchy`に関する機能を提供します。
-- `MornHierarchyColor`コンポーネントにより、重要なオブジェクトに色を付けて目立たせます。
-- `MornHierarchyLine`コンポーネントにより、オブジェクト間に区切り線を目立たせます。
+- `MornHierarchyColor`コンポーネントで重要なオブジェクトに色を付ける
+- `MornHierarchyLine`コンポーネントでオブジェクト間に区切り線を与える
 
 ## 導入
 
-- `PackageManager`の "Add package from git URL... " で以下のURLを入力。
+- `PackageManager`の "Add package from git URL... " で以下のURLを入力
     - https://github.com/matsufriends/MornLib.git?path=MornHierarchy
 
-- `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記。
+- `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記
 ```
 "com.matsufriends.mornhierarchy": "https://github.com/matsufriends/MornLib.git?path=MornHierarchy",
 ```
@@ -28,7 +28,7 @@
 ![2](https://user-images.githubusercontent.com/50489724/224517185-1e4b1f54-717c-4af9-9870-43824a4e1bdb.png)
 
 `MornHierarchyLine`コンポーネントのアタッチで、対象の`GameObject`が区切り線になります。  
-`GameObject`の名前が中央寄りになり、上下に黒線が描画されます。
+`GameObject`の名前が中央寄りで描画され、上下に黒線が描画されます。
 
 ---
 
