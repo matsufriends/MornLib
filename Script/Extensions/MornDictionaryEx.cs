@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MornEnum.Runtime;
+using MornEnum;
 
 namespace MornLib.Extensions
 {
