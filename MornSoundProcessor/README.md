@@ -2,7 +2,7 @@
 
 ## 概要
 
-`AudioClip`に関する機能を提供します。
+`AudioClip`に関する機能を提供します
 
 - `AudioClip`の最初の無音区間の削除
 - `AudioClip`の最後の無音区間の削除
@@ -21,7 +21,7 @@
 
 ## 使い方
 
-ツールバーの`Morn/MornSoundProcessor`よりウィンドウを開く。
+ツールバーの`Morn/MornSoundProcessor`よりウィンドウを開く
 
 ### Input
 
