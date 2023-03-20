@@ -1,13 +1,11 @@
 ﻿using System;
-using MornEnum.Runtime;
 using UnityEditor;
 using UnityEngine;
 
-namespace MornEnum.Editor
+namespace MornEnum
 {
-    /// <summary><see cref="MornEnumToStringAttribute"/>を表示するEditor拡張</summary>
     [CustomPropertyDrawer(typeof(MornEnumToStringAttribute))]
-    public sealed class MornEnumToStringDrawer : PropertyDrawer
+    internal sealed class MornEnumToStringDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
