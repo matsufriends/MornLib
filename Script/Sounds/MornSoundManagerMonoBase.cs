@@ -3,7 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using MornLib.Cores;
 using MornLib.Extensions;
-using MornLib.Singletons;
+using MornSingleton;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Audio;

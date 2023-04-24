@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MornLib.Cores;
-using MornLib.Singletons;
+using MornSingleton;
 using UniRx;
 using UnityEngine;
 

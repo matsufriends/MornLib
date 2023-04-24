@@ -1,5 +1,5 @@
 using System;
-using MornLib.Singletons;
+using MornSingleton;
 using UniRx;
 using UnityEngine;
 

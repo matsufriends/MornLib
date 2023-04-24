@@ -1,6 +1,6 @@
 ﻿using System;
 using MornLib.Cores;
-using MornLib.Singletons;
+using MornSingleton;
 using UniRx;
 using UnityEngine;
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using MornLib.Cores;
 using MornLib.Pools;
-using MornLib.Singletons;
+using MornSingleton;
 using UnityEngine;
 
 namespace MornLib.Debugs

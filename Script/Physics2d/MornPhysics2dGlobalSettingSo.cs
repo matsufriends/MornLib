@@ -1,4 +1,4 @@
-﻿using MornLib.Singletons;
+﻿using MornSingleton;
 using UnityEngine;
 
 namespace MornLib.Physics2d
