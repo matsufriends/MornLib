@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace MornLib.Cores
+namespace MornSerializableDictionary
 {
     [Serializable]
-    public class MornSerializableDictionaryProvider<TKey, TValue>
+    public sealed class MornSerializableDictionaryProvider<TKey, TValue>
     {
         [SerializeField] private List<MornKeyValuePair> _list;
         private Dictionary<TKey, TValue> _dict;
@@ -23,10 +23,6 @@ namespace MornLib.Cores
             public TValue Value;
         }
 
-        public TValue this[TKey key]
-        {
-            get => GetDictionary()[key];
-            set => GetDictionary()[key] = value;
-        }
+        //MornSerializableDictionaryのEditor拡張
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace MornLib.Sounds
+﻿namespace MornSound
 {
     public enum MornSoundVolumeType
     {
