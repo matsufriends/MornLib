@@ -8,6 +8,7 @@
 - 参照する変数が`true`のときのみ表示する`[ShowIf("変数名")]`
 - 参照する変数が`true`のとき非表示にする`[HideIf("変数名")]`
 - `Vector2/Vector2Int`を`Slider`で表示する`[MinMaxSlider(最小値,最大値)]`
+- `Inspectpr`上での表示名を指定する`[Label("ラベル名")]`
 
 ## 導入
 
@@ -62,3 +63,9 @@ https://github.com/matsufriends/MornLib.git?path=MornAttribute
 
 - 型が`Vector2 / Vector2Int`以外
 - `MinMaxSlider`の引数の大小関係が不正な場合、エラーが表示されます。
+
+### `Inspectpr`上での表示名を指定する
+
+```
+[SerializeField, Label("あいうえお")] private int a;
+```
