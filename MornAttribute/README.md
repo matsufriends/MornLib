@@ -2,7 +2,7 @@
 
 ## 概要
 
-`Attribute`を提供します。
+新たな`Attribute`を提供します。
 
 - 値をInspector上から変更不可にする`[ReadOnly]`
 - 参照する変数が`true`のときのみ表示する`[ShowIf("変数名")]`
