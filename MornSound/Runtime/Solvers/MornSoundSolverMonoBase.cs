@@ -42,6 +42,23 @@ namespace MornSound
             }
         }
 
+        private void Awake()
+        {
+            if (s_instance == null)
+            {
+                s_instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else if (s_instance == this)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
         private void Start()
         {
             //Mixer.SetFloatがAwake関数では適切に処理されない
