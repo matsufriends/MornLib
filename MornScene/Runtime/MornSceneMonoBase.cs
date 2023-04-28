@@ -1,36 +1,30 @@
 ﻿using System;
-using UniRx;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace MornScene
 {
-    public abstract class MornSceneMonoBase<TEnum> : MonoBehaviour where TEnum : Enum
+    public abstract class MornSceneMonoBase : MonoBehaviour
     {
         [SerializeField] private MornSceneCanvasMono _sceneCanvas;
         [SerializeField] private GameObject _root;
-        [SerializeField] private TEnum _sceneType;
-        private readonly Subject<TEnum> _changeSceneSubject = new();
-        private readonly Subject<TEnum> _addSceneSubject = new();
-        private readonly Subject<TEnum> _removeSceneSubject = new();
-        public TEnum SceneType => _sceneType;
-        internal IObservable<TEnum> OnChangeScene => _changeSceneSubject;
-        internal IObservable<TEnum> OnAddScene => _addSceneSubject;
-        internal IObservable<TEnum> OnRemoveScene => _removeSceneSubject;
         protected bool ActiveSelf { get; private set; }
 
-        protected void ChangeScene(TEnum sceneType)
+        protected void ChangeScene<TEnum>(TEnum sceneType) where TEnum : Enum
         {
-            _changeSceneSubject.OnNext(sceneType);
+            MornSceneCore<TEnum>.ChangeScene(sceneType);
         }
 
-        protected void AddScene(TEnum sceneType)
+        protected void AddScene<TEnum>(TEnum sceneType) where TEnum : Enum
         {
-            _addSceneSubject.OnNext(sceneType);
+            MornSceneCore<TEnum>.AddScene(sceneType);
         }
 
-        protected void RemoveScene(TEnum sceneType)
+        protected void RemoveScene<TEnum>(TEnum sceneType) where TEnum : Enum
         {
-            _removeSceneSubject.OnNext(sceneType);
+            MornSceneCore<TEnum>.RemoveScene(sceneType);
         }
 
         internal void Initialize()
@@ -38,28 +32,28 @@ namespace MornScene
             OnInitializeImpl();
         }
 
-        internal void OnEnterScene()
+        internal void OnEnterScene<TEnum>(TEnum sceneType) where TEnum : Enum
         {
             ActiveSelf = true;
-            SetSceneActive(true);
+            SetSceneActive(sceneType, true);
             OnEnterSceneImpl();
         }
 
-        internal void OnUpdateScene(bool isTopMost)
+        internal void OnUpdateScene(bool isTop)
         {
-            OnUpdateSceneImpl(isTopMost);
+            OnUpdateSceneImpl(isTop);
         }
 
-        internal void OnExitScene()
+        internal void OnExitScene<TEnum>(TEnum sceneType) where TEnum : Enum
         {
             ActiveSelf = false;
-            SetSceneActive(false);
+            SetSceneActive(sceneType, false);
             OnExitSceneImpl();
         }
 
         protected abstract void OnInitializeImpl();
         protected abstract void OnEnterSceneImpl();
-        protected abstract void OnUpdateSceneImpl(bool isTopMost);
+        protected abstract void OnUpdateSceneImpl(bool isTop);
         protected abstract void OnExitSceneImpl();
 
         internal void ApplyCanvasScale(int width, int height)
@@ -70,19 +64,24 @@ namespace MornScene
             }
         }
 
-        internal void SetSceneActive(bool isActive)
+        internal void SetSceneActive<TEnum>(TEnum sceneType, bool isActive) where TEnum : Enum
         {
             if (_sceneCanvas != null)
             {
                 _sceneCanvas.SetActiveImmediate(isActive);
+                _sceneCanvas.name = $"[{sceneType}] Canvas";
             }
 
             if (_root != null)
             {
                 _root.SetActive(isActive);
+                _root.name = $"[{sceneType}] Root";
             }
 
-            gameObject.name = $"[{_sceneType.ToString()}] {(isActive ? "Active" : "Inactive")}";
+            gameObject.name = $"[{sceneType}] {(isActive ? "Active" : "")}";
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(gameObject);
+#endif
         }
     }
 }
