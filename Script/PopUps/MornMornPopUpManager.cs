@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MornLib.PopUps
 {
-    public class MornMornPopUpManager : Singleton<MornMornPopUpManager, IMornPopUpManager>, IMornPopUpManager, IMornSingleton
+    public class MornMornPopUpManager : MornSingleton<MornMornPopUpManager, IMornPopUpManager>, IMornPopUpManager, IMornSingleton
     {
         private bool _initialized;
         private RectTransform _popRect;

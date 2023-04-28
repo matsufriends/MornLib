@@ -22,7 +22,8 @@
         protected abstract void Instanced();
     }
 
-    public abstract class Singleton<TClass, TInterface> where TClass : Singleton<TClass, TInterface>, TInterface, IMornSingleton, new()
+    public abstract class MornSingleton<TClass, TInterface>
+        where TClass : MornSingleton<TClass, TInterface>, TInterface, IMornSingleton, new()
     {
         private static TInterface s_instance;
 
