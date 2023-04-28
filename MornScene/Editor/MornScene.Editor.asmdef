@@ -1,0 +1,18 @@
+{
+    "name": "MornScene.Editor",
+    "rootNamespace": "MornScene",
+    "references": [
+        "GUID:429a48e5055f1224b8437927466fd54a"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
