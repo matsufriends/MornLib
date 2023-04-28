@@ -47,7 +47,7 @@ namespace MornSound
             var solver = MornSoundSolverMonoBase<T>.Instance;
             var info = solver.GetInfo(soundType);
             var soundPlayer = MornSoundPlayer.GetInstance(solver.transform);
-            soundPlayer.Init(solver.SeMixer, info.AudioClip, false, info.IsRandomPitch ? s_parameter.GetRandomPitch() : 1f);
+            soundPlayer.Init(solver.SeMixer, info.AudioClip, false, 1, info.IsRandomPitch ? s_parameter.GetRandomPitch() : 1f);
         }
 
         public static void PlayBgm<T>(T soundType) where T : Enum
@@ -55,7 +55,7 @@ namespace MornSound
             var solver = MornSoundSolverMonoBase<T>.Instance;
             var info = solver.GetInfo(soundType);
             var soundPlayer = MornSoundPlayer.GetInstance(solver.transform);
-            soundPlayer.Init(solver.BgmMixer, info.AudioClip, true, 1f);
+            soundPlayer.Init(solver.BgmMixer, info.AudioClip, true, 0, 1f);
             soundPlayer.FadeIn(s_parameter.BgmChangeSeconds);
             if (s_cachedBgmPlayer)
             {

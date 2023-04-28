@@ -21,7 +21,7 @@ namespace MornSound
         private float _fadeSeconds;
         private static readonly Queue<MornSoundPlayer> s_playEndQueue = new();
 
-        public void Init(AudioMixerGroup mixerGroup, AudioClip clip, bool isLoop, float pitch)
+        public void Init(AudioMixerGroup mixerGroup, AudioClip clip, bool isLoop, float volume, float pitch)
         {
             if (_audioSource == null)
             {
@@ -29,6 +29,7 @@ namespace MornSound
             }
 
             _audioSource.outputAudioMixerGroup = mixerGroup;
+            _audioSource.volume = volume;
             _audioSource.clip = clip;
             _audioSource.loop = isLoop;
             _audioSource.pitch = pitch;
