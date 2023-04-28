@@ -4,6 +4,11 @@ namespace MornLib.Extensions
 {
     public static class MornVector2IntEx
     {
+        public static int GetRandomValue(this Vector2Int @base)
+        {
+            return Random.Range(@base.x, @base.y + 1);
+        }
+
         public static Vector3 XZ(this Vector2Int @base)
         {
             return new Vector3(@base.x, 0, @base.y);
