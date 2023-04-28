@@ -18,9 +18,7 @@ namespace MornSound
                 _slider = TryGetComponent<Slider>(out var slider) ? slider : gameObject.AddComponent<Slider>();
             }
 
-            ApplyVolume(MornSoundCore.GetVolumeInfo(MornSoundVolumeType.Master));
-            ApplyVolume(MornSoundCore.GetVolumeInfo(MornSoundVolumeType.Se));
-            ApplyVolume(MornSoundCore.GetVolumeInfo(MornSoundVolumeType.Bgm));
+            ApplyVolume(MornSoundCore.GetVolumeInfo(_mornSoundVolumeType));
 
             //スライダーの購読は、値の反映が終わってから行う
             MornSoundCore.OnVolumeChanged.Subscribe(ApplyVolume).AddTo(this);
