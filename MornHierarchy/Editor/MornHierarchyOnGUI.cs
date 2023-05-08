@@ -24,7 +24,6 @@ namespace MornHierarchy
             }
 
             DrawColor(selectionRect, gameObject);
-            DrawLabel(selectionRect, gameObject);
             if (gameObject.TryGetComponent<MornHierarchyLine>(out _))
             {
                 DrawLine(selectionRect, gameObject);
@@ -89,15 +88,6 @@ namespace MornHierarchy
                 target = target.parent;
                 drawOffset++;
             }
-        }
-
-        private static void DrawLabel(Rect selectionRect, GameObject gameObject)
-        {
-            selectionRect.xMin += 18;
-            var style = new GUIStyle();
-            style.normal.textColor = gameObject.activeInHierarchy ? GUI.contentColor : Color.gray;
-            style.alignment = TextAnchor.UpperLeft;
-            EditorGUI.LabelField(selectionRect, gameObject.name, style);
         }
 
         private static void DrawTag(Rect selectionRect, GameObject gameObject)
