@@ -10,7 +10,7 @@
     - https://github.com/matsufriends/MornLib.git?path=MornHierarchy
 
 - `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記
-```
+``` json
 "com.matsufriends.mornhierarchy": "https://github.com/matsufriends/MornLib.git?path=MornHierarchy",
 ```
 
