@@ -36,13 +36,13 @@
 下記のどちらでも導入頂けます。
 - `PackageManager`の "Add package from git URL... " で以下のURLを入力
 
-```
+``` url
 https://github.com/matsufriends/MornLib.git?path=各機能のフォルダ名
 ```
 
 - `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記
 
-```
+``` json
 "com.matsufriends.各機能のパッケージ名": "https://github.com/matsufriends/MornLib.git?path=各機能のフォルダ名",
 ```
 
@@ -54,7 +54,7 @@ https://github.com/matsufriends/MornLib.git?path=各機能のフォルダ名
 
 新たな`Attribute`を提供します。
 
-```
+``` json
 "com.matsufriends.mornattribute": "https://github.com/matsufriends/MornLib.git?path=MornAttribute",
 ```
 
@@ -64,7 +64,7 @@ https://github.com/matsufriends/MornLib.git?path=各機能のフォルダ名
 
 `enum`に関する機能を提供します。
 
-```
+``` json
 "com.matsufriends.mornenum": "https://github.com/matsufriends/MornLib.git?path=MornEnum",
 ```
 
@@ -74,7 +74,7 @@ https://github.com/matsufriends/MornLib.git?path=各機能のフォルダ名
 
 `Hierarchy`に関する機能を提供します。
 
-```
+``` json
 "com.matsufriends.mornhierarchy": "https://github.com/matsufriends/MornLib.git?path=MornHierarchy",
 ```
 
@@ -84,7 +84,7 @@ https://github.com/matsufriends/MornLib.git?path=各機能のフォルダ名
 
 `AudioClip`に関する機能を提供します。
 
-```
+``` json
 "com.matsufriends.mornsoundprocessor": "https://github.com/matsufriends/MornLib.git?path=MornSoundProcessor",
 ```
 
