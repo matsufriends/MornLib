@@ -15,7 +15,7 @@
 
 - `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記
 
-```
+``` json
 "com.matsufriends.mornsoundprocessor": "https://github.com/matsufriends/MornLib.git?path=MornSoundProcessor",
 ```
 
