@@ -14,7 +14,7 @@
 
 - `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記
 
-```
+``` json
 "com.matsufriends.mornenum": "https://github.com/matsufriends/MornLib.git?path=MornEnum",
 ```
 
@@ -22,24 +22,24 @@
 
 ### enumを文字列でシリアライズする
 
-```
+``` csharp
 [SerializeField, MornEnumToString(typeof(HogeType))] private string hoge;
 ```
 
 ### enumの要素数を取得する
 
-```
+``` csharp
 MornEnumUtil<HogeType>.Count;
 ```
 
 ### enumの全要素を取得する
 
-```
+``` csharp
 MornEnumUtil<HogeType>.Values;
 ```
 
 ### ToString結果としてキャッシュしたものを利用する
 
-```
+``` csharp
 MornEnumUtil<HogeType>.CachedToString(HogeType.A);
 ```
