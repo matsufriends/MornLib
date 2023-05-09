@@ -19,6 +19,7 @@ namespace MornScene
         internal void SetActiveImmediate(bool isActive)
         {
             _canvas.enabled = isActive;
+            gameObject.SetActive(isActive);
         }
 
         private void Reset()
