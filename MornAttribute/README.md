@@ -22,7 +22,7 @@ https://github.com/matsufriends/MornLib.git?path=MornAttribute
 
 - `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記
 
-```
+``` json
 "com.matsufriends.mornattribute": "https://github.com/matsufriends/MornLib.git?path=MornAttribute",
 ```
 
@@ -30,13 +30,13 @@ https://github.com/matsufriends/MornLib.git?path=MornAttribute
 
 ### 値をInspector上から変更不可にする
 
-```
+``` csharp
 [SerializeField, ReadOnly] private int a;
 ```
 
 ### 参照する変数が`true`のときのみ表示する
 
-```
+``` csharp
 [SerializeField] private bool a;
 [SerializeField, ShowIf(nameof(a))] private int b;
 ```
@@ -45,7 +45,7 @@ https://github.com/matsufriends/MornLib.git?path=MornAttribute
 
 ### 参照する変数が`true`のとき非表示にする
 
-```
+``` csharp
 [SerializeField] private bool a;
 [SerializeField, HideIf(nameof(a)] private int b;
 ```
@@ -54,7 +54,7 @@ https://github.com/matsufriends/MornLib.git?path=MornAttribute
 
 ### `Vector2/Vector2Int`を`Slider`で表示する
 
-```
+``` csharp
 [SerializeField, MinMaxSlider(4, 10)] private Vector2Int a;
 [SerializeField, MinMaxSlider(3.2f, 5.4f)] private Vector2 b;
 ```
@@ -66,6 +66,6 @@ https://github.com/matsufriends/MornLib.git?path=MornAttribute
 
 ### `Inspectpr`上での表示名を指定する
 
-```
+``` csharp
 [SerializeField, Label("あいうえお")] private int a;
 ```
