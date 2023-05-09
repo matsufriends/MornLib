@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -60,12 +61,9 @@ namespace MornScene
         //関数名がEditor拡張より指定されているため要注意
         public void ApplyCanvasScale()
         {
-            foreach (var scene in _valueList)
+            foreach (var scene in _valueList.Where(scene => scene != null))
             {
-                if (scene != null)
-                {
-                    scene.ApplyCanvasScale(_width, _height);
-                }
+                scene.ApplyCanvasScale(_width, _height);
             }
 
             Debug.Log("Canvas Scale Applied.");
