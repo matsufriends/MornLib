@@ -15,7 +15,7 @@ namespace MornUI
         private static bool s_isFastMove;
         private static MornUIAxisDirType s_cachedAxisDir;
 
-        private static MornUISelectableMonoBase Current
+        private static MornUISelectableMono Current
         {
             get => s_solver._current;
             set => s_solver._current = value;
@@ -41,7 +41,7 @@ namespace MornUI
             }
         }
 
-        public static void SetFocus(MornUISelectableMonoBase selectable)
+        public static void SetFocus(MornUISelectableMono selectable)
         {
             if (Current != null)
             {
@@ -52,7 +52,7 @@ namespace MornUI
             selectable.OnSelected();
         }
 
-        public static bool IsFocused(MornUISelectableMonoBase selectable)
+        public static bool IsFocused(MornUISelectableMono selectable)
         {
             return Current == selectable;
         }
@@ -81,7 +81,7 @@ namespace MornUI
 
             if (s_submitAction.action.WasPressedThisFrame())
             {
-                Current.Submit();
+                Current.OnSubmit();
             }
 
             var moveAxis = s_moveAction.action.ReadValue<Vector2>();
@@ -97,14 +97,14 @@ namespace MornUI
                 s_isFastMove = true;
                 s_cachedAxisDir = axis;
                 s_cachedMoveTime = Time.unscaledTime;
-                Current.Transition(axis);
+                Current.TryMove(axis);
             }
             else
             {
                 s_isFastMove = false;
                 s_cachedAxisDir = axis;
                 s_cachedMoveTime = Time.unscaledTime;
-                Current.Transition(axis);
+                Current.TryMove(axis);
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace MornUI
 {
-    internal enum MornUIAxisDirType
+    public enum MornUIAxisDirType
     {
         None,
         Up,
