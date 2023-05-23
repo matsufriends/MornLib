@@ -1,0 +1,16 @@
+{
+    "name": "MornDictionary.Editor",
+    "rootNamespace": "MornDictionary",
+    "references": ["GUID:2310e99326312ea41bd9676ceb403692"],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
