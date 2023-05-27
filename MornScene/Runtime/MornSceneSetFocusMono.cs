@@ -8,11 +8,11 @@ namespace MornScene
     public sealed class MornSceneSetFocusMono : MonoBehaviour
     {
         [SerializeField] private MornSceneMonoBase _scene;
-        [SerializeField] private UIBehaviour _focusObject;
+        [SerializeField] private GameObject _focusObject;
 
         private void Awake()
         {
-            _scene.OnEnterSceneRx.Subscribe(_ => EventSystem.current.SetSelectedGameObject(_focusObject.gameObject)).AddTo(this);
+            _scene.OnEnterSceneRx.Subscribe(_ => EventSystem.current.SetSelectedGameObject(_focusObject)).AddTo(this);
         }
 
         private void Reset()
