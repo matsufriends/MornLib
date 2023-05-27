@@ -14,9 +14,13 @@ namespace MornScene
         [SerializeField] private TEnum _firstSceneType;
         [SerializeField] protected List<TEnum> _keyList;
         [SerializeField] protected List<MornSceneMonoBase> _valueList;
-        private static readonly Dictionary<TEnum, MornSceneMonoBase> s_typeToSceneDict = new();
-        private static readonly Dictionary<MornSceneMonoBase, TEnum> s_sceneToTypeDict = new();
+        private readonly Dictionary<TEnum, MornSceneMonoBase> _typeToSceneDict = new();
+        private readonly Dictionary<MornSceneMonoBase, TEnum> _sceneToTypeDict = new();
         private static MornSceneSolverBase<TEnum> s_instance;
+
+        internal MornSceneMonoBase this[TEnum sceneType] => _typeToSceneDict[sceneType];
+
+        internal TEnum this[MornSceneMonoBase scene] => _sceneToTypeDict[scene];
 
         public static MornSceneSolverBase<TEnum> Instance
         {
@@ -37,25 +41,9 @@ namespace MornScene
             }
         }
 
-        internal MornSceneMonoBase this[TEnum sceneType] => s_typeToSceneDict[sceneType];
-        internal TEnum this[MornSceneMonoBase scene] => s_sceneToTypeDict[scene];
-
-        internal void Initialize()
+        private void OnDestroy()
         {
-            s_typeToSceneDict.Clear();
-            s_sceneToTypeDict.Clear();
-            for (var i = 0; i < _keyList.Count; i++)
-            {
-                var sceneType = _keyList[i];
-                var scene = _valueList[i];
-                s_typeToSceneDict.Add(sceneType, scene);
-                s_sceneToTypeDict.Add(scene, sceneType);
-            }
-
-            foreach (var scene in _valueList)
-            {
-                scene.Initialize();
-            }
+            MornSceneCore<TEnum>.Reset();
         }
 
         //関数名がEditor拡張より指定されているため要注意
@@ -101,6 +89,24 @@ namespace MornScene
             }
 
             Debug.Log($"Scene Changed to {sceneName}.");
+        }
+
+        private void Awake()
+        {
+            _typeToSceneDict.Clear();
+            _sceneToTypeDict.Clear();
+            for (var i = 0; i < _keyList.Count; i++)
+            {
+                var sceneType = _keyList[i];
+                var scene = _valueList[i];
+                _typeToSceneDict.Add(sceneType, scene);
+                _sceneToTypeDict.Add(scene, sceneType);
+            }
+
+            foreach (var scene in _valueList)
+            {
+                scene.Initialize();
+            }
         }
 
         private void Start()

@@ -1,4 +1,5 @@
 ﻿using System;
+using UniRx;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -11,6 +12,12 @@ namespace MornScene
         [SerializeField] private MornSceneCanvasMono _sceneCanvas;
         [SerializeField] private GameObject _root;
         protected bool ActiveSelf { get; private set; }
+        private readonly Subject<Unit> _onEnterSceneSubject = new();
+        private readonly Subject<Unit> _onUpdateSceneSubject = new();
+        private readonly Subject<Unit> _onExitSceneSubject = new();
+        public IObservable<Unit> OnEnterSceneRx => _onEnterSceneSubject;
+        public IObservable<Unit> OnUpdateSceneRx => _onUpdateSceneSubject;
+        public IObservable<Unit> OnExitSceneRx => _onExitSceneSubject;
 
         protected void ChangeScene<TEnum>(TEnum sceneType) where TEnum : Enum
         {
@@ -37,11 +44,13 @@ namespace MornScene
             ActiveSelf = true;
             SetSceneActive(sceneType, true);
             OnEnterSceneImpl();
+            _onEnterSceneSubject.OnNext(Unit.Default);
         }
 
         internal void OnUpdateScene(bool isTop)
         {
             OnUpdateSceneImpl(isTop);
+            _onUpdateSceneSubject.OnNext(Unit.Default);
         }
 
         internal void OnExitScene<TEnum>(TEnum sceneType) where TEnum : Enum
@@ -49,6 +58,7 @@ namespace MornScene
             ActiveSelf = false;
             SetSceneActive(sceneType, false);
             OnExitSceneImpl();
+            _onExitSceneSubject.OnNext(Unit.Default);
         }
 
         protected abstract void OnInitializeImpl();

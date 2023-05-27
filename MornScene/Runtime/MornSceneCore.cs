@@ -9,10 +9,10 @@ namespace MornScene
         private static readonly Stack<MornSceneMonoBase> s_sceneUpdateStack = new();
         private static readonly List<MornSceneMonoBase> s_cachedUpdateList = new();
 
-        static MornSceneCore()
+        internal static void Reset()
         {
-            var solver = MornSceneSolverBase<TEnum>.Instance;
-            solver.Initialize();
+            s_sceneUpdateStack.Clear();
+            s_cachedUpdateList.Clear();
         }
 
         internal static void ChangeScene(TEnum sceneType)
