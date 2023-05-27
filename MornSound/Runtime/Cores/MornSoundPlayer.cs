@@ -69,6 +69,11 @@ namespace MornSound
             s_playEndQueue.Enqueue(this);
         }
 
+        private void OnDestroy()
+        {
+            s_playEndQueue.Clear();
+        }
+
         public void FadeIn(float seconds)
         {
             _fadeType = FadeType.FadeIn;
