@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MornSetting;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -15,6 +16,9 @@ namespace MornSound
         [SerializeField] private AudioMixer _mixer;
         [SerializeField] private AudioMixerGroup _seMixer;
         [SerializeField] private AudioMixerGroup _bgmMixer;
+        [SerializeField] private MornSettingFloatSo _masterSo;
+        [SerializeField] private MornSettingFloatSo _bgmSo;
+        [SerializeField] private MornSettingFloatSo _seSo;
         private Dictionary<TEnum, int> _enumToIndexDictionary;
         private const string MasterVolumeKey = "MasterVolume";
         private const string SeVolumeKey = "SeVolume";
@@ -22,7 +26,6 @@ namespace MornSound
         public AudioMixerGroup SeMixer => _seMixer;
         public AudioMixerGroup BgmMixer => _bgmMixer;
         private static MornSoundSolverMonoBase<TEnum> s_instance;
-
         public static MornSoundSolverMonoBase<TEnum> Instance
         {
             get
@@ -56,28 +59,32 @@ namespace MornSound
             else
             {
                 Destroy(gameObject);
+                return;
             }
+
+            _masterSo.OnFloatChanged.Subscribe(x => ApplyVolume(MornSoundVolumeType.Master, x)).AddTo(this);
+            _bgmSo.OnFloatChanged.Subscribe(x => ApplyVolume(MornSoundVolumeType.Bgm, x)).AddTo(this);
+            _seSo.OnFloatChanged.Subscribe(x => ApplyVolume(MornSoundVolumeType.Se, x)).AddTo(this);
         }
 
         private void Start()
         {
             //Mixer.SetFloatがAwake関数では適切に処理されない
-            ApplyVolume(MornSoundCore.GetVolumeInfo(MornSoundVolumeType.Master));
-            ApplyVolume(MornSoundCore.GetVolumeInfo(MornSoundVolumeType.Se));
-            ApplyVolume(MornSoundCore.GetVolumeInfo(MornSoundVolumeType.Bgm));
-            MornSoundCore.OnVolumeChanged.Subscribe(ApplyVolume).AddTo(this);
+            ApplyVolume(MornSoundVolumeType.Master, _masterSo.LoadFloat());
+            ApplyVolume(MornSoundVolumeType.Se, _seSo.LoadFloat());
+            ApplyVolume(MornSoundVolumeType.Bgm, _bgmSo.LoadFloat());
         }
 
-        private void ApplyVolume(MornSoundVolumeChangeInfo info)
+        private void ApplyVolume(MornSoundVolumeType volumeType, float value)
         {
-            var volumeKey = info.VolumeType switch
+            var volumeKey = volumeType switch
             {
                 MornSoundVolumeType.Master => MasterVolumeKey,
-                MornSoundVolumeType.Se => SeVolumeKey,
-                MornSoundVolumeType.Bgm => BGMVolumeKey,
-                _ => throw new ArgumentOutOfRangeException(nameof(info.VolumeType), info.VolumeType, null),
+                MornSoundVolumeType.Se     => SeVolumeKey,
+                MornSoundVolumeType.Bgm    => BGMVolumeKey,
+                _                          => throw new ArgumentOutOfRangeException(nameof(volumeType), volumeType, null),
             };
-            _mixer.SetFloat(volumeKey, info.VolumeDecibel);
+            _mixer.SetFloat(volumeKey, MornSoundCore.SoundParameter.VolumeRateToDecibel(value));
         }
 
         public MornSoundInfo GetInfo(TEnum value)
@@ -97,7 +104,7 @@ namespace MornSound
             }
 
             Debug.LogError($"Key:{value} is not found.");
-            return default;
+            return default(MornSoundInfo);
         }
     }
 }

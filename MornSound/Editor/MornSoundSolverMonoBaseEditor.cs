@@ -12,9 +12,6 @@ namespace MornSound
         private SerializedProperty _keyListProperty;
         private SerializedProperty _clipListProperty;
         private SerializedProperty _isRandomPitchListProperty;
-        private SerializedProperty _mixer;
-        private SerializedProperty _seMixer;
-        private SerializedProperty _bgmMixer;
         private readonly List<int> _cachedKeyList = new();
 
         private void OnEnable()
@@ -22,9 +19,6 @@ namespace MornSound
             _scriptProperty = serializedObject.FindProperty("m_Script");
             _keyListProperty = serializedObject.FindProperty("_keyList");
             _clipListProperty = serializedObject.FindProperty("_clipList");
-            _mixer = serializedObject.FindProperty("_mixer");
-            _seMixer = serializedObject.FindProperty("_seMixer");
-            _bgmMixer = serializedObject.FindProperty("_bgmMixer");
             _isRandomPitchListProperty = serializedObject.FindProperty("_isRandomPitchList");
         }
 
@@ -81,14 +75,25 @@ namespace MornSound
 
         private void ShowHeaderProperties()
         {
+            //m_ScriptをDisableで描画
             using (new EditorGUI.DisabledScope(true))
             {
                 EditorGUILayout.PropertyField(_scriptProperty);
             }
 
-            EditorGUILayout.PropertyField(_mixer);
-            EditorGUILayout.PropertyField(_seMixer);
-            EditorGUILayout.PropertyField(_bgmMixer);
+            //他のプロパティを描画
+            var iterator = serializedObject.GetIterator();
+            var isEnterChildren = true;
+            while (iterator.NextVisible(isEnterChildren))
+            {
+                isEnterChildren = false;
+                if (iterator.name is "m_Script" or "_keyList" or "_clipList" or "_isRandomPitchList")
+                {
+                    continue;
+                }
+
+                EditorGUILayout.PropertyField(iterator, true);
+            }
         }
 
         private void AdjustElements()

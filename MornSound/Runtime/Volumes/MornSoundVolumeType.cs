@@ -3,7 +3,7 @@
     public enum MornSoundVolumeType
     {
         Master,
-        Se,
         Bgm,
+        Se,
     }
 }
