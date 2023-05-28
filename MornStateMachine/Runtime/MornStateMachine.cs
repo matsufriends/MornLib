@@ -61,5 +61,28 @@ namespace MornStateMachine
         {
             return EqualityComparer<TEnum>.Default.Equals(CurState, type);
         }
+
+        public bool IsState(TEnum type1, TEnum type2)
+        {
+            return EqualityComparer<TEnum>.Default.Equals(CurState, type1) || EqualityComparer<TEnum>.Default.Equals(CurState, type2);
+        }
+
+        public bool IsState(TEnum type1, TEnum type2, TEnum type3)
+        {
+            return EqualityComparer<TEnum>.Default.Equals(CurState, type1) || EqualityComparer<TEnum>.Default.Equals(CurState, type2) || EqualityComparer<TEnum>.Default.Equals(CurState, type3);
+        }
+
+        public bool IsState(params TEnum[] types)
+        {
+            foreach (var type in types)
+            {
+                if (EqualityComparer<TEnum>.Default.Equals(CurState, type))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
