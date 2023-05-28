@@ -10,12 +10,11 @@ namespace MornSetting
         [SerializeField] private Slider _slider;
         [SerializeField] private MornSettingFloatSo _settingSo;
         private bool _selfChangeLock;
+
         private void Awake()
         {
             ApplyValue(_settingSo.LoadFloat());
-            _settingSo.OnFloatChanged.Where(x => _selfChangeLock == false)
-                      .Subscribe(ApplyValue)
-                      .AddTo(this);
+            _settingSo.OnFloatChanged.Where(x => _selfChangeLock == false).Subscribe(ApplyValue).AddTo(this);
             _slider.OnValueChangedAsObservable()
                    .Subscribe(x =>
                     {
@@ -25,10 +24,12 @@ namespace MornSetting
                     })
                    .AddTo(this);
         }
+
         private void ApplyValue(float value)
         {
             _slider.value = value;
         }
+
         private void Reset()
         {
             _slider = GetComponent<Slider>();
