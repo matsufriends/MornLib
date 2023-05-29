@@ -1,4 +1,4 @@
-﻿namespace ParryKing.MornEase.Runtime
+﻿namespace MornEase
 {
     public enum MornEaseType
     {

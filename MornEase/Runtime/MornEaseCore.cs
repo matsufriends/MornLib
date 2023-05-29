@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace ParryKing.MornEase.Runtime
+namespace MornEase
 {
     public static class MornEaseCore
     {
@@ -73,31 +73,25 @@ namespace ParryKing.MornEase.Runtime
                 case MornEaseType.EaseOutBack:
                     return 1 + c3 * Mathf.Pow(x - 1, 3) + c1 * Mathf.Pow(x - 1, 2);
                 case MornEaseType.EaseInOutBack:
-                    return x < 0.5
-                        ? Mathf.Pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2) / 2
-                        : (Mathf.Pow(2 * x - 2, 2) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2;
+                    return x < 0.5 ? Mathf.Pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2) / 2 : (Mathf.Pow(2 * x - 2, 2) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2;
                 case MornEaseType.EaseInElastic:
                     return -Mathf.Pow(2, 10 * x - 10) * Mathf.Sin((x * 10 - 10.75f) * c4);
                 case MornEaseType.EaseOutElastic:
                     return Mathf.Pow(2, -10 * x) * Mathf.Sin((x * 10 - 0.75f) * c4) + 1;
                 case MornEaseType.EaseInOutElastic:
-                    return x < 0.5
-                        ? -(Mathf.Pow(2, 20 * x - 10) * Mathf.Sin((20 * x - 11.125f) * c5)) / 2
-                        : Mathf.Pow(2, -20 * x + 10) * Mathf.Sin((20 * x - 11.125f) * c5) / 2 + 1;
+                    return x < 0.5 ? -(Mathf.Pow(2, 20 * x - 10) * Mathf.Sin((20 * x - 11.125f) * c5)) / 2 : Mathf.Pow(2, -20 * x + 10) * Mathf.Sin((20 * x - 11.125f) * c5) / 2 + 1;
                 case MornEaseType.EaseInBounce:
                     return 1 - Ease(1 - x, MornEaseType.EaseOutBounce);
                 case MornEaseType.EaseOutBounce:
                     return x switch
                     {
-                        < 1 / d1 => n1 * x * x,
-                        < 2 / d1 => n1 * (x -= 1.5f / d1) * x + 0.75f,
+                        < 1 / d1    => n1 * x * x,
+                        < 2 / d1    => n1 * (x -= 1.5f / d1) * x + 0.75f,
                         < 2.5f / d1 => n1 * (x -= 2.25f / d1) * x + 0.9375f,
-                        _ => n1 * (x -= 2.625f / d1) * x + 0.984375f,
+                        _           => n1 * (x -= 2.625f / d1) * x + 0.984375f,
                     };
                 case MornEaseType.EaseInOutBounce:
-                    return x < 0.5
-                        ? (1 - Ease(1 - 2 * x, MornEaseType.EaseOutBounce)) / 2
-                        : (1 + Ease(2 * x - 1, MornEaseType.EaseOutBounce)) / 2;
+                    return x < 0.5 ? (1 - Ease(1 - 2 * x, MornEaseType.EaseOutBounce)) / 2 : (1 + Ease(2 * x - 1, MornEaseType.EaseOutBounce)) / 2;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(easeType), easeType, null);
             }
