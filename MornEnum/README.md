@@ -9,8 +9,13 @@
 
 ## 導入
 
+下記どちらでも導入できます。
+
 - `PackageManager`の "Add package from git URL... " で以下のURLを入力
-    - https://github.com/matsufriends/MornLib.git?path=MornEnum
+
+``` 
+https://github.com/matsufriends/MornLib.git?path=MornEnum
+```
 
 - `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記
 
