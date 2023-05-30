@@ -13,6 +13,7 @@ namespace MornStateMachine
         private readonly bool _useUnScaledTime;
         private readonly TEnum _noneEnum;
         private readonly int _fps;
+        public int ChangeSameStateCount { get; private set; }
         public TEnum CurState { get; private set; }
         public float PrevFrame { get; private set; }
         public float Frame { get; private set; }
@@ -48,6 +49,15 @@ namespace MornStateMachine
         public void ChangeState(TEnum type)
         {
             _onExitSubject.OnNext(CurState);
+            if (IsState(type))
+            {
+                ChangeSameStateCount++;
+            }
+            else
+            {
+                ChangeSameStateCount = 0;
+            }
+
             CurState = type;
             PrevFrame = 0;
             Frame = 0;
