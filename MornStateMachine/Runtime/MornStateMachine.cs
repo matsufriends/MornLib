@@ -38,10 +38,7 @@ namespace MornStateMachine
             }
         }
 
-        public bool IsFrame(int frame)
-        {
-            return PrevFrame < frame && frame <= Frame;
-        }
+        public bool IsFrame(int frame) => PrevFrame < frame && frame <= Frame;
 
         public void RegisterState(TEnum type, Func<TArg, TEnum> task)
         {
@@ -57,20 +54,9 @@ namespace MornStateMachine
             _onEnterSubject.OnNext(CurState);
         }
 
-        public bool IsState(TEnum type)
-        {
-            return EqualityComparer<TEnum>.Default.Equals(CurState, type);
-        }
-
-        public bool IsState(TEnum type1, TEnum type2)
-        {
-            return EqualityComparer<TEnum>.Default.Equals(CurState, type1) || EqualityComparer<TEnum>.Default.Equals(CurState, type2);
-        }
-
-        public bool IsState(TEnum type1, TEnum type2, TEnum type3)
-        {
-            return EqualityComparer<TEnum>.Default.Equals(CurState, type1) || EqualityComparer<TEnum>.Default.Equals(CurState, type2) || EqualityComparer<TEnum>.Default.Equals(CurState, type3);
-        }
+        public bool IsState(TEnum type) => EqualityComparer<TEnum>.Default.Equals(CurState, type);
+        public bool IsState(TEnum type1, TEnum type2) => EqualityComparer<TEnum>.Default.Equals(CurState, type1) || EqualityComparer<TEnum>.Default.Equals(CurState, type2);
+        public bool IsState(TEnum type1, TEnum type2, TEnum type3) => EqualityComparer<TEnum>.Default.Equals(CurState, type1) || EqualityComparer<TEnum>.Default.Equals(CurState, type2) || EqualityComparer<TEnum>.Default.Equals(CurState, type3);
 
         public bool IsState(params TEnum[] types)
         {
