@@ -10,10 +10,12 @@ namespace MornSetting
         [SerializeField] private float _defaultFloat;
         private readonly Subject<float> _floatSubject = new();
         public IObservable<float> OnFloatChanged => _floatSubject;
+
         public float LoadFloat()
         {
             return PlayerPrefs.GetFloat(Key, _defaultFloat);
         }
+
         public void SaveFloat(float value)
         {
             PlayerPrefs.SetFloat(Key, value);
