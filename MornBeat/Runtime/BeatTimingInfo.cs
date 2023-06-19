@@ -1,4 +1,4 @@
-﻿namespace MornLib.Beats
+﻿namespace MornBeat
 {
     /// <summary>
     ///     1小節内における拍の構造体
@@ -9,7 +9,6 @@
         ///     何チック目か
         /// </summary>
         private readonly int _currentTick;
-
         /// <summary>
         ///     1小節に何チックあるか
         /// </summary>

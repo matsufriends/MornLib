@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using MornLib.Cores;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
 
-namespace MornLib.Beats
+namespace MornBeat
 {
-    [CreateAssetMenu(fileName = nameof(MornBeatMemoSo), menuName = nameof(MornBeatMemoSo))]
-    public sealed class MornBeatMemoSo : ScriptableObject
+    [CreateAssetMenu(fileName = nameof(MornBeatMemoSo), menuName = "MornBeat/" + nameof(MornBeatMemoSo))]
+    internal sealed class MornBeatMemoSo : ScriptableObject
     {
         [Serializable]
         private struct BpmAndTimeInfo
@@ -24,9 +24,9 @@ namespace MornLib.Beats
         [SerializeField] private float _offset;
         public int BeatCount => _beatCount;
         public int Timings => _timingList.Count;
-        public AudioClip clip => _clip;
+        public AudioClip Clip => _clip;
 
-        public float GetBeatTiming(int index)
+        internal float GetBeatTiming(int index)
         {
             if (index < 0 || Timings <= index)
             {
@@ -36,14 +36,10 @@ namespace MornLib.Beats
             return _timingList[index];
         }
 
-        public void MakeBeat()
+        internal void MakeBeat()
         {
-            if (_offset < 0)
-            {
-                MornLog.Error("負数のオフセットには未対応です");
-                return;
-            }
-
+            Assert.IsTrue(_offset >= 0);
+            Assert.IsNotNull(_clip);
             var beat = 0d;
             var time = 0d;
             _interval = Math.Max(0.000001f, _interval);
@@ -94,8 +90,8 @@ namespace MornLib.Beats
 
                 var begin = _bpmAndTimeInfoList[i - 1];
                 var end = _bpmAndTimeInfoList[i];
-                var t1 = MornMath.InverseLerp(begin.Time, end.Time, time);
-                return MornMath.Lerp(begin.Bpm, end.Bpm, t1);
+                var t1 = MornBeatUtil.InverseLerp(begin.Time, end.Time, time);
+                return MornBeatUtil.Lerp(begin.Bpm, end.Bpm, t1);
             }
 
             return _bpmAndTimeInfoList[^1].Bpm;
@@ -104,7 +100,7 @@ namespace MornLib.Beats
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(MornBeatMemoSo))]
-    public class BeatMemoSoEditor : Editor
+    internal sealed class BeatMemoSoEditor : Editor
     {
         private MornBeatMemoSo _mornBeatMemo;
 
