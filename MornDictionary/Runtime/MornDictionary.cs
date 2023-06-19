@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace MornDictionary
 {
-    public abstract class MornDictionaryBase<TKey, TValue> : MonoBehaviour where TKey : Enum
+    [Serializable]
+    public struct MornDictionary<TKey, TValue> where TKey : Enum
     {
-        [SerializeField] internal List<TKey> _keyList;
-        [SerializeField] internal List<TValue> _valueList;
+        [SerializeField] private List<KeyValuePairSet> _pairList;
         private Dictionary<TKey, TValue> _keyToValueDict;
 
         public TValue this[TKey key] => GetDictionary()[key];
@@ -20,12 +20,19 @@ namespace MornDictionary
             }
 
             _keyToValueDict = new();
-            for (var i = 0; i < _keyList.Count; i++)
+            for (var i = 0; i < _pairList.Count; i++)
             {
-                _keyToValueDict.Add(_keyList[i], _valueList[i]);
+                _keyToValueDict.Add(_pairList[i].Key, _pairList[i].Value);
             }
 
             return _keyToValueDict;
+        }
+
+        [Serializable]
+        private struct KeyValuePairSet
+        {
+            public TKey Key;
+            public TValue Value;
         }
     }
 }
