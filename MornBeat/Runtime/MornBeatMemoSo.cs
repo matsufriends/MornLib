@@ -25,6 +25,7 @@ namespace MornBeat
         public int BeatCount => _beatCount;
         public int TickSum => _timingList.Count;
         public AudioClip Clip => _clip;
+        internal float Offset => _offset;
 
         internal float GetBeatTiming(int index)
         {
@@ -38,13 +39,11 @@ namespace MornBeat
 
         internal void MakeBeat()
         {
-            Assert.IsTrue(_offset >= 0);
             Assert.IsNotNull(_clip);
             var beat = 0d;
             var time = 0d;
             _interval = Math.Max(0.000001f, _interval);
             _timingList.Clear();
-            _timingList.Add(_offset);
             var length = _clip.length;
             while (time < length)
             {
@@ -52,7 +51,7 @@ namespace MornBeat
                 var dif = bpm / 60 * _beatCount / 4 * _interval;
                 if (Math.Floor(beat) < Math.Floor(beat + dif))
                 {
-                    _timingList.Add(((float)time + _offset) % length);
+                    _timingList.Add((float)time % length);
                 }
 
                 beat += dif;

@@ -18,7 +18,7 @@ namespace MornBeat
         public static IObservable<Unit> OnEndBeat => s_endBeatSubject;
 
         public static float GetMusicPlayingTime<TBeatType>() where TBeatType : Enum =>
-            MornBeatSolverMonoBase<TBeatType>.Instance.MusicPlayingTimeImpl;
+            MornBeatSolverMonoBase<TBeatType>.Instance.MusicPlayingTimeImpl + s_currentBeatMemo.Offset;
 
         public static float GetBeatTiming(int tick)
         {
@@ -32,8 +32,7 @@ namespace MornBeat
 
         public static void UpdateBeat<TBeatType>() where TBeatType : Enum
         {
-            var solver = MornBeatSolverMonoBase<TBeatType>.Instance;
-            var time = solver.MusicPlayingTimeImpl;
+            var time = GetMusicPlayingTime<TBeatType>();
             if (s_currentBeatMemo == null)
             {
                 return;
