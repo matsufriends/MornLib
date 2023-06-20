@@ -16,7 +16,9 @@ namespace MornBeat
         public static IObservable<BeatTimingInfo> OnBeat => s_beatSubject;
         public static IObservable<Unit> OnInitializeBeat => s_initializeBeatSubject;
         public static IObservable<Unit> OnEndBeat => s_endBeatSubject;
-        public static float MusicPlayingTime => MornBeatSolverMonoBase<Enum>.Instance.MusicPlayingTimeImpl;
+
+        public static float GetMusicPlayingTime<TBeatType>() where TBeatType : Enum =>
+            MornBeatSolverMonoBase<TBeatType>.Instance.MusicPlayingTimeImpl;
 
         public static float GetBeatTiming(int tick)
         {
