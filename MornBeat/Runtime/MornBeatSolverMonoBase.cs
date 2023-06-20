@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace MornBeat
 {
-    public abstract class MornBeatSolverBase<TBeatType> : MonoBehaviour where TBeatType : Enum
+    public abstract class MornBeatSolverMonoBase<TBeatType> : MonoBehaviour where TBeatType : Enum
     {
         [Header("MakeBeat")] [SerializeField] private MornDictionary<TBeatType, MornBeatMemoSo> _beatDictionary;
-        private static MornBeatSolverBase<TBeatType> s_instance;
+        private static MornBeatSolverMonoBase<TBeatType> s_instance;
 
         internal MornBeatMemoSo this[TBeatType beatType] => _beatDictionary[beatType];
 
-        internal static MornBeatSolverBase<TBeatType> Instance
+        internal static MornBeatSolverMonoBase<TBeatType> Instance
         {
             get
             {
@@ -20,10 +20,10 @@ namespace MornBeat
                     return s_instance;
                 }
 
-                s_instance = FindObjectOfType<MornBeatSolverBase<TBeatType>>();
+                s_instance = FindObjectOfType<MornBeatSolverMonoBase<TBeatType>>();
                 if (s_instance == null)
                 {
-                    Debug.LogError($"{nameof(MornBeatSolverBase<TBeatType>)} is not found.");
+                    Debug.LogError($"{nameof(MornBeatSolverMonoBase<TBeatType>)} is not found.");
                 }
 
                 return s_instance;

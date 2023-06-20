@@ -16,7 +16,7 @@ namespace MornBeat
 
         public static void UpdateBeat<TBeatType>() where TBeatType : Enum
         {
-            var solver = MornBeatSolverBase<TBeatType>.Instance;
+            var solver = MornBeatSolverMonoBase<TBeatType>.Instance;
             var time = solver.MusicPlayingTimeImpl;
             if (s_currentBeatMemo == null)
             {
@@ -52,7 +52,7 @@ namespace MornBeat
 
         public static void InitializeBeat<TBeatType>(TBeatType beatType) where TBeatType : Enum
         {
-            var solver = MornBeatSolverBase<TBeatType>.Instance;
+            var solver = MornBeatSolverMonoBase<TBeatType>.Instance;
             s_nextBeatIndex = 0;
             s_currentBeatMemo = solver[beatType];
             s_waitLoop = false;
