@@ -1,35 +1,24 @@
 ﻿using System;
 using UniRx;
-using UnityEngine;
 
 namespace MornBeat
 {
-    public static class MornBeatCore<TBeatType> where TBeatType : Enum
+    public static class MornBeatCore
     {
-        private static MornBeatMemoSo s_currentMemo;
+        private static MornBeatMemoSo s_currentBeatMemo;
         private static int s_nextBeatIndex;
         private static float s_lastBgmTime;
         private static bool s_waitLoop;
         private static readonly Subject<BeatTimingInfo> s_beatSubject = new();
         private static readonly Subject<Unit> s_endBeatSubject = new();
-        public static float LeftMeasureTime { get; private set; }
         public static IObservable<BeatTimingInfo> OnBeat => s_beatSubject;
         public static IObservable<Unit> OnEndBeat => s_endBeatSubject;
 
-        public static void InitializeBeat(TBeatType beatType)
+        public static void UpdateBeat<TBeatType>() where TBeatType : Enum
         {
             var solver = MornBeatSolverBase<TBeatType>.Instance;
-            s_nextBeatIndex = 0;
-            s_currentMemo = solver[beatType];
-            s_waitLoop = false;
-            solver.OnInitialized(beatType, s_currentMemo.Clip);
-        }
-
-        public static void UpdateBeat()
-        {
-            var solver = MornBeatSolverBase<TBeatType>.Instance;
-            var time = solver.PlayingTime;
-            if (s_currentMemo == null)
+            var time = solver.MusicPlayingTimeImpl;
+            if (s_currentBeatMemo == null)
             {
                 return;
             }
@@ -45,21 +34,29 @@ namespace MornBeat
             }
 
             s_lastBgmTime = time;
-            LeftMeasureTime = s_currentMemo.GetBeatTiming(Mathf.FloorToInt(s_nextBeatIndex / 8f) * 8 + 7) - s_lastBgmTime;
-            if (s_lastBgmTime < s_currentMemo.GetBeatTiming(s_nextBeatIndex))
+            if (s_lastBgmTime < s_currentBeatMemo.GetBeatTiming(s_nextBeatIndex))
             {
                 return;
             }
 
-            s_beatSubject.OnNext(new BeatTimingInfo(s_nextBeatIndex, s_currentMemo.BeatCount));
-            s_waitLoop = s_currentMemo.GetBeatTiming(s_nextBeatIndex) > s_currentMemo.GetBeatTiming(s_nextBeatIndex + 1);
+            s_beatSubject.OnNext(new BeatTimingInfo(s_nextBeatIndex, s_currentBeatMemo.BeatCount));
+            s_waitLoop = s_currentBeatMemo.GetBeatTiming(s_nextBeatIndex) > s_currentBeatMemo.GetBeatTiming(s_nextBeatIndex + 1);
             s_nextBeatIndex++;
-            if (s_nextBeatIndex == s_currentMemo.Timings)
+            if (s_nextBeatIndex == s_currentBeatMemo.Timings)
             {
                 s_nextBeatIndex = 0;
                 s_waitLoop = false;
                 s_endBeatSubject.OnNext(Unit.Default);
             }
+        }
+
+        public static void InitializeBeat<TBeatType>(TBeatType beatType) where TBeatType : Enum
+        {
+            var solver = MornBeatSolverBase<TBeatType>.Instance;
+            s_nextBeatIndex = 0;
+            s_currentBeatMemo = solver[beatType];
+            s_waitLoop = false;
+            solver.OnInitializeBeatImpl(beatType);
         }
     }
 }

@@ -6,9 +6,12 @@ namespace MornBeat
 {
     public abstract class MornBeatSolverBase<TBeatType> : MonoBehaviour where TBeatType : Enum
     {
-        [SerializeField] private MornDictionary<TBeatType, MornBeatMemoSo> _beatDictionary;
+        [Header("MakeBeat")] [SerializeField] private MornDictionary<TBeatType, MornBeatMemoSo> _beatDictionary;
         private static MornBeatSolverBase<TBeatType> s_instance;
-        public static MornBeatSolverBase<TBeatType> Instance
+
+        internal MornBeatMemoSo this[TBeatType beatType] => _beatDictionary[beatType];
+
+        internal static MornBeatSolverBase<TBeatType> Instance
         {
             get
             {
@@ -26,10 +29,14 @@ namespace MornBeat
                 return s_instance;
             }
         }
+        internal float MusicPlayingTimeImpl => MusicPlayingTime;
 
-        internal MornBeatMemoSo this[TBeatType beatType] => _beatDictionary[beatType];
+        internal void OnInitializeBeatImpl(TBeatType beatType)
+        {
+            OnInitializedBeat(beatType, _beatDictionary[beatType].Clip);
+        }
 
-        public abstract float PlayingTime { get; }
-        public abstract void OnInitialized(TBeatType beatType, AudioClip audioClip);
+        protected abstract float MusicPlayingTime { get; }
+        protected abstract void OnInitializedBeat(TBeatType beatType, AudioClip clip);
     }
 }
