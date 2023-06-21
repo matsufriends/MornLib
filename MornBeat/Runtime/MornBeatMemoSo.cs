@@ -44,6 +44,7 @@ namespace MornBeat
             var time = 0d;
             _interval = Math.Max(0.000001f, _interval);
             _timingList.Clear();
+            _timingList.Add(0);
             var length = _clip.length;
             while (time < length)
             {
