@@ -20,6 +20,14 @@ namespace MornBeat
         public static float GetMusicPlayingTime<TBeatType>() where TBeatType : Enum =>
             MornBeatSolverMonoBase<TBeatType>.Instance.MusicPlayingTimeImpl + s_currentBeatMemo.Offset;
 
+        public static void Reset()
+        {
+            s_currentBeatMemo = null;
+            s_tick = 0;
+            s_lastBgmTime = 0;
+            s_waitLoop = false;
+        }
+
         public static float GetBeatTiming(int tick)
         {
             if (s_currentBeatMemo == null)
@@ -59,15 +67,24 @@ namespace MornBeat
             s_tick++;
             if (s_tick == s_currentBeatMemo.TickSum)
             {
-                s_tick = 0;
+                if (s_currentBeatMemo.IsLoop)
+                {
+                    s_tick = 0;
+                }
+
                 s_waitLoop = false;
                 s_endBeatSubject.OnNext(Unit.Default);
             }
         }
 
-        public static void InitializeBeat<TBeatType>(TBeatType beatType) where TBeatType : Enum
+        public static void InitializeBeat<TBeatType>(TBeatType beatType, bool isForceInitialize = false) where TBeatType : Enum
         {
             var solver = MornBeatSolverMonoBase<TBeatType>.Instance;
+            if (s_currentBeatMemo == solver[beatType] && isForceInitialize == false)
+            {
+                return;
+            }
+
             s_tick = 0;
             s_currentBeatMemo = solver[beatType];
             s_waitLoop = false;

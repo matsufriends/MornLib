@@ -33,10 +33,15 @@ namespace MornBeat
 
         internal void OnInitializeBeatImpl(TBeatType beatType)
         {
-            OnInitializedBeat(beatType, _beatDictionary[beatType].Clip);
+            OnInitializedBeat(beatType, _beatDictionary[beatType].Clip, _beatDictionary[beatType].IsLoop);
+        }
+
+        private void OnDestroy()
+        {
+            MornBeatCore.Reset();
         }
 
         protected abstract float MusicPlayingTime { get; }
-        protected abstract void OnInitializedBeat(TBeatType beatType, AudioClip clip);
+        protected abstract void OnInitializedBeat(TBeatType beatType, AudioClip clip, bool isLoop);
     }
 }
