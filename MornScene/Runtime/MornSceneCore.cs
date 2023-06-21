@@ -23,6 +23,7 @@ namespace MornScene
                 updateScene.OnExitScene(solver[updateScene]);
             }
 
+            s_sceneUpdateList.Clear();
             AddScene(sceneType);
         }
 
