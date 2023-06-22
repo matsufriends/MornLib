@@ -10,9 +10,9 @@ namespace MornBeat
         private static int s_tick;
         private static float s_lastBgmTime;
         private static bool s_waitLoop;
-        private static readonly Subject<BeatTimingInfo> s_beatSubject = new();
-        private static readonly Subject<Unit> s_initializeBeatSubject = new();
-        private static readonly Subject<Unit> s_endBeatSubject = new();
+        private static Subject<BeatTimingInfo> s_beatSubject = new();
+        private static Subject<Unit> s_initializeBeatSubject = new();
+        private static Subject<Unit> s_endBeatSubject = new();
         public static IObservable<BeatTimingInfo> OnBeat => s_beatSubject;
         public static IObservable<Unit> OnInitializeBeat => s_initializeBeatSubject;
         public static IObservable<Unit> OnEndBeat => s_endBeatSubject;
@@ -26,6 +26,9 @@ namespace MornBeat
             s_tick = 0;
             s_lastBgmTime = 0;
             s_waitLoop = false;
+            s_beatSubject = new Subject<BeatTimingInfo>();
+            s_initializeBeatSubject = new Subject<Unit>();
+            s_endBeatSubject = new Subject<Unit>();
         }
 
         public static float GetBeatTiming(int tick)
