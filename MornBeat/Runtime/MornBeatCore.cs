@@ -104,7 +104,7 @@ namespace MornBeat
             var curTime = GetMusicPlayingTime<TBeatType>();
             var preTime = GetBeatTiming(lastTick);
             var nexTime = GetBeatTiming(nextTick);
-            while (curTime < preTime)
+            while (curTime < preTime && lastTick - tickSize >= 0)
             {
                 lastTick -= tickSize;
                 nextTick -= tickSize;
@@ -112,7 +112,7 @@ namespace MornBeat
                 nexTime = GetBeatTiming(nextTick);
             }
 
-            while (nexTime < curTime)
+            while (nexTime < curTime && nextTick + tickSize < s_currentBeatMemo.TickSum)
             {
                 lastTick += tickSize;
                 nextTick += tickSize;
