@@ -1,6 +1,7 @@
 ﻿using System;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace MornBeat
 {
@@ -66,7 +67,6 @@ namespace MornBeat
             }
 
             s_beatSubject.OnNext(new BeatTimingInfo(s_tick, s_currentBeatMemo.BeatCount));
-            s_waitLoop = s_currentBeatMemo.GetBeatTiming(s_tick) > s_currentBeatMemo.GetBeatTiming(s_tick + 1);
             s_tick++;
             if (s_tick == s_currentBeatMemo.TickSum)
             {
@@ -75,7 +75,7 @@ namespace MornBeat
                     s_tick = 0;
                 }
 
-                s_waitLoop = false;
+                s_waitLoop = true;
                 s_endBeatSubject.OnNext(Unit.Default);
             }
         }
@@ -93,6 +93,41 @@ namespace MornBeat
             s_waitLoop = false;
             solver.OnInitializeBeatImpl(beatType);
             s_initializeBeatSubject.OnNext(Unit.Default);
+        }
+
+        public static int GetNearTick<TBeatType>(int beat, out float nearDif) where TBeatType : Enum
+        {
+            Assert.IsTrue(beat <= s_currentBeatMemo.BeatCount);
+            var tickSize = s_currentBeatMemo.BeatCount / beat;
+            var lastTick = s_tick - s_tick % tickSize;
+            var nextTick = lastTick + tickSize;
+            var curTime = GetMusicPlayingTime<TBeatType>();
+            var preTime = GetBeatTiming(lastTick);
+            var nexTime = GetBeatTiming(nextTick);
+            while (curTime < preTime)
+            {
+                lastTick -= tickSize;
+                nextTick -= tickSize;
+                preTime = GetBeatTiming(lastTick);
+                nexTime = GetBeatTiming(nextTick);
+            }
+
+            while (nexTime < curTime)
+            {
+                lastTick += tickSize;
+                nextTick += tickSize;
+                preTime = GetBeatTiming(lastTick);
+                nexTime = GetBeatTiming(nextTick);
+            }
+
+            if (curTime < (preTime + nexTime) / 2f)
+            {
+                nearDif = preTime - curTime;
+                return lastTick;
+            }
+
+            nearDif = nexTime - curTime;
+            return nextTick;
         }
     }
 }
