@@ -29,11 +29,10 @@ namespace MornBeat
                 return s_instance;
             }
         }
-        internal float MusicPlayingTimeImpl => MusicPlayingTime;
 
-        internal void OnInitializeBeatImpl(TBeatType beatType)
+        internal void OnInitializeBeatImpl(TBeatType beatType, double dspTime)
         {
-            OnInitializedBeat(beatType, _beatDictionary[beatType].Clip, _beatDictionary[beatType].IsLoop);
+            OnInitializedBeat(beatType, _beatDictionary[beatType].Clip, dspTime, _beatDictionary[beatType].IsLoop);
         }
 
         private void OnDestroy()
@@ -41,7 +40,6 @@ namespace MornBeat
             MornBeatCore.Reset();
         }
 
-        protected abstract float MusicPlayingTime { get; }
-        protected abstract void OnInitializedBeat(TBeatType beatType, AudioClip clip, bool isLoop);
+        protected abstract void OnInitializedBeat(TBeatType beatType, AudioClip clip, double dspTime, bool isLoop);
     }
 }

@@ -9,24 +9,23 @@ namespace MornBeat
     {
         private static MornBeatMemoSo s_currentBeatMemo;
         private static int s_tick;
-        private static float s_lastBgmTime;
         private static bool s_waitLoop;
+        private static double s_startDspTime;
         private static Subject<BeatTimingInfo> s_beatSubject = new();
         private static Subject<Unit> s_initializeBeatSubject = new();
         private static Subject<Unit> s_endBeatSubject = new();
         public static IObservable<BeatTimingInfo> OnBeat => s_beatSubject;
         public static IObservable<Unit> OnInitializeBeat => s_initializeBeatSubject;
         public static IObservable<Unit> OnEndBeat => s_endBeatSubject;
-
-        public static float GetMusicPlayingTime<TBeatType>() where TBeatType : Enum =>
-            MornBeatSolverMonoBase<TBeatType>.Instance.MusicPlayingTimeImpl + s_currentBeatMemo.Offset;
+        public static double OffsetTime;
+        private static double GetMusicPlayingTime => AudioSettings.dspTime - s_startDspTime + s_currentBeatMemo.Offset + OffsetTime;
 
         public static void Reset()
         {
             s_currentBeatMemo = null;
             s_tick = 0;
-            s_lastBgmTime = 0;
             s_waitLoop = false;
+            s_startDspTime = AudioSettings.dspTime;
             s_beatSubject = new Subject<BeatTimingInfo>();
             s_initializeBeatSubject = new Subject<Unit>();
             s_endBeatSubject = new Subject<Unit>();
@@ -42,26 +41,28 @@ namespace MornBeat
             return s_currentBeatMemo.GetBeatTiming(tick);
         }
 
-        public static void UpdateBeat<TBeatType>() where TBeatType : Enum
+        public static void UpdateBeat()
         {
-            var time = GetMusicPlayingTime<TBeatType>();
             if (s_currentBeatMemo == null)
             {
                 return;
             }
 
+            var time = GetMusicPlayingTime;
             if (s_waitLoop)
             {
-                if (s_lastBgmTime <= time)
+                var length = s_currentBeatMemo.Clip.length;
+                if (time < length)
                 {
                     return;
                 }
 
+                s_startDspTime += length;
+                time -= length;
                 s_waitLoop = false;
             }
 
-            s_lastBgmTime = time;
-            if (s_lastBgmTime < s_currentBeatMemo.GetBeatTiming(s_tick))
+            if (time < s_currentBeatMemo.GetBeatTiming(s_tick))
             {
                 return;
             }
@@ -88,20 +89,21 @@ namespace MornBeat
                 return;
             }
 
-            s_tick = 0;
             s_currentBeatMemo = solver[beatType];
+            s_tick = 0;
             s_waitLoop = false;
-            solver.OnInitializeBeatImpl(beatType);
+            s_startDspTime = AudioSettings.dspTime + 0.1d;
+            solver.OnInitializeBeatImpl(beatType, s_startDspTime);
             s_initializeBeatSubject.OnNext(Unit.Default);
         }
 
-        public static int GetNearTick<TBeatType>(int beat, out float nearDif) where TBeatType : Enum
+        public static int GetNearTick(int beat, out double nearDif)
         {
             Assert.IsTrue(beat <= s_currentBeatMemo.BeatCount);
             var tickSize = s_currentBeatMemo.BeatCount / beat;
             var lastTick = s_tick - s_tick % tickSize;
             var nextTick = lastTick + tickSize;
-            var curTime = GetMusicPlayingTime<TBeatType>();
+            var curTime = GetMusicPlayingTime;
             var preTime = GetBeatTiming(lastTick);
             var nexTime = GetBeatTiming(nextTick);
             while (curTime < preTime && lastTick - tickSize >= 0)
