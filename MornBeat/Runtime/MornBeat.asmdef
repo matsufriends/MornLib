@@ -1,19 +1,20 @@
 {
-    "name": "MornBeat",
-    "rootNamespace": "MornBeat",
-    "references": [
-        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
-        "GUID:2310e99326312ea41bd9676ceb403692",
-        "GUID:520891f70526d454fa74c098f96aaedd",
-        "GUID:0930510a8abf8654aa769aa5dfc373f1"
-    ],
-    "includePlatforms": [],
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
-    "noEngineReferences": false
+  "name": "MornBeat",
+  "rootNamespace": "MornBeat",
+  "references": [
+    "GUID:560b04d1a97f54a4e82edc0cbbb69285",
+    "GUID:2310e99326312ea41bd9676ceb403692",
+    "GUID:520891f70526d454fa74c098f96aaedd",
+    "GUID:0930510a8abf8654aa769aa5dfc373f1",
+    "GUID:125c1ea3b2f364846bbec0de39d4c3af"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
 }

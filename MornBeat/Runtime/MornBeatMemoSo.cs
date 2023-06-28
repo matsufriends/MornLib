@@ -7,7 +7,7 @@ using UnityEngine.Assertions;
 namespace MornBeat
 {
     [CreateAssetMenu(fileName = nameof(MornBeatMemoSo), menuName = "MornBeat/" + nameof(MornBeatMemoSo))]
-    internal sealed class MornBeatMemoSo : ScriptableObject
+    public sealed class MornBeatMemoSo : ScriptableObject
     {
         [Serializable]
         private struct BpmAndTimeInfo

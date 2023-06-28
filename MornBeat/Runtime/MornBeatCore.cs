@@ -12,10 +12,10 @@ namespace MornBeat
         private static bool s_waitLoop;
         private static double s_startDspTime;
         private static Subject<BeatTimingInfo> s_beatSubject = new();
-        private static Subject<Unit> s_initializeBeatSubject = new();
+        private static Subject<MornBeatMemoSo> s_initializeBeatSubject = new();
         private static Subject<Unit> s_endBeatSubject = new();
         public static IObservable<BeatTimingInfo> OnBeat => s_beatSubject;
-        public static IObservable<Unit> OnInitializeBeat => s_initializeBeatSubject;
+        public static IObservable<MornBeatMemoSo> OnInitializeBeat => s_initializeBeatSubject;
         public static IObservable<Unit> OnEndBeat => s_endBeatSubject;
         public static double OffsetTime;
         public static double CurrentBpm { get; private set; } = 120;
@@ -30,7 +30,7 @@ namespace MornBeat
             s_waitLoop = false;
             s_startDspTime = AudioSettings.dspTime;
             s_beatSubject = new Subject<BeatTimingInfo>();
-            s_initializeBeatSubject = new Subject<Unit>();
+            s_initializeBeatSubject = new Subject<MornBeatMemoSo>();
             s_endBeatSubject = new Subject<Unit>();
         }
 
@@ -85,20 +85,20 @@ namespace MornBeat
             }
         }
 
-        public static void InitializeBeat<TBeatType>(TBeatType beatType, bool isForceInitialize = false) where TBeatType : Enum
+        public static void InitializeBeat(MornBeatMemoSo beatMemo, bool isForceInitialize = false)
         {
-            var solver = MornBeatSolverMonoBase<TBeatType>.Instance;
-            if (s_currentBeatMemo == solver[beatType] && isForceInitialize == false)
+            var solver = MornBeatSolverMono.Instance;
+            if (s_currentBeatMemo == beatMemo && isForceInitialize == false)
             {
                 return;
             }
 
-            s_currentBeatMemo = solver[beatType];
+            s_currentBeatMemo = beatMemo;
             s_tick = 0;
             s_waitLoop = false;
             s_startDspTime = AudioSettings.dspTime + 0.1d;
-            solver.OnInitializeBeatImpl(beatType, s_startDspTime);
-            s_initializeBeatSubject.OnNext(Unit.Default);
+            solver.OnInitializeBeat(beatMemo, s_startDspTime);
+            s_initializeBeatSubject.OnNext(beatMemo);
         }
 
         public static int GetNearTick(out double nearDif)
