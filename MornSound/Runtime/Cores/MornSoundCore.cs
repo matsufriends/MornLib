@@ -19,9 +19,19 @@ namespace MornSound
             SoundParameter = soundParameter;
         }
 
+        public static UniTask FadeInAsync<T>(MornSoundVolumeType volumeType, double duration, CancellationToken token) where T : Enum
+        {
+            return MornSoundSolverMonoBase<T>.Instance.FadeInAsync(volumeType, (float)duration, token);
+        }
+
         public static UniTask FadeInAsync<T>(MornSoundVolumeType volumeType, float duration, CancellationToken token) where T : Enum
         {
             return MornSoundSolverMonoBase<T>.Instance.FadeInAsync(volumeType, duration, token);
+        }
+
+        public static UniTask FadeOutAsync<T>(MornSoundVolumeType volumeType, double duration, CancellationToken token) where T : Enum
+        {
+            return MornSoundSolverMonoBase<T>.Instance.FadeOutAsync(volumeType, (float)duration, token);
         }
 
         public static UniTask FadeOutAsync<T>(MornSoundVolumeType volumeType, float duration, CancellationToken token) where T : Enum

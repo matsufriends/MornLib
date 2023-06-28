@@ -18,12 +18,15 @@ namespace MornBeat
         public static IObservable<Unit> OnInitializeBeat => s_initializeBeatSubject;
         public static IObservable<Unit> OnEndBeat => s_endBeatSubject;
         public static double OffsetTime;
+        public static double CurrentBpm { get; private set; } = 120;
+        public static double CurrentBeatLength => 60d / CurrentBpm;
         private static double GetMusicPlayingTime => AudioSettings.dspTime - s_startDspTime + s_currentBeatMemo.Offset + OffsetTime;
 
         public static void Reset()
         {
             s_currentBeatMemo = null;
             s_tick = 0;
+            CurrentBpm = 120;
             s_waitLoop = false;
             s_startDspTime = AudioSettings.dspTime;
             s_beatSubject = new Subject<BeatTimingInfo>();
@@ -67,6 +70,7 @@ namespace MornBeat
                 return;
             }
 
+            CurrentBpm = s_currentBeatMemo.GetBpm(time);
             s_beatSubject.OnNext(new BeatTimingInfo(s_tick, s_currentBeatMemo.BeatCount));
             s_tick++;
             if (s_tick == s_currentBeatMemo.TickSum)
@@ -97,7 +101,12 @@ namespace MornBeat
             s_initializeBeatSubject.OnNext(Unit.Default);
         }
 
-        public static int GetNearTick(int beat, out double nearDif)
+        public static int GetNearTick(out double nearDif)
+        {
+            return GetNearTickBySpecifiedBeat(out nearDif, s_currentBeatMemo.BeatCount);
+        }
+
+        public static int GetNearTickBySpecifiedBeat(out double nearDif, int beat)
         {
             Assert.IsTrue(beat <= s_currentBeatMemo.BeatCount);
             var tickSize = s_currentBeatMemo.BeatCount / beat;

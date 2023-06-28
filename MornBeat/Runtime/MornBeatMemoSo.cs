@@ -68,7 +68,7 @@ namespace MornBeat
             }
         }
 
-        private double GetBpm(double time)
+        public double GetBpm(double time)
         {
             switch (_bpmAndTimeInfoList.Count)
             {
