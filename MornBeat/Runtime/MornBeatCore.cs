@@ -19,8 +19,10 @@ namespace MornBeat
         public static IObservable<Unit> OnEndBeat => s_endBeatSubject;
         public static double OffsetTime;
         public static double CurrentBpm { get; private set; } = 120;
+        public static int MeasureTickCount => s_currentBeatMemo.MeasureTickCount;
+        public static int BeatCount => s_currentBeatMemo.BeatCount;
         public static double CurrentBeatLength => 60d / CurrentBpm;
-        private static double GetMusicPlayingTime => AudioSettings.dspTime - s_startDspTime + s_currentBeatMemo.Offset + OffsetTime;
+        public static double MusicPlayingTime => AudioSettings.dspTime - s_startDspTime + s_currentBeatMemo.Offset + OffsetTime;
 
         public static void Reset()
         {
@@ -51,7 +53,7 @@ namespace MornBeat
                 return;
             }
 
-            var time = GetMusicPlayingTime;
+            var time = MusicPlayingTime;
             if (s_waitLoop)
             {
                 var length = s_currentBeatMemo.Clip.length;
@@ -71,7 +73,7 @@ namespace MornBeat
             }
 
             CurrentBpm = s_currentBeatMemo.GetBpm(time);
-            s_beatSubject.OnNext(new BeatTimingInfo(s_tick, s_currentBeatMemo.BeatCount));
+            s_beatSubject.OnNext(new BeatTimingInfo(s_tick, s_currentBeatMemo.MeasureTickCount));
             s_tick++;
             if (s_tick == s_currentBeatMemo.TickSum)
             {
@@ -103,16 +105,16 @@ namespace MornBeat
 
         public static int GetNearTick(out double nearDif)
         {
-            return GetNearTickBySpecifiedBeat(out nearDif, s_currentBeatMemo.BeatCount);
+            return GetNearTickBySpecifiedBeat(out nearDif, s_currentBeatMemo.MeasureTickCount);
         }
 
         public static int GetNearTickBySpecifiedBeat(out double nearDif, int beat)
         {
-            Assert.IsTrue(beat <= s_currentBeatMemo.BeatCount);
-            var tickSize = s_currentBeatMemo.BeatCount / beat;
+            Assert.IsTrue(beat <= s_currentBeatMemo.MeasureTickCount);
+            var tickSize = s_currentBeatMemo.MeasureTickCount / beat;
             var lastTick = s_tick - s_tick % tickSize;
             var nextTick = lastTick + tickSize;
-            var curTime = GetMusicPlayingTime;
+            var curTime = MusicPlayingTime;
             var preTime = GetBeatTiming(lastTick);
             var nexTime = GetBeatTiming(nextTick);
             while (curTime < preTime && lastTick - tickSize >= 0)

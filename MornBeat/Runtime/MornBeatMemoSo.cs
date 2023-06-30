@@ -19,11 +19,13 @@ namespace MornBeat
         [SerializeField] private bool _isLoop;
         [SerializeField] private List<float> _timingList;
         [SerializeField] private List<BpmAndTimeInfo> _bpmAndTimeInfoList;
+        [SerializeField] private int _measureTickCount = 8;
         [SerializeField] private int _beatCount = 4;
         [SerializeField] private double _interval = 0.000001d;
         [SerializeField] private AudioClip _clip;
         [SerializeField] private float _offset;
         public bool IsLoop => _isLoop;
+        public int MeasureTickCount => _measureTickCount;
         public int BeatCount => _beatCount;
         public int TickSum => _timingList.Count;
         public AudioClip Clip => _clip;
@@ -51,7 +53,7 @@ namespace MornBeat
             while (time < length)
             {
                 var bpm = GetBpm(time);
-                var dif = bpm / 60 * _beatCount / 4 * _interval;
+                var dif = bpm / 60 * _measureTickCount / _beatCount * _interval;
                 if (Math.Floor(beat) < Math.Floor(beat + dif))
                 {
                     _timingList.Add((float)time % length);
@@ -61,7 +63,7 @@ namespace MornBeat
                 time += _interval;
             }
 
-            var remove = _timingList.Count % _beatCount;
+            var remove = _timingList.Count % _measureTickCount;
             for (var i = 0; i < remove; i++)
             {
                 _timingList.RemoveAt(_timingList.Count - 1);
