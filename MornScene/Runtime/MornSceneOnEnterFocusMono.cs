@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 namespace MornScene
 {
     [RequireComponent(typeof(MornSceneMonoBase))]
-    public sealed class MornSceneSetFocusMono : MonoBehaviour
+    public sealed class MornSceneOnEnterFocusMono : MonoBehaviour
     {
         [SerializeField] private MornSceneMonoBase _scene;
         [SerializeField] private GameObject _focusObject;
