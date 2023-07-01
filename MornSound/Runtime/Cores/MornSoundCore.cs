@@ -1,17 +1,12 @@
 ﻿using System;
-using UniRx;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 
 namespace MornSound
 {
     public static class MornSoundCore
     {
         private static MornSoundPlayer s_cachedBgmPlayer;
-        private static readonly Subject<float> s_masterVolumeChanged = new();
-        private static readonly Subject<float> s_bgmVolumeChanged = new();
-        private static readonly Subject<float> s_seVolumeChanged = new();
-        public static IObservable<float> OnMasterVolumeChanged => s_masterVolumeChanged;
-        public static IObservable<float> OnBgmVolumeChanged => s_bgmVolumeChanged;
-        public static IObservable<float> OnSeVolumeChanged => s_seVolumeChanged;
         public static IMornSoundParameter SoundParameter { get; private set; }
 
         static MornSoundCore()
@@ -22,6 +17,26 @@ namespace MornSound
         public static void OverrideSoundParameter(IMornSoundParameter soundParameter)
         {
             SoundParameter = soundParameter;
+        }
+
+        public static UniTask FadeInAsync<T>(MornSoundVolumeType volumeType, double duration, CancellationToken token) where T : Enum
+        {
+            return MornSoundSolverMonoBase<T>.Instance.FadeInAsync(volumeType, (float)duration, token);
+        }
+
+        public static UniTask FadeInAsync<T>(MornSoundVolumeType volumeType, float duration, CancellationToken token) where T : Enum
+        {
+            return MornSoundSolverMonoBase<T>.Instance.FadeInAsync(volumeType, duration, token);
+        }
+
+        public static UniTask FadeOutAsync<T>(MornSoundVolumeType volumeType, double duration, CancellationToken token) where T : Enum
+        {
+            return MornSoundSolverMonoBase<T>.Instance.FadeOutAsync(volumeType, (float)duration, token);
+        }
+
+        public static UniTask FadeOutAsync<T>(MornSoundVolumeType volumeType, float duration, CancellationToken token) where T : Enum
+        {
+            return MornSoundSolverMonoBase<T>.Instance.FadeOutAsync(volumeType, duration, token);
         }
 
         public static void PlaySe<T>(T soundType) where T : Enum

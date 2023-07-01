@@ -6,23 +6,24 @@ namespace MornScene
 {
     public static class MornSceneCore<TEnum> where TEnum : Enum
     {
-        private static readonly Stack<MornSceneMonoBase> s_sceneUpdateStack = new();
+        private static readonly List<MornSceneMonoBase> s_sceneUpdateList = new();
         private static readonly List<MornSceneMonoBase> s_cachedUpdateList = new();
 
         internal static void Reset()
         {
-            s_sceneUpdateStack.Clear();
+            s_sceneUpdateList.Clear();
             s_cachedUpdateList.Clear();
         }
 
         internal static void ChangeScene(TEnum sceneType)
         {
             var solver = MornSceneSolverBase<TEnum>.Instance;
-            while (s_sceneUpdateStack.TryPop(out var updateScene))
+            foreach (var updateScene in s_sceneUpdateList)
             {
                 updateScene.OnExitScene(solver[updateScene]);
             }
 
+            s_sceneUpdateList.Clear();
             AddScene(sceneType);
         }
 
@@ -31,7 +32,7 @@ namespace MornScene
             var solver = MornSceneSolverBase<TEnum>.Instance;
             var scene = solver[sceneType];
             scene.OnEnterScene(sceneType);
-            s_sceneUpdateStack.Push(scene);
+            s_sceneUpdateList.Add(scene);
         }
 
         internal static void RemoveScene(TEnum sceneType)
@@ -39,11 +40,11 @@ namespace MornScene
             var solver = MornSceneSolverBase<TEnum>.Instance;
             var scene = solver[sceneType];
             scene.OnExitScene(sceneType);
-            if (s_sceneUpdateStack.TryPop(out var topScene))
+            if (s_sceneUpdateList.Count > 0)
             {
-                if (topScene != scene)
+                if (s_sceneUpdateList[^1] != scene)
                 {
-                    Debug.LogError($"[RemoveScene({sceneType})]:TOPのシーン({solver[topScene]})からRemoveして下さい。");
+                    Debug.LogError($"[RemoveScene({sceneType})]:TOPのシーン({s_sceneUpdateList[^1]})からRemoveして下さい。");
                 }
             }
             else
@@ -55,7 +56,7 @@ namespace MornScene
         internal static void UpdateScene()
         {
             s_cachedUpdateList.Clear();
-            s_cachedUpdateList.AddRange(s_sceneUpdateStack);
+            s_cachedUpdateList.AddRange(s_sceneUpdateList);
             for (var i = 0; i < s_cachedUpdateList.Count; i++)
             {
                 s_cachedUpdateList[i].OnUpdateScene(i == 0);

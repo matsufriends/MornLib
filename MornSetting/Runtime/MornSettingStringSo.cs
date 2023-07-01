@@ -10,10 +10,12 @@ namespace MornSetting
         [SerializeField] private string _defaultString;
         private readonly Subject<string> _stringSubject = new();
         public IObservable<string> OnStringChanged => _stringSubject;
+
         public string LoadString()
         {
             return PlayerPrefs.GetString(Key, _defaultString);
         }
+
         public void SaveFloat(string value)
         {
             PlayerPrefs.SetString(Key, value);

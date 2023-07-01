@@ -5,7 +5,7 @@
 `enum`に関する機能を提供します。
 
 - `enum`を`string`でシリアライズする`Attribute`の追加
-- `enum`の全要素取得や`ToString`結果をキャッシュする`Generic`クラス
+- `enum`の全要素取得や`ToString`結果をキャッシュ
 
 ## 導入
 

@@ -1,4 +1,4 @@
-﻿namespace MornLib.Beats
+﻿namespace MornBeat
 {
     /// <summary>
     ///     1小節内における拍の構造体
@@ -8,8 +8,7 @@
         /// <summary>
         ///     何チック目か
         /// </summary>
-        private readonly int _currentTick;
-
+        public readonly int CurrentTick;
         /// <summary>
         ///     1小節に何チックあるか
         /// </summary>
@@ -22,7 +21,7 @@
         /// <param name="tickCountPerMeasure">1小節に何チックあるか</param>
         public BeatTimingInfo(int currentTick, int tickCountPerMeasure)
         {
-            _currentTick = currentTick;
+            CurrentTick = currentTick;
             TickCountPerMeasure = tickCountPerMeasure;
         }
 
@@ -33,7 +32,7 @@
         /// <returns>作成したインスタンス</returns>
         public BeatTimingInfo CloneWithOffset(int offsetTick)
         {
-            return new BeatTimingInfo(_currentTick + offsetTick, TickCountPerMeasure);
+            return new BeatTimingInfo(CurrentTick + offsetTick, TickCountPerMeasure);
         }
 
         /// <summary>
@@ -47,18 +46,18 @@
         }
 
         /// <summary>
-        ///     <paramref name="beat" />ビートのいずれか拍に合うかどうか
+        ///     1小節[<paramref name="beat" />]拍の、いずれかに合うかどうか
         /// </summary>
         /// <param name="beat">1小節に何拍あるか</param>
         /// <param name="offsetTick">オフセットチック</param>
         /// <returns>拍に合うかどうか</returns>
         public bool IsJustForAnyBeat(int beat, int offsetTick = 0)
         {
-            return (_currentTick + offsetTick) % (TickCountPerMeasure / beat) == 0;
+            return (CurrentTick + offsetTick) % (TickCountPerMeasure / beat) == 0;
         }
 
         /// <summary>
-        ///     <paramref name="beat" />ビートで何拍目か返す
+        ///     1小節[<paramref name="beat" />]拍の、何拍目か返す
         /// </summary>
         /// <param name="beat">1小節に何拍あるか</param>
         /// <param name="offsetTick">オフセットチック</param>
@@ -68,16 +67,16 @@
         /// </returns>
         public int GetBeatCountBySpecificBeat(int beat, int offsetTick = 0)
         {
-            if ((_currentTick + offsetTick) % (TickCountPerMeasure / beat) != 0)
+            if ((CurrentTick + offsetTick) % (TickCountPerMeasure / beat) != 0)
             {
                 return -1;
             }
 
-            return (_currentTick + offsetTick) / (TickCountPerMeasure / beat);
+            return (CurrentTick + offsetTick) / (TickCountPerMeasure / beat);
         }
 
         /// <summary>
-        ///     <paramref name="beat" />ビートの<paramref name="numerator" />拍目に合うかどうか
+        ///     1小節[<paramref name="beat" />]拍の、[<paramref name="numerator" />]拍目に合うかどうか
         /// </summary>
         /// <param name="numerator">特定の拍目</param>
         /// <param name="beat">1小節に何拍あるか</param>
@@ -85,7 +84,7 @@
         /// <returns>拍に合うかどうか</returns>
         public bool IsJustForSpecificBeat(int numerator, int beat, int offsetTick = 0)
         {
-            return (_currentTick + offsetTick) % TickCountPerMeasure == numerator * TickCountPerMeasure / beat;
+            return (CurrentTick + offsetTick) % TickCountPerMeasure == numerator * TickCountPerMeasure / beat;
         }
     }
 }

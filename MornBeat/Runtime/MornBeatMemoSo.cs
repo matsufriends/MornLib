@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using MornLib.Cores;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
 
-namespace MornLib.Beats
+namespace MornBeat
 {
-    [CreateAssetMenu(fileName = nameof(MornBeatMemoSo), menuName = nameof(MornBeatMemoSo))]
+    [CreateAssetMenu(fileName = nameof(MornBeatMemoSo), menuName = "MornBeat/" + nameof(MornBeatMemoSo))]
     public sealed class MornBeatMemoSo : ScriptableObject
     {
         [Serializable]
@@ -16,19 +16,24 @@ namespace MornLib.Beats
             public double Time;
         }
 
+        [SerializeField] private bool _isLoop;
         [SerializeField] private List<float> _timingList;
         [SerializeField] private List<BpmAndTimeInfo> _bpmAndTimeInfoList;
+        [SerializeField] private int _measureTickCount = 8;
         [SerializeField] private int _beatCount = 4;
         [SerializeField] private double _interval = 0.000001d;
         [SerializeField] private AudioClip _clip;
         [SerializeField] private float _offset;
+        public bool IsLoop => _isLoop;
+        public int MeasureTickCount => _measureTickCount;
         public int BeatCount => _beatCount;
-        public int Timings => _timingList.Count;
-        public AudioClip clip => _clip;
+        public int TickSum => _timingList.Count;
+        public AudioClip Clip => _clip;
+        internal float Offset => _offset;
 
-        public float GetBeatTiming(int index)
+        internal float GetBeatTiming(int index)
         {
-            if (index < 0 || Timings <= index)
+            if (index < 0 || TickSum <= index)
             {
                 return Mathf.Infinity;
             }
@@ -36,41 +41,36 @@ namespace MornLib.Beats
             return _timingList[index];
         }
 
-        public void MakeBeat()
+        internal void MakeBeat()
         {
-            if (_offset < 0)
-            {
-                MornLog.Error("負数のオフセットには未対応です");
-                return;
-            }
-
+            Assert.IsNotNull(_clip);
             var beat = 0d;
             var time = 0d;
             _interval = Math.Max(0.000001f, _interval);
             _timingList.Clear();
-            _timingList.Add(_offset);
+            _timingList.Add(0);
             var length = _clip.length;
             while (time < length)
             {
                 var bpm = GetBpm(time);
-                var dif = bpm / 60 * _beatCount / 4 * _interval;
+                var dif = bpm / 60 * _measureTickCount / _beatCount * _interval;
                 if (Math.Floor(beat) < Math.Floor(beat + dif))
                 {
-                    _timingList.Add(((float)time + _offset) % length);
+                    _timingList.Add((float)time % length);
                 }
 
                 beat += dif;
                 time += _interval;
             }
 
-            var remove = _timingList.Count % _beatCount;
+            var remove = _timingList.Count % _measureTickCount;
             for (var i = 0; i < remove; i++)
             {
                 _timingList.RemoveAt(_timingList.Count - 1);
             }
         }
 
-        private double GetBpm(double time)
+        public double GetBpm(double time)
         {
             switch (_bpmAndTimeInfoList.Count)
             {
@@ -94,8 +94,8 @@ namespace MornLib.Beats
 
                 var begin = _bpmAndTimeInfoList[i - 1];
                 var end = _bpmAndTimeInfoList[i];
-                var t1 = MornMath.InverseLerp(begin.Time, end.Time, time);
-                return MornMath.Lerp(begin.Bpm, end.Bpm, t1);
+                var t1 = MornBeatUtil.InverseLerp(begin.Time, end.Time, time);
+                return MornBeatUtil.Lerp(begin.Bpm, end.Bpm, t1);
             }
 
             return _bpmAndTimeInfoList[^1].Bpm;
@@ -104,7 +104,7 @@ namespace MornLib.Beats
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(MornBeatMemoSo))]
-    public class BeatMemoSoEditor : Editor
+    internal sealed class BeatMemoSoEditor : Editor
     {
         private MornBeatMemoSo _mornBeatMemo;
 

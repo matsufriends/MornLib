@@ -10,10 +10,12 @@ namespace MornSetting
         [SerializeField] private int _defaultInt;
         private readonly Subject<int> _intSubject = new();
         public IObservable<int> OnIntChanged => _intSubject;
+
         public int LoadInt()
         {
             return PlayerPrefs.GetInt(Key, _defaultInt);
         }
+
         public void SaveInt(int value)
         {
             PlayerPrefs.SetInt(Key, value);
