@@ -43,7 +43,7 @@ namespace MornScene
 
         private void OnDestroy()
         {
-            MornSceneCore<TEnum>.Reset();
+            MornSceneCore.Reset();
         }
 
         //関数名がEditor拡張より指定されているため要注意
@@ -111,12 +111,12 @@ namespace MornScene
 
         private void Start()
         {
-            MornSceneCore<TEnum>.ChangeScene(_firstSceneType);
+            MornSceneCore.ChangeScene(_firstSceneType);
         }
 
         private void Update()
         {
-            MornSceneCore<TEnum>.UpdateScene();
+            MornSceneCore.UpdateScene();
         }
     }
 }
