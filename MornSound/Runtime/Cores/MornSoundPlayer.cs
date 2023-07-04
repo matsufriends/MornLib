@@ -21,13 +21,14 @@ namespace MornSound
         private float _fadeSeconds;
         private static readonly Queue<MornSoundPlayer> s_playEndQueue = new();
 
-        public void Init(AudioMixerGroup mixerGroup, AudioClip clip, bool isLoop, float volume, float pitch)
+        public void Init(AudioMixerGroup mixerGroup, AudioClip clip, int priority, bool isLoop, float volume, float pitch)
         {
             if (_audioSource == null)
             {
                 _audioSource = TryGetComponent<AudioSource>(out var source) ? source : gameObject.AddComponent<AudioSource>();
             }
 
+            _audioSource.priority = priority;
             _audioSource.outputAudioMixerGroup = mixerGroup;
             _audioSource.volume = volume;
             _audioSource.clip = clip;
