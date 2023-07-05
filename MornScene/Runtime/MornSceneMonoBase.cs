@@ -21,17 +21,17 @@ namespace MornScene
 
         protected void ChangeScene<TEnum>(TEnum sceneType) where TEnum : Enum
         {
-            MornSceneCore<TEnum>.ChangeScene(sceneType);
+            MornSceneCore.ChangeScene(sceneType);
         }
 
         protected void AddScene<TEnum>(TEnum sceneType) where TEnum : Enum
         {
-            MornSceneCore<TEnum>.AddScene(sceneType);
+            MornSceneCore.AddScene(sceneType);
         }
 
         protected void RemoveScene<TEnum>(TEnum sceneType) where TEnum : Enum
         {
-            MornSceneCore<TEnum>.RemoveScene(sceneType);
+            MornSceneCore.RemoveScene(sceneType);
         }
 
         internal void Initialize()
