@@ -8,89 +8,142 @@ namespace MornDictionary
     [CustomEditor(typeof(MornDictionaryBase<,>), true)]
     public sealed class MornDictionaryBaseEditor : Editor
     {
-        private SerializedProperty _scriptProperty;
-        private SerializedProperty _keyListProperty;
+        private SerializedProperty _script;
+        private SerializedProperty _keyList;
         private SerializedProperty _valueList;
-        private readonly List<int> _cachedKeyList = new();
+        private readonly HashSet<int> _keyDuplicateHashSet = new();
+        private readonly HashSet<int> _keyNotFoundHashSet = new();
+        private const int ButtonSize = 20;
+
         private void OnEnable()
         {
-            _scriptProperty = serializedObject.FindProperty("m_Script");
-            _keyListProperty = serializedObject.FindProperty("_keyList");
+            _script = serializedObject.FindProperty("m_Script");
+            _keyList = serializedObject.FindProperty("_keyList");
             _valueList = serializedObject.FindProperty("_valueList");
         }
+
         public override void OnInspectorGUI()
         {
+            _keyDuplicateHashSet.Clear();
+            _keyNotFoundHashSet.Clear();
             serializedObject.Update();
             using (new EditorGUI.DisabledScope(true))
             {
-                EditorGUILayout.PropertyField(_scriptProperty);
+                EditorGUILayout.PropertyField(_script);
             }
-            AdjustElements();
-            if (GUILayout.Button("Add"))
+
+            while (_valueList.arraySize < _keyList.arraySize)
             {
-                _keyListProperty.InsertArrayElementAtIndex(_keyListProperty.arraySize);
-                _valueList.InsertArrayElementAtIndex(_valueList.arraySize);
+                _valueList.arraySize++;
             }
-            _cachedKeyList.Clear();
-            for (var i = 0; i < _keyListProperty.arraySize; i++)
+
+            while (_valueList.arraySize > _keyList.arraySize)
             {
-                var keyProperty = _keyListProperty.GetArrayElementAtIndex(i);
-                var clipProperty = _valueList.GetArrayElementAtIndex(i);
-                var width = EditorGUIUtility.currentViewWidth - 40;
-                using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
+                _valueList.arraySize--;
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                _keyList.isExpanded = EditorGUILayout.Foldout(_keyList.isExpanded, "Dictionary", true);
+                using (new EditorGUI.DisabledScope(_keyList.arraySize == 0))
                 {
-                    EditorGUILayout.PropertyField(keyProperty, GUIContent.none, GUILayout.Width(width * 0.2f));
-                    if (_cachedKeyList.Contains(keyProperty.enumValueFlag))
+                    if (GUILayout.Button("Clear", GUILayout.Width(ButtonSize * 3)))
                     {
-                        EditorGUILayout.HelpBox("Keyが重複しています。", MessageType.Error);
+                        _keyList.ClearArray();
+                        _valueList.ClearArray();
                     }
-                    else
+
+                    if (GUILayout.Button("-", GUILayout.Width(ButtonSize)))
                     {
-                        EditorGUILayout.PropertyField(clipProperty, GUIContent.none, GUILayout.Width(width * 0.3f));
+                        _keyList.arraySize--;
                     }
-                    if (GUILayout.Button("Delete"))
+                }
+
+                if (GUILayout.Button("+", GUILayout.Width(ButtonSize)))
+                {
+                    _keyList.arraySize++;
+                }
+            }
+
+            if (_keyList.isExpanded)
+            {
+                using (new EditorGUI.IndentLevelScope())
+                {
+                    for (var i = 0; i < _keyList.arraySize; i++)
                     {
-                        _keyListProperty.DeleteArrayElementAtIndex(i);
-                        _valueList.DeleteArrayElementAtIndex(i);
+                        using (new EditorGUILayout.VerticalScope(GUI.skin.box))
+                        {
+                            using (new EditorGUILayout.HorizontalScope())
+                            {
+                                EditorGUILayout.PropertyField(_keyList.GetArrayElementAtIndex(i), new GUIContent("Key"));
+                                using (new EditorGUI.DisabledScope(i == 0))
+                                {
+                                    if (GUILayout.Button("↑", GUILayout.Width(ButtonSize)))
+                                    {
+                                        _keyList.MoveArrayElement(i, i - 1);
+                                        _valueList.MoveArrayElement(i, i - 1);
+                                    }
+                                }
+
+                                using (new EditorGUI.DisabledScope(i == _keyList.arraySize - 1))
+                                {
+                                    if (GUILayout.Button("↓", GUILayout.Width(ButtonSize)))
+                                    {
+                                        _keyList.MoveArrayElement(i, i + 1);
+                                        _valueList.MoveArrayElement(i, i + 1);
+                                    }
+                                }
+
+                                if (GUILayout.Button("-", GUILayout.Width(ButtonSize)))
+                                {
+                                    _keyList.DeleteArrayElementAtIndex(i);
+                                    _valueList.DeleteArrayElementAtIndex(i);
+                                    break;
+                                }
+
+                                if (GUILayout.Button("+", GUILayout.Width(ButtonSize)))
+                                {
+                                    _keyList.InsertArrayElementAtIndex(i);
+                                    _valueList.InsertArrayElementAtIndex(i);
+                                }
+                            }
+
+                            using (new EditorGUI.IndentLevelScope())
+                            {
+                                var value = _valueList.GetArrayElementAtIndex(i);
+                                EditorGUILayout.PropertyField(value, new GUIContent("Value"));
+                            }
+
+                            var key = _keyList.GetArrayElementAtIndex(i).intValue;
+                            if (!_keyDuplicateHashSet.Add(key))
+                            {
+                                EditorGUILayout.HelpBox("Duplicate key", MessageType.Error);
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (var i = 0; i < _keyList.arraySize; i++)
+            {
+                _keyNotFoundHashSet.Add(_keyList.GetArrayElementAtIndex(i).intValue);
+            }
+
+            var genericType = target.GetType().BaseType?.GetGenericArguments()[0];
+            if (genericType != null)
+            {
+                foreach (var enumValue in Enum.GetValues(genericType))
+                {
+                    if (_keyNotFoundHashSet.Contains((int)enumValue))
+                    {
                         continue;
                     }
-                    _cachedKeyList.Add(keyProperty.enumValueFlag);
+
+                    EditorGUILayout.HelpBox($"{enumValue} is not Registered", MessageType.Error);
                 }
-                GUILayout.Space(10);
             }
-            ShowNotContainEnums();
+
             serializedObject.ApplyModifiedProperties();
-        }
-        private void AdjustElements()
-        {
-            var max = Mathf.Max(_keyListProperty.arraySize, _valueList.arraySize);
-            for (var i = 0; i < max; i++)
-            {
-                if (i >= _keyListProperty.arraySize)
-                {
-                    _keyListProperty.InsertArrayElementAtIndex(i);
-                }
-                if (i >= _valueList.arraySize)
-                {
-                    _valueList.InsertArrayElementAtIndex(i);
-                }
-            }
-        }
-        private void ShowNotContainEnums()
-        {
-            var genericType = target.GetType().BaseType?.GetGenericArguments()[0];
-            if (genericType == null)
-            {
-                return;
-            }
-            foreach (var enumValue in Enum.GetValues(genericType))
-            {
-                if (_cachedKeyList.Contains((int)enumValue))
-                {
-                    continue;
-                }
-                EditorGUILayout.HelpBox($"{enumValue}が登録されていません。", MessageType.Error);
-            }
         }
     }
 }

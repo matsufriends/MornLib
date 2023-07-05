@@ -6,8 +6,8 @@ namespace MornDictionary
 {
     public abstract class MornDictionaryBase<TKey, TValue> : MonoBehaviour where TKey : Enum
     {
-        [SerializeField] internal List<TKey> _keyList;
-        [SerializeField] internal List<TValue> _valueList;
+        [SerializeField] private List<TKey> _keyList;
+        [SerializeField] private List<TValue> _valueList;
         private Dictionary<TKey, TValue> _keyToValueDict;
 
         public TValue this[TKey key] => GetDictionary()[key];
@@ -19,7 +19,7 @@ namespace MornDictionary
                 return _keyToValueDict;
             }
 
-            _keyToValueDict = new();
+            _keyToValueDict = new Dictionary<TKey, TValue>();
             for (var i = 0; i < _keyList.Count; i++)
             {
                 _keyToValueDict.Add(_keyList[i], _valueList[i]);

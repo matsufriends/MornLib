@@ -5,7 +5,7 @@ using UnityEngine;
 namespace MornDictionary
 {
     [Serializable]
-    public struct MornDictionary<TKey, TValue> where TKey : Enum
+    public struct MornDictionaryStruct<TKey, TValue> where TKey : Enum
     {
         [SerializeField] private List<KeyValuePairSet> _pairList;
         private Dictionary<TKey, TValue> _keyToValueDict;
