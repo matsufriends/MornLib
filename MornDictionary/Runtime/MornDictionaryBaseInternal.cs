@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace MornDictionary
 {
-    public abstract class MornDictionaryBase<TKey, TValue> : MonoBehaviour where TKey : Enum
+    public abstract class MornDictionaryBaseInternal<TKey, TValue> : MonoBehaviour
     {
-        [SerializeField] private List<TKey> _keyList;
-        [SerializeField] private List<TValue> _valueList;
+        [SerializeField] internal List<TKey> _keyList;
+        [SerializeField] internal List<TValue> _valueList;
         private Dictionary<TKey, TValue> _keyToValueDict;
 
         public TValue this[TKey key] => GetDictionary()[key];

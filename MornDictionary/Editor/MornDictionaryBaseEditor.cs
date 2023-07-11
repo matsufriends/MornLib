@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace MornDictionary
 {
-    [CustomEditor(typeof(MornDictionaryBase<,>), true)]
-    public sealed class MornDictionaryBaseEditor : Editor
+    [CustomEditor(typeof(MornDictionaryBaseInternal<,>), true)]
+    public abstract class MornDictionaryBaseEditor<TKey> : Editor
     {
         private SerializedProperty _script;
         private SerializedProperty _keyList;
         private SerializedProperty _valueList;
-        private readonly HashSet<int> _keyDuplicateHashSet = new();
-        private readonly HashSet<int> _keyNotFoundHashSet = new();
+        private readonly HashSet<TKey> _keyDuplicateHashSet = new();
+        protected readonly HashSet<TKey> KeyNotFoundHashSet = new();
         private const int ButtonSize = 20;
+        protected abstract TKey GetValue(SerializedProperty property);
+        protected abstract void AfterRenderDictionary();
 
         private void OnEnable()
         {
@@ -25,7 +26,7 @@ namespace MornDictionary
         public override void OnInspectorGUI()
         {
             _keyDuplicateHashSet.Clear();
-            _keyNotFoundHashSet.Clear();
+            KeyNotFoundHashSet.Clear();
             serializedObject.Update();
             using (new EditorGUI.DisabledScope(true))
             {
@@ -114,7 +115,7 @@ namespace MornDictionary
                                 EditorGUILayout.PropertyField(value, new GUIContent("Value"));
                             }
 
-                            var key = _keyList.GetArrayElementAtIndex(i).intValue;
+                            var key = GetValue(_keyList.GetArrayElementAtIndex(i));
                             if (!_keyDuplicateHashSet.Add(key))
                             {
                                 EditorGUILayout.HelpBox("Duplicate key", MessageType.Error);
@@ -126,23 +127,11 @@ namespace MornDictionary
 
             for (var i = 0; i < _keyList.arraySize; i++)
             {
-                _keyNotFoundHashSet.Add(_keyList.GetArrayElementAtIndex(i).intValue);
+                var key = GetValue(_keyList.GetArrayElementAtIndex(i));
+                KeyNotFoundHashSet.Add(key);
             }
 
-            var genericType = target.GetType().BaseType?.GetGenericArguments()[0];
-            if (genericType != null)
-            {
-                foreach (var enumValue in Enum.GetValues(genericType))
-                {
-                    if (_keyNotFoundHashSet.Contains((int)enumValue))
-                    {
-                        continue;
-                    }
-
-                    EditorGUILayout.HelpBox($"{enumValue} is not Registered", MessageType.Error);
-                }
-            }
-
+            AfterRenderDictionary();
             serializedObject.ApplyModifiedProperties();
         }
     }
