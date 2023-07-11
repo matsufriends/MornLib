@@ -33,16 +33,6 @@ namespace MornDictionary
                 EditorGUILayout.PropertyField(_script);
             }
 
-            while (_valueList.arraySize < _keyList.arraySize)
-            {
-                _valueList.arraySize++;
-            }
-
-            while (_valueList.arraySize > _keyList.arraySize)
-            {
-                _valueList.arraySize--;
-            }
-
             using (new EditorGUILayout.HorizontalScope())
             {
                 _keyList.isExpanded = EditorGUILayout.Foldout(_keyList.isExpanded, "Dictionary", true);
@@ -64,6 +54,16 @@ namespace MornDictionary
                 {
                     _keyList.arraySize++;
                 }
+            }
+
+            while (_valueList.arraySize < _keyList.arraySize)
+            {
+                _valueList.arraySize++;
+            }
+
+            while (_valueList.arraySize > _keyList.arraySize)
+            {
+                _valueList.arraySize--;
             }
 
             if (_keyList.isExpanded)
