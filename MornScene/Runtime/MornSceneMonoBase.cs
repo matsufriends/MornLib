@@ -9,6 +9,7 @@ namespace MornScene
 {
     public abstract class MornSceneMonoBase : MonoBehaviour
     {
+        [SerializeField] private MornSceneDataSo _sceneData;
         [SerializeField] private MornSceneCanvasMono _sceneCanvas;
         [SerializeField] private GameObject _root;
         protected bool ActiveSelf { get; private set; }
@@ -19,52 +20,52 @@ namespace MornScene
         public IObservable<Unit> OnUpdateSceneRx => _onUpdateSceneSubject;
         public IObservable<Unit> OnExitSceneRx => _onExitSceneSubject;
 
-        protected void ChangeScene<TEnum>(TEnum sceneType) where TEnum : Enum
+        protected void ChangeScene(MornSceneDataSo sceneData)
         {
-            MornSceneCore.ChangeScene(sceneType);
+            MornSceneCore.ChangeScene(sceneData);
         }
 
-        protected void AddScene<TEnum>(TEnum sceneType) where TEnum : Enum
+        protected void AddScene(MornSceneDataSo sceneData)
         {
-            MornSceneCore.AddScene(sceneType);
+            MornSceneCore.AddScene(sceneData);
         }
 
-        protected void RemoveScene<TEnum>(TEnum sceneType) where TEnum : Enum
+        protected void RemoveScene(MornSceneDataSo sceneData)
         {
-            MornSceneCore.RemoveScene(sceneType);
+            MornSceneCore.RemoveScene(sceneData);
         }
 
-        internal void Initialize()
+        internal void Initialize(MornSceneDataSo sceneData)
         {
-            OnInitializeImpl();
+            OnInitializeImpl(sceneData);
         }
 
-        internal void OnEnterScene<TEnum>(TEnum sceneType) where TEnum : Enum
+        internal void OnEnterScene(MornSceneDataSo sceneData)
         {
             ActiveSelf = true;
-            SetSceneActive(sceneType, true);
-            OnEnterSceneImpl();
+            SetSceneActive(true);
+            OnEnterSceneImpl(sceneData);
             _onEnterSceneSubject.OnNext(Unit.Default);
         }
 
-        internal void OnUpdateScene(bool isTop)
+        internal void OnUpdateScene(MornSceneDataSo sceneData, bool isTop)
         {
-            OnUpdateSceneImpl(isTop);
+            OnUpdateSceneImpl(sceneData, isTop);
             _onUpdateSceneSubject.OnNext(Unit.Default);
         }
 
-        internal void OnExitScene<TEnum>(TEnum sceneType) where TEnum : Enum
+        internal void OnExitScene(MornSceneDataSo sceneData)
         {
             ActiveSelf = false;
-            SetSceneActive(sceneType, false);
-            OnExitSceneImpl();
+            SetSceneActive(false);
+            OnExitSceneImpl(sceneData);
             _onExitSceneSubject.OnNext(Unit.Default);
         }
 
-        protected abstract void OnInitializeImpl();
-        protected abstract void OnEnterSceneImpl();
-        protected abstract void OnUpdateSceneImpl(bool isTop);
-        protected abstract void OnExitSceneImpl();
+        protected abstract void OnInitializeImpl(MornSceneDataSo sceneData);
+        protected abstract void OnEnterSceneImpl(MornSceneDataSo sceneData);
+        protected abstract void OnUpdateSceneImpl(MornSceneDataSo sceneData, bool isTop);
+        protected abstract void OnExitSceneImpl(MornSceneDataSo sceneData);
 
         internal void ApplyCanvasScale(int width, int height)
         {
@@ -74,21 +75,22 @@ namespace MornScene
             }
         }
 
-        internal void SetSceneActive<TEnum>(TEnum sceneType, bool isActive) where TEnum : Enum
+        internal void SetSceneActive(bool isActive)
         {
+            var sceneName = _sceneData.SceneName;
             if (_sceneCanvas != null)
             {
                 _sceneCanvas.SetActiveImmediate(isActive);
-                _sceneCanvas.name = $"[{sceneType}] Canvas";
+                _sceneCanvas.name = $"[{sceneName}] Canvas";
             }
 
             if (_root != null)
             {
                 _root.SetActive(isActive);
-                _root.name = $"[{sceneType}] Root";
+                _root.name = $"[{sceneName}] Root";
             }
 
-            gameObject.name = $"[{sceneType}] {(isActive ? "Active" : "")}";
+            gameObject.name = $"[{sceneName}] {(isActive ? "Active" : "")}";
 #if UNITY_EDITOR
             EditorUtility.SetDirty(gameObject);
 #endif

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace MornScene
 {
     public static class MornSceneCore
     {
-        private static readonly List<MornSceneMonoBase> _sceneUpdateList = new();
-        private static readonly List<MornSceneMonoBase> _cachedUpdateList = new();
+        private static readonly List<MornSceneDataSo> _sceneUpdateList = new();
+        private static readonly List<MornSceneDataSo> _cachedUpdateList = new();
 
         internal static void Reset()
         {
@@ -15,51 +14,53 @@ namespace MornScene
             _cachedUpdateList.Clear();
         }
 
-        internal static void ChangeScene<TEnum>(TEnum sceneType) where TEnum : Enum
+        internal static void ChangeScene(MornSceneDataSo sceneDataSo)
         {
-            var solver = MornSceneSolverBase<TEnum>.Instance;
+            var solver = MornSceneSolver.Instance;
             foreach (var updateScene in _sceneUpdateList)
             {
-                updateScene.OnExitScene(solver[updateScene]);
+                solver[updateScene].OnExitScene(updateScene);
             }
 
             _sceneUpdateList.Clear();
-            AddScene(sceneType);
+            AddScene(sceneDataSo);
         }
 
-        internal static void AddScene<TEnum>(TEnum sceneType) where TEnum : Enum
+        internal static void AddScene(MornSceneDataSo sceneData)
         {
-            var solver = MornSceneSolverBase<TEnum>.Instance;
-            var scene = solver[sceneType];
-            scene.OnEnterScene(sceneType);
-            _sceneUpdateList.Add(scene);
+            var solver = MornSceneSolver.Instance;
+            solver[sceneData].OnEnterScene(sceneData);
+            _sceneUpdateList.Add(sceneData);
         }
 
-        internal static void RemoveScene<TEnum>(TEnum sceneType) where TEnum : Enum
+        internal static void RemoveScene(MornSceneDataSo sceneData)
         {
-            var solver = MornSceneSolverBase<TEnum>.Instance;
-            var scene = solver[sceneType];
-            scene.OnExitScene(sceneType);
+            var solver = MornSceneSolver.Instance;
+            var scene = solver[sceneData];
+            scene.OnExitScene(sceneData);
+            var sceneName = sceneData.SceneName;
             if (_sceneUpdateList.Count > 0)
             {
-                if (_sceneUpdateList[^1] != scene)
+                if (_sceneUpdateList[^1] != sceneData)
                 {
-                    Debug.LogError($"[RemoveScene({sceneType})]:TOPのシーン({_sceneUpdateList[^1]})からRemoveして下さい。");
+                    Debug.LogError($"[RemoveScene({sceneName})]:TOPのシーン({_sceneUpdateList[^1]})からRemoveして下さい。");
                 }
             }
             else
             {
-                Debug.LogError($"[RemoveScene({sceneType})]:Sceneが追加されていません。");
+                Debug.LogError($"[RemoveScene({sceneName})]:Sceneが追加されていません。");
             }
         }
 
         internal static void UpdateScene()
         {
+            var solver = MornSceneSolver.Instance;
             _cachedUpdateList.Clear();
             _cachedUpdateList.AddRange(_sceneUpdateList);
             for (var i = 0; i < _cachedUpdateList.Count; i++)
             {
-                _cachedUpdateList[i].OnUpdateScene(i == 0);
+                var sceneData = _cachedUpdateList[i];
+                solver[sceneData].OnUpdateScene(sceneData, i == 0);
             }
         }
     }
