@@ -43,42 +43,6 @@ namespace MornScene
             _sceneDictionary = GetComponent<MornSceneDictionaryMono>();
         }
 
-        /*
-        //関数名がEditor拡張より指定されているため要注意
-        public void HideAll()
-        {
-            Assert.IsTrue(_keyList.Count == _valueList.Count);
-            for (var i = 0; i < _valueList.Count; i++)
-            {
-                var sceneType = _keyList[i];
-                var scene = _valueList[i];
-                if (scene != null)
-                {
-                    scene.SetSceneActive(sceneType, false);
-                }
-            }
-
-            Debug.Log("All Scenes Hidden.");
-        }
-
-        //関数名がEditor拡張より指定されているため要注意
-        public void ChangeScene(string sceneName)
-        {
-            Assert.IsTrue(_keyList.Count == _valueList.Count);
-            for (var i = 0; i < _valueList.Count; i++)
-            {
-                var sceneType = _keyList[i];
-                var scene = _valueList[i];
-                if (scene != null)
-                {
-                    scene.SetSceneActive(sceneType, sceneType.ToString() == sceneName);
-                }
-            }
-
-            Debug.Log($"Scene Changed to {sceneName}.");
-        }
-        */
-
         private void Awake()
         {
             _nameToSceneDict.Clear();
