@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace MornDictionary
 {
-    [CustomEditor(typeof(MornDictionaryBaseInternal<,>), true)]
     public abstract class MornDictionaryBaseEditor<TKey> : Editor
     {
         private SerializedProperty _script;
