@@ -12,18 +12,10 @@
 
 ## 導入
 
-下記どちらでも導入できます。
-
-- `PackageManager`の "Add package from git URL... " で以下のURLを入力
+`PackageManager`の "Add package from git URL... " にて、以下のURLを入力して下さい。
 
 ```
 https://github.com/matsufriends/MornLib.git?path=MornAttribute
-```
-
-- `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記
-
-``` json
-"com.matsufriends.mornattribute": "https://github.com/matsufriends/MornLib.git?path=MornAttribute",
 ```
 
 ## 使い方

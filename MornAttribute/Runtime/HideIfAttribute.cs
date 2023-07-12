@@ -1,14 +1,9 @@
-﻿using UnityEngine;
-
-namespace MornAttribute
+﻿namespace MornAttribute
 {
-    public sealed class HideIfAttribute : PropertyAttribute
+    public sealed class HideIfAttribute : GivenBoolNameAttributeBase
     {
-        public readonly string PropertyName;
-
-        public HideIfAttribute(string propertyName)
+        public HideIfAttribute(string propertyName) : base(propertyName)
         {
-            PropertyName = propertyName;
         }
     }
 }

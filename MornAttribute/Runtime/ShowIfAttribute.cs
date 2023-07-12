@@ -1,14 +1,9 @@
-﻿using UnityEngine;
-
-namespace MornAttribute
+﻿namespace MornAttribute
 {
-    public sealed class ShowIfAttribute : PropertyAttribute
+    public sealed class ShowIfAttribute : GivenBoolNameAttributeBase
     {
-        public readonly string PropertyName;
-
-        public ShowIfAttribute(string propertyName)
+        public ShowIfAttribute(string propertyName) : base(propertyName)
         {
-            PropertyName = propertyName;
         }
     }
 }
