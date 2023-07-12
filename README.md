@@ -10,8 +10,8 @@
 全てのコードは「**自分の開発の補助**」として作成していますが、  
 一人でも多くの方の役に立てばと思い、公開しています。
 
-また、本リポジトリのコードはすべて`Unlicense`の為、全てご自由にお使いいただけます。  
-（もちろん利用報告を頂ければ、喜びます！）
+また、本リポジトリのコードはすべて`Unlicense`の為、
+自己責任で全てご自由にお使いいただけます。
 
 # 動作環境
 
@@ -23,74 +23,23 @@
 ## 全ての機能を利用する
 
 本リポジトリを`submodule`としてプロジェクトに導入することで、全ての機能をお使い頂けます。  
-導入先が`Assets`フォルダ以下になるようご注意下さい。
-
-```
-// git導入済み環境下でのコマンドの実行例です。自己責任でお願いします。
-// cdコマンド等で、Assetsへ移動してから実行すること。
-~/Unityのプロジェクト/Assets> git submodule add https://github.com/matsufriends/MornLib.git
-```
-
+導入先が`Assets`フォルダ以下になるようご注意下さい。  
 詳しくは「[git submodule](https://www.google.com/search?q=git+submodule)」等でご確認ください。
 
 ## いくつかの機能を利用する
 
-全ての機能は、`UPM(Unity Package Manager)`に対応しています。
-
-下記どちらでも導入できます。
-
-- `PackageManager`の "Add package from git URL... " で以下のURLを入力
+本ライブラリの各機能は`UPM`に対応しています。  
+`PackageManager`の "Add package from git URL... " で以下のURLを入力
 
 ``` url
 https://github.com/matsufriends/MornLib.git?path=各機能のフォルダ名
-```
-
-- `Packages/manifest.json` の `"dependencies":{` 行の下に以下を追記
-
-``` json
-"com.matsufriends.各機能のパッケージ名": "https://github.com/matsufriends/MornLib.git?path=各機能のフォルダ名",
 ```
 
 詳細な機能名は、各機能の`README.md`をご確認ください。
 
 ---
 
-# MornAttribute
-
-新たな`Attribute`を提供します。
-
-``` json
-"com.matsufriends.mornattribute": "https://github.com/matsufriends/MornLib.git?path=MornAttribute",
-```
-
-[MornAttributeドキュメント](MornAttribute/README.md)
-
-# MornEnum
-
-`enum`に関する機能を提供します。
-
-``` json
-"com.matsufriends.mornenum": "https://github.com/matsufriends/MornLib.git?path=MornEnum",
-```
-
-[MornEnumドキュメント](MornEnum/README.md)
-
-# MornHierarchy
-
-`Hierarchy`に関する機能を提供します。
-
-``` json
-"com.matsufriends.mornhierarchy": "https://github.com/matsufriends/MornLib.git?path=MornHierarchy",
-```
-
-[MornHierarchyドキュメント](MornHierarchy/README.md)
-
-# MornSoundProcessor
-
-`AudioClip`に関する機能を提供します。
-
-``` json
-"com.matsufriends.mornsoundprocessor": "https://github.com/matsufriends/MornLib.git?path=MornSoundProcessor",
-```
-
+[MornAttributeドキュメント](MornAttribute/README.md)  
+[MornEnumドキュメント](MornEnum/README.md)  
+[MornHierarchyドキュメント](MornHierarchy/README.md)  
 [MornSoundProcessorドキュメント](MornSoundProcessor/README.md)
