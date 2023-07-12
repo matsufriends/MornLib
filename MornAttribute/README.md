@@ -5,10 +5,10 @@
 新たな`Attribute`を提供します。
 
 - 値をInspector上から変更不可にする`[ReadOnly]`
-- 参照する変数が`true`のときのみ表示する`[ShowIf("変数名")]`
-- 参照する変数が`true`のとき非表示にする`[HideIf("変数名")]`
-- 参照する変数が`true`のとき変更可能にする`[EnableIf("変数名")]`
-- 参照する変数が`true`のとき変更不可にする`[DisableIf("変数名")]`
+- 参照する変数/プロパティが`true`のときのみ表示する`[ShowIf("変数名")]`
+- 参照する変数/プロパティが`true`のとき非表示にする`[HideIf("変数名")]`
+- 参照する変数/プロパティが`true`のとき変更可能にする`[EnableIf("変数名")]`
+- 参照する変数/プロパティが`true`のとき変更不可にする`[DisableIf("変数名")]`
 - `Vector2/Vector2Int`を`Slider`で表示する`[MinMaxSlider(最小値,最大値)]`
 - Inspector上での表示名を指定する`[Label("ラベル名")]`
 
