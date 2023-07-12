@@ -48,8 +48,8 @@ public class MornAttributeUsage : MonoBehaviour
     [SerializeField, Label("移動速度")] private float moveSpeed;
 }
 ```
-![InspectorWindow001](https://github.com/matsufriends/MornLib/assets/50489724/40361502-3418-4963-9e5c-0dc10c10ea23)
+![image1](https://github.com/matsufriends/MornLib/assets/50489724/40361502-3418-4963-9e5c-0dc10c10ea23)
 `hp`が0より大きいとき（`IsAlive`が`true`のとき）
 
-![InspectorWindow002](https://github.com/matsufriends/MornLib/assets/50489724/b62c2f08-2d3c-43b2-a360-f205f10af96e)
+![image2](https://github.com/matsufriends/MornLib/assets/50489724/b62c2f08-2d3c-43b2-a360-f205f10af96e)
 `hp`が0以下のとき（`IsAlive`が`false`のとき）
