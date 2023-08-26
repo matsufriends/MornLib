@@ -13,7 +13,7 @@ namespace MornDictionary
 
         public Dictionary<TKey, TValue> GetDictionary()
         {
-            if (_keyToValueDict != null)
+            if (_keyToValueDict != null && _keyList.Count == _valueList.Count && _keyList.Count == _keyToValueDict.Count)
             {
                 return _keyToValueDict;
             }
