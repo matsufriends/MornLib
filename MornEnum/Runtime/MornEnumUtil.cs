@@ -8,7 +8,6 @@ namespace MornEnum
         private static List<T> s_enumList;
         private static readonly Dictionary<T, string> s_toStringDictionary = new();
         public static int Count => Values.Count;
-
         public static IReadOnlyList<T> Values
         {
             get

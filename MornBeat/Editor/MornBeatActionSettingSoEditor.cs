@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using MornEnum;
+using MornMath;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,8 +11,8 @@ namespace MornBeat
     {
         private SerializedProperty _measureTick;
         private SerializedProperty _beatAction;
-        private Color _cachedBackgroundColor;
         private readonly HashSet<int> _tickHashSet = new();
+        private Color _cachedBackgroundColor;
         private const int InputWidth = 30;
         private const int ButtonWidth = 50;
 
@@ -78,17 +78,17 @@ namespace MornBeat
             var flag = beatActionType.enumValueFlag;
             foreach (var tuple in tuples)
             {
-                var containFlag = MornEnumUtil.Equal(flag, (int)(object)tuple.Item1);
+                var containFlag = flag.BitEqual((int)(object)tuple.Item1);
                 GUI.backgroundColor = containFlag ? tuple.Item3 : _cachedBackgroundColor;
                 if (GUILayout.Button(tuple.Item2, GUILayout.Width(width)))
                 {
                     if (containFlag)
                     {
-                        beatActionType.enumValueFlag = MornEnumUtil.Remove(flag, (int)(object)tuple.Item1);
+                        beatActionType.enumValueFlag = flag.BitRemove((int)(object)tuple.Item1);
                     }
                     else
                     {
-                        beatActionType.enumValueFlag = MornEnumUtil.Add(flag, (int)(object)tuple.Item1);
+                        beatActionType.enumValueFlag = flag.BitAdd((int)(object)tuple.Item1);
                     }
                 }
 
