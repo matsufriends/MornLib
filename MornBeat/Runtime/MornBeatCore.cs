@@ -11,10 +11,10 @@ namespace MornBeat
         private static int s_tick;
         private static bool s_waitLoop;
         private static double s_startDspTime;
-        private static Subject<BeatTimingInfo> s_beatSubject = new();
+        private static Subject<MornBeatTimingInfo> s_beatSubject = new();
         private static Subject<MornBeatMemoSo> s_initializeBeatSubject = new();
         private static Subject<Unit> s_endBeatSubject = new();
-        public static IObservable<BeatTimingInfo> OnBeat => s_beatSubject;
+        public static IObservable<MornBeatTimingInfo> OnBeat => s_beatSubject;
         public static IObservable<MornBeatMemoSo> OnInitializeBeat => s_initializeBeatSubject;
         public static IObservable<Unit> OnEndBeat => s_endBeatSubject;
         public static double OffsetTime;
@@ -31,7 +31,7 @@ namespace MornBeat
             CurrentBpm = 120;
             s_waitLoop = false;
             s_startDspTime = AudioSettings.dspTime;
-            s_beatSubject = new Subject<BeatTimingInfo>();
+            s_beatSubject = new Subject<MornBeatTimingInfo>();
             s_initializeBeatSubject = new Subject<MornBeatMemoSo>();
             s_endBeatSubject = new Subject<Unit>();
         }
@@ -73,7 +73,7 @@ namespace MornBeat
             }
 
             CurrentBpm = s_currentBeatMemo.GetBpm(time);
-            s_beatSubject.OnNext(new BeatTimingInfo(s_tick, s_currentBeatMemo.MeasureTickCount));
+            s_beatSubject.OnNext(new MornBeatTimingInfo(s_tick, s_currentBeatMemo.MeasureTickCount));
             s_tick++;
             if (s_tick == s_currentBeatMemo.TickSum)
             {
