@@ -8,7 +8,7 @@ namespace MornSwordTrail
     [ExecuteAlways]
     public sealed class MornSwordTrailMono : MonoBehaviour
     {
-        [SerializeField] private MornSwordTrailSettingSo _settings;
+        [SerializeField] public MornSwordTrailSettingSo _settings;
         [SerializeField] private Transform _origin;
         [SerializeField] private Transform _swordTop;
         [SerializeField] private Transform _swordBottom;
