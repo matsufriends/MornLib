@@ -125,9 +125,10 @@ namespace MornSwordTrail
                 _uvs = Array.Empty<Vector2>();
                 _colors = Array.Empty<Color>();
                 _triangles = Array.Empty<int>();
-                _swordLength = (_swordTop.position - _swordBottom.position).magnitude;
                 _isInitialized = true;
             }
+            
+            _swordLength = (_swordTop.position - _swordBottom.position).magnitude;
 
             if (_isRegisterTrail || Application.isPlaying == false)
             {
