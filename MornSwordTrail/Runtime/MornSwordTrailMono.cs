@@ -64,11 +64,6 @@ namespace MornSwordTrail
 
         public void DrawReset()
         {
-            if (_isInitialized == false)
-            {
-                return;
-            }
-
             _beforeBottomPos = _swordBottom.position;
             _beforeCenterPos = (_swordTop.position + _beforeBottomPos) / 2f;
             _lastUpdateTime = Time.time;
@@ -127,9 +122,8 @@ namespace MornSwordTrail
                 _triangles = Array.Empty<int>();
                 _isInitialized = true;
             }
-            
-            _swordLength = (_swordTop.position - _swordBottom.position).magnitude;
 
+            _swordLength = (_swordTop.position - _swordBottom.position).magnitude;
             if (_isRegisterTrail || Application.isPlaying == false)
             {
                 RegisterTrails();
