@@ -45,6 +45,10 @@ namespace MornScene
                 {
                     Debug.LogError($"[RemoveScene({sceneName})]:TOPのシーン({_sceneUpdateList[^1]})からRemoveして下さい。");
                 }
+                else
+                {
+                    _sceneUpdateList.RemoveAt(_sceneUpdateList.Count - 1);
+                }
             }
             else
             {
@@ -60,7 +64,7 @@ namespace MornScene
             for (var i = 0; i < _cachedUpdateList.Count; i++)
             {
                 var sceneData = _cachedUpdateList[i];
-                solver[sceneData].OnUpdateScene(sceneData, i == 0);
+                solver[sceneData].OnUpdateScene(sceneData, i == _cachedUpdateList.Count - 1);
             }
         }
     }
