@@ -55,6 +55,11 @@ namespace MornScene
 
         private void Start()
         {
+            foreach (var pair in _sceneDictionary.GetDictionary())
+            {
+                pair.Value.SetSceneActive(pair.Key, false);
+            }
+
             MornSceneCore.ChangeScene(_firstScene);
         }
 
