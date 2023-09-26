@@ -7,6 +7,7 @@ namespace MornSound
     public static class MornSoundCore
     {
         private static MornSoundPlayer s_cachedBgmPlayer;
+        private static MornSoundInfo s_lastBgmInfo;
         public static IMornSoundParameter SoundParameter { get; private set; }
 
         static MornSoundCore()
@@ -47,10 +48,15 @@ namespace MornSound
             soundPlayer.Init(solver.SeMixer, info.AudioClip, -16, false, 1, info.IsRandomPitch ? SoundParameter.GetRandomPitch() : 1f);
         }
 
-        public static void PlayBgm<T>(T soundType) where T : Enum
+        public static void PlayBgm<T>(T soundType, bool skipSameTransition = true) where T : Enum
         {
             var solver = MornSoundSolverMonoBase<T>.Instance;
             var info = solver.GetInfo(soundType);
+            if (skipSameTransition && s_lastBgmInfo.AudioClip == info.AudioClip)
+            {
+                return;
+            }
+
             var soundPlayer = MornSoundPlayer.GetInstance(solver.transform);
             soundPlayer.Init(solver.BgmMixer, info.AudioClip, 16, true, 0, 1f);
             soundPlayer.FadeIn(SoundParameter.BgmChangeSeconds);
@@ -60,6 +66,7 @@ namespace MornSound
             }
 
             s_cachedBgmPlayer = soundPlayer;
+            s_lastBgmInfo = info;
         }
     }
 }
