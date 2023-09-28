@@ -7,33 +7,33 @@ namespace MornLib.Cores
 {
     public static class MornTask
     {
-        public static async UniTask TransitionAsync(TimeSpan duration, bool isUnscaledTime, Action<float> action,
-            CancellationToken token)
+        public async static UniTask TransitionAsync(TimeSpan duration, Action<float> action, bool useUnscaledTime = false, CancellationToken cancellationToken = default)
         {
-            var time = (float)duration.TotalSeconds;
-            if (time < 0)
+            var totalSeconds = (float)duration.TotalSeconds;
+            if (totalSeconds < 0)
             {
                 throw new ArgumentException("durationは0以上の値を指定して下さい。");
             }
 
-            if (time == 0)
+            if (totalSeconds == 0)
             {
                 action(1);
                 return;
             }
 
-            var startTime = isUnscaledTime ? Time.unscaledTime : Time.time;
+            var startTime = useUnscaledTime ? Time.unscaledTime : Time.time;
             while (true)
             {
-                var dif = (isUnscaledTime ? Time.unscaledTime : Time.time) - startTime;
-                action(Mathf.Clamp01(dif / time));
-                if (dif >= time)
+                var elapsedTime = (useUnscaledTime ? Time.unscaledTime : Time.time) - startTime;
+                action(Mathf.Clamp01(elapsedTime / totalSeconds));
+                if (elapsedTime >= totalSeconds)
                 {
-                    return;
+                    break;
                 }
 
-                await UniTask.NextFrame(token);
+                await UniTask.NextFrame(cancellationToken);
             }
+            action(1f);
         }
     }
 }
