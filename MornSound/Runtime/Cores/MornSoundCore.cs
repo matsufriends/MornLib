@@ -68,5 +68,16 @@ namespace MornSound
             s_cachedBgmPlayer = soundPlayer;
             s_lastBgmInfo = info;
         }
+
+        public static void StopBgm()
+        {
+            if (s_cachedBgmPlayer)
+            {
+                s_cachedBgmPlayer.FadeOut(SoundParameter.BgmChangeSeconds);
+            }
+
+            s_cachedBgmPlayer = null;
+            s_lastBgmInfo = default;
+        }
     }
 }
