@@ -80,6 +80,11 @@ namespace MornSound
             ApplyVolumeToMixer(MornSoundVolumeType.Bgm, _bgmSo.LoadFloat());
         }
 
+        private void OnDestroy()
+        {
+            MornSoundCore.Reset();
+        }
+
         internal async UniTask FadeInAsync(MornSoundVolumeType volumeType, float duration, CancellationToken token)
         {
             var elapsedTime = 0f;
