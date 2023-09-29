@@ -79,5 +79,11 @@ namespace MornSound
             s_cachedBgmPlayer = null;
             s_lastBgmInfo = default;
         }
+
+        public static void Reset()
+        {
+            s_cachedBgmPlayer = null;
+            s_lastBgmInfo = default(MornSoundInfo);
+        }
     }
 }
