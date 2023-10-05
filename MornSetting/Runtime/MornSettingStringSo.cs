@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MornSetting
 {
-    [CreateAssetMenu(fileName = nameof(MornSettingStringSo), menuName = "MornLib/" + nameof(MornSettingStringSo))]
+    [CreateAssetMenu(fileName = nameof(MornSettingStringSo), menuName = "MornSetting/" + nameof(MornSettingStringSo))]
     public sealed class MornSettingStringSo : MornSettingSoBase
     {
         [SerializeField] private string _defaultString;

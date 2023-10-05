@@ -13,7 +13,7 @@ namespace MornDictionary
 
         protected override void AfterRenderDictionary()
         {
-            var genericType = target.GetType().BaseType?.GetGenericArguments()[1];
+            var genericType = target.GetType().BaseType?.GetGenericArguments()[0];
             if (genericType == null)
             {
                 return;

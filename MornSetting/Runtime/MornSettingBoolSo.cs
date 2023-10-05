@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MornSetting
 {
-    [CreateAssetMenu(fileName = nameof(MornSettingBoolSo), menuName = "MornLib/" + nameof(MornSettingBoolSo))]
+    [CreateAssetMenu(fileName = nameof(MornSettingBoolSo), menuName = "MornSetting/" + nameof(MornSettingBoolSo))]
     public sealed class MornSettingBoolSo : MornSettingSoBase
     {
         [SerializeField] private bool _defaultValue;
