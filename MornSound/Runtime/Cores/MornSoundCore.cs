@@ -40,12 +40,12 @@ namespace MornSound
             return MornSoundSolverMonoBase<T>.Instance.FadeOutAsync(volumeType, duration, token);
         }
 
-        public static void PlaySe<T>(T soundType) where T : Enum
+        public static void PlaySe<T>(T soundType, float volume = 1) where T : Enum
         {
             var solver = MornSoundSolverMonoBase<T>.Instance;
             var info = solver.GetInfo(soundType);
             var soundPlayer = MornSoundPlayer.GetInstance(solver.transform);
-            soundPlayer.Init(solver.SeMixer, info.AudioClip, -16, false, 1, info.IsRandomPitch ? SoundParameter.GetRandomPitch() : 1f);
+            soundPlayer.Init(solver.SeMixer, info.AudioClip, -16, false, volume, info.IsRandomPitch ? SoundParameter.GetRandomPitch() : 1f);
         }
 
         public static void PlayBgm<T>(T soundType, bool skipSameTransition = true) where T : Enum
