@@ -2,7 +2,7 @@
 
 namespace MornScene
 {
-    [CreateAssetMenu(fileName = nameof(MornSceneDataSo), menuName = "MornScene/" + nameof(MornSceneDataSo))]
+    [CreateAssetMenu(fileName = nameof(MornSceneDataSo), menuName = "MornLib/" + nameof(MornSceneDataSo))]
     public sealed class MornSceneDataSo : ScriptableObject
     {
         [SerializeField] private string _sceneName;
