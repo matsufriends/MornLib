@@ -9,7 +9,6 @@ namespace MornSound
         private const float RandomPitchMax = 1f * RandomPitchRate;
         private const float RandomPitchRate = 1.05946309f; //半音
         private const float MinDb = 30;
-        float IMornSoundParameter.BgmChangeSeconds => BgmChangeSeconds;
 
         float IMornSoundParameter.GetRandomPitch()
         {

@@ -48,7 +48,7 @@ namespace MornSound
             soundPlayer.Init(solver.SeMixer, info.AudioClip, -16, false, volume, info.IsRandomPitch ? SoundParameter.GetRandomPitch() : 1f);
         }
 
-        public static void PlayBgm<T>(T soundType, bool skipSameTransition = true) where T : Enum
+        public static void PlayBgm<T>(T soundType, float fadeDuration = 1, bool skipSameTransition = true) where T : Enum
         {
             var solver = MornSoundSolverMonoBase<T>.Instance;
             var info = solver.GetInfo(soundType);
@@ -59,21 +59,21 @@ namespace MornSound
 
             var soundPlayer = MornSoundPlayer.GetInstance(solver.transform);
             soundPlayer.Init(solver.BgmMixer, info.AudioClip, 16, true, 0, 1f);
-            soundPlayer.FadeIn(SoundParameter.BgmChangeSeconds);
+            soundPlayer.FadeIn(fadeDuration);
             if (s_cachedBgmPlayer)
             {
-                s_cachedBgmPlayer.FadeOut(SoundParameter.BgmChangeSeconds);
+                s_cachedBgmPlayer.FadeOut(fadeDuration);
             }
 
             s_cachedBgmPlayer = soundPlayer;
             s_lastBgmInfo = info;
         }
 
-        public static void StopBgm()
+        public static void StopBgm(float fadeDuration = 1)
         {
             if (s_cachedBgmPlayer)
             {
-                s_cachedBgmPlayer.FadeOut(SoundParameter.BgmChangeSeconds);
+                s_cachedBgmPlayer.FadeOut(fadeDuration);
             }
 
             s_cachedBgmPlayer = null;
