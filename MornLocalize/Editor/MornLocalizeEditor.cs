@@ -19,7 +19,7 @@ namespace MornLocalize
                         var buttonLabel = MornEnumUtil<MornLocalizeLanguageType>.CachedToString(languageType);
                         if (GUILayout.Button(buttonLabel))
                         {
-                            var texts = Object.FindObjectsByType<MornLocalizeTextMono>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                            var texts = Object.FindObjectsOfType<MornLocalizeTextMono>(true);
                             foreach (var text in texts)
                             {
                                 text.ApplyLanguage(languageType);
