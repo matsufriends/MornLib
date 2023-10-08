@@ -7,7 +7,7 @@ namespace MornSoundProcessor
     {
         private static Editor s_editor;
 
-        [MenuItem("Morn/MornSoundProcessor")]
+        [MenuItem("MornLib/MornSoundProcessor")]
         private static void Open()
         {
             Init();

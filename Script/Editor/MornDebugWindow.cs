@@ -8,7 +8,7 @@ namespace MornLib.Editor
     {
         private Vector2 _scrollPos;
 
-        [MenuItem("Morn/" + nameof(MornDebugWindow))]
+        [MenuItem("MornLib/" + nameof(MornDebugWindow))]
         private static void Open()
         {
             var window = GetWindow<MornDebugWindow>();
