@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 namespace MornScene
@@ -10,32 +11,13 @@ namespace MornScene
         [SerializeField] private MornSceneDictionaryMono _sceneDictionary;
         [SerializeField] private MornSceneDataSo _firstScene;
         private readonly Dictionary<MornSceneDataSo, MornSceneMonoBase> _nameToSceneDict = new();
-        private static MornSceneSolver s_instance;
-
         internal MornSceneMonoBase this[MornSceneDataSo sceneName] => _nameToSceneDict[sceneName];
 
-        public static MornSceneSolver Instance
-        {
-            get
-            {
-                if (s_instance != null)
-                {
-                    return s_instance;
-                }
-
-                s_instance = FindObjectOfType<MornSceneSolver>();
-                if (s_instance == null)
-                {
-                    Debug.LogError($"{nameof(MornSceneSolver)} is not found.");
-                }
-
-                return s_instance;
-            }
-        }
+        private MornSceneController _sceneController;
 
         private void OnDestroy()
         {
-            MornSceneCore.Reset();
+            _sceneController?.Reset();
         }
 
         private void Reset()
@@ -45,11 +27,17 @@ namespace MornScene
 
         private void Awake()
         {
+            _sceneController = new MornSceneController(this);
+            
             _nameToSceneDict.Clear();
             foreach (var pair in _sceneDictionary.GetDictionary())
             {
                 _nameToSceneDict.Add(pair.Key, pair.Value);
                 pair.Value.Initialize(pair.Key);
+                
+                pair.Value.OnChangeSceneRx.Subscribe(_sceneController.ChangeScene);
+                pair.Value.OnAddSceneRx.Subscribe(_sceneController.AddScene);
+                pair.Value.OnRemoveSceneRx.Subscribe(_sceneController.RemoveScene);
             }
         }
 
@@ -60,12 +48,12 @@ namespace MornScene
                 pair.Value.SetSceneActive(pair.Key, false);
             }
 
-            MornSceneCore.ChangeScene(_firstScene);
+            _sceneController.ChangeScene(_firstScene);
         }
 
         private void Update()
         {
-            MornSceneCore.UpdateScene();
+            _sceneController.UpdateScene();
         }
     }
 }

@@ -14,23 +14,29 @@ namespace MornScene
         private readonly Subject<Unit> _onEnterSceneSubject = new();
         private readonly Subject<Unit> _onUpdateSceneSubject = new();
         private readonly Subject<Unit> _onExitSceneSubject = new();
+        private readonly Subject<MornSceneDataSo> _onChangeScene = new();
+        private readonly Subject<MornSceneDataSo> _onAddScene = new();
+        private readonly Subject<MornSceneDataSo> _onRemoveScene = new();
         public IObservable<Unit> OnEnterSceneRx => _onEnterSceneSubject;
         public IObservable<Unit> OnUpdateSceneRx => _onUpdateSceneSubject;
         public IObservable<Unit> OnExitSceneRx => _onExitSceneSubject;
+        public IObservable<MornSceneDataSo> OnChangeSceneRx => _onChangeScene;
+        public IObservable<MornSceneDataSo> OnAddSceneRx => _onAddScene;
+        public IObservable<MornSceneDataSo> OnRemoveSceneRx => _onRemoveScene;
 
         protected void ChangeScene(MornSceneDataSo sceneData)
         {
-            MornSceneCore.ChangeScene(sceneData);
+            _onChangeScene.OnNext(sceneData);
         }
 
         protected void AddScene(MornSceneDataSo sceneData)
         {
-            MornSceneCore.AddScene(sceneData);
+            _onAddScene.OnNext(sceneData);
         }
 
         protected void RemoveScene(MornSceneDataSo sceneData)
         {
-            MornSceneCore.RemoveScene(sceneData);
+            _onRemoveScene.OnNext(sceneData);
         }
 
         internal void Initialize(MornSceneDataSo sceneData)
