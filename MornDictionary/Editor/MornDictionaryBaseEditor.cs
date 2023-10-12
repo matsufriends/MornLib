@@ -131,6 +131,11 @@ namespace MornDictionary
             }
 
             AfterRenderDictionary();
+            if (GUILayout.Button("Reset Cache"))
+            {
+                ((MornDictionaryBaseInternalBase)target).ResetDictionary();
+            }
+
             serializedObject.ApplyModifiedProperties();
         }
     }

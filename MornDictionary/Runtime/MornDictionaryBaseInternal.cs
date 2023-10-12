@@ -3,13 +3,18 @@ using UnityEngine;
 
 namespace MornDictionary
 {
-    public abstract class MornDictionaryBaseInternal<TKey, TValue> : MonoBehaviour
+    public abstract class MornDictionaryBaseInternal<TKey, TValue> : MornDictionaryBaseInternalBase
     {
         [SerializeField] internal List<TKey> _keyList;
         [SerializeField] internal List<TValue> _valueList;
         private Dictionary<TKey, TValue> _keyToValueDict;
 
         public TValue this[TKey key] => GetDictionary()[key];
+
+        public override void ResetDictionary()
+        {
+            _keyToValueDict = null;
+        }
 
         public Dictionary<TKey, TValue> GetDictionary()
         {
