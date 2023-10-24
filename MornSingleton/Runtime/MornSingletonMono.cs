@@ -7,7 +7,6 @@ namespace MornSingleton
     {
         private static T s_instance;
         private bool _didAwake;
-
         public static T Instance
         {
             get
@@ -23,7 +22,7 @@ namespace MornSingleton
                     Debug.LogError($"{typeof(T)}が見つかりません");
                 }
 
-                s_instance.MyAwake();
+                s_instance.OnInstanced();
                 return s_instance;
             }
         }
@@ -34,7 +33,7 @@ namespace MornSingleton
             {
                 s_instance = (T)this;
                 DontDestroyOnLoad(gameObject);
-                MyAwake();
+                OnInstanced();
             }
             else if (s_instance == this)
             {
@@ -46,14 +45,12 @@ namespace MornSingleton
             }
         }
 
-        protected abstract void MyAwake();
+        protected abstract void OnInstanced();
     }
 
-    public abstract class MornSingletonMono<TMono, TInterface> : MonoBehaviour
-        where TMono : MornSingletonMono<TMono, TInterface>, TInterface, IMornSingleton
+    public abstract class MornSingletonMono<TMono, TInterface> : MonoBehaviour where TMono : MornSingletonMono<TMono, TInterface>, TInterface, IMornSingleton
     {
         private static TInterface s_instance;
-
         public static TInterface Instance
         {
             get

@@ -11,7 +11,7 @@ namespace MornLib.Types
         private readonly Subject<char> _inputChar = new();
         public IObservable<char> OnInputChar => _inputChar;
 
-        protected override void MyAwake()
+        protected override void OnInstanced()
         {
         }
 
