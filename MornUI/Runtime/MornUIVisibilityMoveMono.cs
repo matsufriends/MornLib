@@ -16,6 +16,12 @@ namespace MornUI
             _rectTransform = GetComponent<RectTransform>();
         }
 
+        public void OverridePositions(Vector2 showPos, Vector2 hidePos)
+        {
+            _showPos = showPos;
+            _hidePos = hidePos;
+        }
+
         public override void Show(bool immediate = false)
         {
             _aimPos = _showPos;

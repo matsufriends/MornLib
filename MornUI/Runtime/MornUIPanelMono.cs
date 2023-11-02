@@ -8,7 +8,7 @@ namespace MornUI
         [SerializeField] private MornUIMonoBase _firstFocus;
         private HashSet<MornUIMonoBase> _uis;
         private MornUIMonoBase _currentFocus;
-        private MornUIDirType _preMornUIDir;
+        private MornUIDirType _preDir;
         private MornUIDirType _lockDir;
         private float _lastInputTime;
         private float _nextCanMoveTime;
@@ -32,13 +32,17 @@ namespace MornUI
                 ui.AddSurround(tryAddQueue.Enqueue);
             }
 
-            Initialize(Vector2.zero);
+            ResetFocus();
         }
 
-        public void Initialize(Vector2 input)
+        public void RegisterInitialInput(Vector2 input)
+        {
+            _lockDir = input.ToDir();
+        }
+
+        public void ResetFocus()
         {
             ChangeFocus(_firstFocus);
-            _lockDir = input.ToDir();
         }
 
         private void ChangeFocus(MornUIMonoBase focus)
@@ -99,13 +103,13 @@ namespace MornUI
         public void PanelUpdate(Vector2 input)
         {
             var curDir = input.ToDir();
-            if (curDir == _lockDir)
+            if (_lockDir != MornUIDirType.None && curDir == _lockDir)
             {
                 return;
             }
 
             _lockDir = MornUIDirType.None;
-            if (_preMornUIDir != curDir)
+            if (_preDir != curDir)
             {
                 _nextCanMoveTime = 0;
             }
@@ -116,13 +120,13 @@ namespace MornUI
                 if (nextFocus != null)
                 {
                     ChangeFocus(nextFocus);
-                    var dif = curDir != _preMornUIDir ? ChangeFocusInitInterval : ChangeFocusInterval;
+                    var dif = curDir != _preDir ? ChangeFocusInitInterval : ChangeFocusInterval;
                     _nextCanMoveTime = Time.realtimeSinceStartup + dif;
                     _lastInputTime = Time.realtimeSinceStartup;
                 }
             }
 
-            _preMornUIDir = curDir;
+            _preDir = curDir;
         }
     }
 }

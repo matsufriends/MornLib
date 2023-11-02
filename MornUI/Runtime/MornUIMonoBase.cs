@@ -1,5 +1,8 @@
 ﻿using System;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace MornUI
 {
@@ -143,4 +146,27 @@ namespace MornUI
         }
 #endif
     }
+
+#if UNITY_EDITOR
+    [CustomEditor(typeof(MornUIMonoBase), true)]
+    public sealed class MornUIMonoEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+            var ui = (MornUIMonoBase)target;
+            if (GUILayout.Button("Focus"))
+            {
+                ui.OnFocus();
+                EditorUtility.SetDirty(ui);
+            }
+
+            if (GUILayout.Button("UnFocus"))
+            {
+                ui.OnUnFocus();
+                EditorUtility.SetDirty(ui);
+            }
+        }
+    }
+#endif
 }
