@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace MornLib
+namespace MornWeb
 {
     public static class MornWebUtil
     {

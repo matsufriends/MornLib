@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MornLib
+namespace MornWeb
 {
     [RequireComponent(typeof(Button))]
     public class MornWebOpenURLButton : MonoBehaviour
