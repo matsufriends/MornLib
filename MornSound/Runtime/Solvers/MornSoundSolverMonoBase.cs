@@ -28,45 +28,13 @@ namespace MornSound
         private const string MasterVolumeKey = "MasterVolume";
         private const string SeVolumeKey = "SeVolume";
         private const string BGMVolumeKey = "BgmVolume";
-        public AudioMixerGroup SeMixer => _seMixer;
-        public AudioMixerGroup BgmMixer => _bgmMixer;
-        private static MornSoundSolverMonoBase<TEnum> s_instance;
-        public static MornSoundSolverMonoBase<TEnum> Instance
-        {
-            get
-            {
-                if (s_instance != null)
-                {
-                    return s_instance;
-                }
-
-                s_instance = FindObjectOfType<MornSoundSolverMonoBase<TEnum>>();
-                if (s_instance == null)
-                {
-                    Debug.LogError($"{nameof(MornSoundSolverMonoBase<TEnum>)} is not found.");
-                }
-
-                return s_instance;
-            }
-        }
+        internal AudioMixerGroup SeMixer => _seMixer;
+        internal AudioMixerGroup BgmMixer => _bgmMixer;
+        internal MornSoundParameter SoundParameter { get; private set; }
 
         private void Awake()
         {
-            if (s_instance == null)
-            {
-                s_instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else if (s_instance == this)
-            {
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-                return;
-            }
-
+            SoundParameter = MornSoundParameter.Default;
             _masterSo.OnFloatChanged.Subscribe(x => ApplyVolumeToMixer(MornSoundVolumeType.Master, x)).AddTo(this);
             _bgmSo.OnFloatChanged.Subscribe(x => ApplyVolumeToMixer(MornSoundVolumeType.Bgm, x)).AddTo(this);
             _seSo.OnFloatChanged.Subscribe(x => ApplyVolumeToMixer(MornSoundVolumeType.Se, x)).AddTo(this);
@@ -80,9 +48,9 @@ namespace MornSound
             ApplyVolumeToMixer(MornSoundVolumeType.Bgm, _bgmSo.LoadFloat());
         }
 
-        private void OnDestroy()
+        internal void SetSoundParameter(MornSoundParameter soundParameter)
         {
-            MornSoundCore.Reset();
+            SoundParameter = soundParameter;
         }
 
         internal async UniTask FadeInAsync(MornSoundVolumeType volumeType, float duration, CancellationToken token)
@@ -150,10 +118,10 @@ namespace MornSound
                 MornSoundVolumeType.Bgm    => BGMVolumeKey,
                 _                          => throw new ArgumentOutOfRangeException(nameof(volumeType), volumeType, null),
             };
-            _mixer.SetFloat(volumeKey, MornSoundCore.SoundParameter.VolumeRateToDecibel(value * volumeRate));
+            _mixer.SetFloat(volumeKey, SoundParameter.VolumeRateToDecibel(value * volumeRate));
         }
 
-        public MornSoundInfo GetInfo(TEnum value)
+        internal MornSoundInfo GetInfo(TEnum value)
         {
             if (_enumToIndexDictionary == null)
             {

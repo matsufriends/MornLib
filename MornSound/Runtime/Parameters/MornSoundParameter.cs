@@ -2,22 +2,29 @@
 
 namespace MornSound
 {
-    internal sealed class MornSoundParameter : IMornSoundParameter
+    public readonly struct MornSoundParameter
     {
-        private const float BgmChangeSeconds = 1;
-        private const float RandomPitchMin = 1f / RandomPitchRate;
-        private const float RandomPitchMax = 1f * RandomPitchRate;
-        private const float RandomPitchRate = 1.05946309f; //半音
-        private const float MinDb = 30;
+        // 半音
+        public static MornSoundParameter Default => new(1f / 1.05946309f, 1.05946309f, -30f);
+        private readonly float _pitchMin;
+        private readonly float _pitchMax;
+        private readonly float _minDb;
 
-        float IMornSoundParameter.GetRandomPitch()
+        public MornSoundParameter(float pitchMin, float pitchMax, float minDb)
         {
-            return Random.Range(RandomPitchMin, RandomPitchMax);
+            _pitchMin = pitchMin;
+            _pitchMax = pitchMax;
+            _minDb = minDb;
         }
 
-        float IMornSoundParameter.VolumeRateToDecibel(float rate)
+        public float GetRandomPitch()
         {
-            return rate <= 0 ? -5000 : (rate - 1) * MinDb;
+            return Random.Range(_pitchMin, _pitchMax);
+        }
+
+        public float VolumeRateToDecibel(float rate)
+        {
+            return rate <= 0 ? -5000 : (rate - 1) * _minDb;
         }
     }
 }

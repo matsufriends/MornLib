@@ -4,86 +4,85 @@ using Cysharp.Threading.Tasks;
 
 namespace MornSound
 {
-    public static class MornSoundCore
+    public sealed class MornSoundCore<T> where T : Enum
     {
-        private static MornSoundPlayer s_cachedBgmPlayer;
-        private static MornSoundInfo s_lastBgmInfo;
-        public static IMornSoundParameter SoundParameter { get; private set; }
+        private readonly MornSoundSolverMonoBase<T> _solver;
+        private MornSoundPlayer _cachedBgmPlayer;
+        private MornSoundInfo _lastBgmInfo;
 
-        static MornSoundCore()
+        public MornSoundCore(MornSoundSolverMonoBase<T> solver)
         {
-            OverrideSoundParameter(new MornSoundParameter());
+            _solver = solver;
         }
 
-        public static void OverrideSoundParameter(IMornSoundParameter soundParameter)
+        public void SetSoundParameter(MornSoundParameter soundParameter)
         {
-            SoundParameter = soundParameter;
+            _solver.SetSoundParameter(soundParameter);
         }
 
-        public static UniTask FadeInAsync<T>(MornSoundVolumeType volumeType, double duration, CancellationToken token) where T : Enum
+        public UniTask FadeInAsync(MornSoundVolumeType volumeType, double duration, CancellationToken token)
         {
-            return MornSoundSolverMonoBase<T>.Instance.FadeInAsync(volumeType, (float)duration, token);
+            return _solver.FadeInAsync(volumeType, (float)duration, token);
         }
 
-        public static UniTask FadeInAsync<T>(MornSoundVolumeType volumeType, float duration, CancellationToken token) where T : Enum
+        public UniTask FadeInAsync(MornSoundVolumeType volumeType, float duration, CancellationToken token)
         {
-            return MornSoundSolverMonoBase<T>.Instance.FadeInAsync(volumeType, duration, token);
+            return _solver.FadeInAsync(volumeType, duration, token);
         }
 
-        public static UniTask FadeOutAsync<T>(MornSoundVolumeType volumeType, double duration, CancellationToken token) where T : Enum
+        public UniTask FadeOutAsync(MornSoundVolumeType volumeType, double duration, CancellationToken token)
         {
-            return MornSoundSolverMonoBase<T>.Instance.FadeOutAsync(volumeType, (float)duration, token);
+            return _solver.FadeOutAsync(volumeType, (float)duration, token);
         }
 
-        public static UniTask FadeOutAsync<T>(MornSoundVolumeType volumeType, float duration, CancellationToken token) where T : Enum
+        public UniTask FadeOutAsync(MornSoundVolumeType volumeType, float duration, CancellationToken token)
         {
-            return MornSoundSolverMonoBase<T>.Instance.FadeOutAsync(volumeType, duration, token);
+            return _solver.FadeOutAsync(volumeType, duration, token);
         }
 
-        public static void PlaySe<T>(T soundType, float volume = 1) where T : Enum
+        public void PlaySe(T soundType, float volume = 1)
         {
-            var solver = MornSoundSolverMonoBase<T>.Instance;
-            var info = solver.GetInfo(soundType);
-            var soundPlayer = MornSoundPlayer.GetInstance(solver.transform);
-            soundPlayer.Init(solver.SeMixer, info.AudioClip, -16, false, volume, info.IsRandomPitch ? SoundParameter.GetRandomPitch() : 1f);
+            var info = _solver.GetInfo(soundType);
+            var soundPlayer = MornSoundPlayer.GetInstance(_solver.transform);
+            var pitch = info.IsRandomPitch ? _solver.SoundParameter.GetRandomPitch() : 1f;
+            soundPlayer.Init(_solver.SeMixer, info.AudioClip, -16, false, volume, pitch);
         }
 
-        public static void PlayBgm<T>(T soundType, float fadeDuration = 1, bool skipSameTransition = true) where T : Enum
+        public void PlayBgm(T soundType, float fadeDuration = 1, bool skipSameTransition = true)
         {
-            var solver = MornSoundSolverMonoBase<T>.Instance;
-            var info = solver.GetInfo(soundType);
-            if (skipSameTransition && s_lastBgmInfo.AudioClip == info.AudioClip)
+            var info = _solver.GetInfo(soundType);
+            if (skipSameTransition && _lastBgmInfo.AudioClip == info.AudioClip)
             {
                 return;
             }
 
-            var soundPlayer = MornSoundPlayer.GetInstance(solver.transform);
-            soundPlayer.Init(solver.BgmMixer, info.AudioClip, 16, true, 0, 1f);
+            var soundPlayer = MornSoundPlayer.GetInstance(_solver.transform);
+            soundPlayer.Init(_solver.BgmMixer, info.AudioClip, 16, true, 0, 1f);
             soundPlayer.FadeIn(fadeDuration);
-            if (s_cachedBgmPlayer)
+            if (_cachedBgmPlayer)
             {
-                s_cachedBgmPlayer.FadeOut(fadeDuration);
+                _cachedBgmPlayer.FadeOut(fadeDuration);
             }
 
-            s_cachedBgmPlayer = soundPlayer;
-            s_lastBgmInfo = info;
+            _cachedBgmPlayer = soundPlayer;
+            _lastBgmInfo = info;
         }
 
-        public static void StopBgm(float fadeDuration = 1)
+        public void StopBgm(float fadeDuration = 1)
         {
-            if (s_cachedBgmPlayer)
+            if (_cachedBgmPlayer)
             {
-                s_cachedBgmPlayer.FadeOut(fadeDuration);
+                _cachedBgmPlayer.FadeOut(fadeDuration);
             }
 
-            s_cachedBgmPlayer = null;
-            s_lastBgmInfo = default;
+            _cachedBgmPlayer = null;
+            _lastBgmInfo = default(MornSoundInfo);
         }
 
-        public static void Reset()
+        public void Reset()
         {
-            s_cachedBgmPlayer = null;
-            s_lastBgmInfo = default(MornSoundInfo);
+            _cachedBgmPlayer = null;
+            _lastBgmInfo = default(MornSoundInfo);
         }
     }
 }
