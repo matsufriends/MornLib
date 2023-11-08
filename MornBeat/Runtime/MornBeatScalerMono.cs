@@ -1,5 +1,4 @@
-﻿using UniRx;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MornBeat
 {
@@ -11,11 +10,12 @@ namespace MornBeat
         private void Awake()
         {
             _defaultScale = transform.localScale;
+            /*
             MornBeatCore.OnBeat.Where(beat => beat.IsJustForAnyBeat(4)).Subscribe(
                 _ =>
                 {
                     transform.localScale = _defaultScale * _mornBeatScalerSetting.AimScale;
-                }).AddTo(this);
+                }).AddTo(this);*/
         }
 
         private void Update()

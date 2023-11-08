@@ -5,114 +5,126 @@ using UnityEngine.Assertions;
 
 namespace MornBeat
 {
-    public static class MornBeatCore
+    public sealed class MornBeatCore
     {
-        private static MornBeatMemoSo s_currentBeatMemo;
-        private static int s_tick;
-        private static bool s_waitLoop;
-        private static double s_startDspTime;
-        private static Subject<MornBeatTimingInfo> s_beatSubject = new();
-        private static Subject<MornBeatMemoSo> s_initializeBeatSubject = new();
-        private static Subject<Unit> s_endBeatSubject = new();
-        public static IObservable<MornBeatTimingInfo> OnBeat => s_beatSubject;
-        public static IObservable<MornBeatMemoSo> OnInitializeBeat => s_initializeBeatSubject;
-        public static IObservable<Unit> OnEndBeat => s_endBeatSubject;
-        public static double OffsetTime;
-        public static double CurrentBpm { get; private set; } = 120;
-        public static int MeasureTickCount => s_currentBeatMemo.MeasureTickCount;
-        public static int BeatCount => s_currentBeatMemo.BeatCount;
-        public static double CurrentBeatLength => 60d / CurrentBpm;
-        public static double MusicPlayingTime => AudioSettings.dspTime - s_startDspTime + s_currentBeatMemo.Offset + OffsetTime;
+        private readonly AudioSource _audioSource;
+        private MornBeatMemoSo _currentBeatMemo;
+        private int _tick;
+        private bool _waitLoop;
+        private double _startDspTime;
+        private double _offsetTime;
+        private Subject<MornBeatTimingInfo> _beatSubject = new();
+        private Subject<MornBeatMemoSo> _initializeBeatSubject = new();
+        private Subject<Unit> _endBeatSubject = new();
+        public IObservable<MornBeatTimingInfo> OnBeat => _beatSubject;
+        public IObservable<MornBeatMemoSo> OnInitializeBeat => _initializeBeatSubject;
+        public IObservable<Unit> OnEndBeat => _endBeatSubject;
+        public double CurrentBpm { get; private set; } = 120;
+        public int MeasureTickCount => _currentBeatMemo.MeasureTickCount;
+        public int BeatCount => _currentBeatMemo.BeatCount;
+        public double CurrentBeatLength => 60d / CurrentBpm;
+        public double MusicPlayingTime => AudioSettings.dspTime - _startDspTime + _currentBeatMemo.Offset + _offsetTime;
 
-        public static void Reset()
+        public MornBeatCore(AudioSource audioSource)
         {
-            s_currentBeatMemo = null;
-            s_tick = 0;
-            CurrentBpm = 120;
-            s_waitLoop = false;
-            s_startDspTime = AudioSettings.dspTime;
-            s_beatSubject = new Subject<MornBeatTimingInfo>();
-            s_initializeBeatSubject = new Subject<MornBeatMemoSo>();
-            s_endBeatSubject = new Subject<Unit>();
+            _audioSource = audioSource;
         }
 
-        public static float GetBeatTiming(int tick)
+        public void ChangeOffset(double offset)
         {
-            if (s_currentBeatMemo == null)
+            _offsetTime = offset;
+        }
+
+        public void Reset()
+        {
+            _currentBeatMemo = null;
+            _tick = 0;
+            CurrentBpm = 120;
+            _waitLoop = false;
+            _startDspTime = AudioSettings.dspTime;
+            _beatSubject = new Subject<MornBeatTimingInfo>();
+            _initializeBeatSubject = new Subject<MornBeatMemoSo>();
+            _endBeatSubject = new Subject<Unit>();
+        }
+
+        public float GetBeatTiming(int tick)
+        {
+            if (_currentBeatMemo == null)
             {
                 return Mathf.Infinity;
             }
 
-            return s_currentBeatMemo.GetBeatTiming(tick);
+            return _currentBeatMemo.GetBeatTiming(tick);
         }
 
-        public static void UpdateBeat()
+        public void UpdateBeat()
         {
-            if (s_currentBeatMemo == null)
+            if (_currentBeatMemo == null)
             {
                 return;
             }
 
             var time = MusicPlayingTime;
-            if (s_waitLoop)
+            if (_waitLoop)
             {
-                var length = s_currentBeatMemo.Clip.length;
+                var length = _currentBeatMemo.Clip.length;
                 if (time < length)
                 {
                     return;
                 }
 
-                s_startDspTime += length;
+                _startDspTime += length;
                 time -= length;
-                s_waitLoop = false;
+                _waitLoop = false;
             }
 
-            if (time < s_currentBeatMemo.GetBeatTiming(s_tick))
+            if (time < _currentBeatMemo.GetBeatTiming(_tick))
             {
                 return;
             }
 
-            CurrentBpm = s_currentBeatMemo.GetBpm(time);
-            s_beatSubject.OnNext(new MornBeatTimingInfo(s_tick, s_currentBeatMemo.MeasureTickCount));
-            s_tick++;
-            if (s_tick == s_currentBeatMemo.TickSum)
+            CurrentBpm = _currentBeatMemo.GetBpm(time);
+            _beatSubject.OnNext(new MornBeatTimingInfo(_tick, _currentBeatMemo.MeasureTickCount));
+            _tick++;
+            if (_tick == _currentBeatMemo.TickSum)
             {
-                if (s_currentBeatMemo.IsLoop)
+                if (_currentBeatMemo.IsLoop)
                 {
-                    s_tick = 0;
+                    _tick = 0;
                 }
 
-                s_waitLoop = true;
-                s_endBeatSubject.OnNext(Unit.Default);
+                _waitLoop = true;
+                _endBeatSubject.OnNext(Unit.Default);
             }
         }
 
-        public static void InitializeBeat(MornBeatMemoSo beatMemo, bool isForceInitialize = false)
+        public void InitializeBeat(MornBeatMemoSo beatMemo, bool isForceInitialize = false)
         {
-            var solver = MornBeatSolverMono.Instance;
-            if (s_currentBeatMemo == beatMemo && isForceInitialize == false)
+            if (_currentBeatMemo == beatMemo && isForceInitialize == false)
             {
                 return;
             }
 
-            s_currentBeatMemo = beatMemo;
-            s_tick = 0;
-            s_waitLoop = false;
-            s_startDspTime = AudioSettings.dspTime + 0.1d;
-            solver.OnInitializeBeat(beatMemo, s_startDspTime);
-            s_initializeBeatSubject.OnNext(beatMemo);
+            _currentBeatMemo = beatMemo;
+            _tick = 0;
+            _waitLoop = false;
+            _startDspTime = AudioSettings.dspTime + 0.1d;
+            _audioSource.loop = beatMemo.IsLoop;
+            _audioSource.clip = beatMemo.Clip;
+            _audioSource.PlayScheduled(_startDspTime);
+            _initializeBeatSubject.OnNext(beatMemo);
         }
 
-        public static int GetNearTick(out double nearDif)
+        public int GetNearTick(out double nearDif)
         {
-            return GetNearTickBySpecifiedBeat(out nearDif, s_currentBeatMemo.MeasureTickCount);
+            return GetNearTickBySpecifiedBeat(out nearDif, _currentBeatMemo.MeasureTickCount);
         }
 
-        public static int GetNearTickBySpecifiedBeat(out double nearDif, int beat)
+        public int GetNearTickBySpecifiedBeat(out double nearDif, int beat)
         {
-            Assert.IsTrue(beat <= s_currentBeatMemo.MeasureTickCount);
-            var tickSize = s_currentBeatMemo.MeasureTickCount / beat;
-            var lastTick = s_tick - s_tick % tickSize;
+            Assert.IsTrue(beat <= _currentBeatMemo.MeasureTickCount);
+            var tickSize = _currentBeatMemo.MeasureTickCount / beat;
+            var lastTick = _tick - _tick % tickSize;
             var nextTick = lastTick + tickSize;
             var curTime = MusicPlayingTime;
             var preTime = GetBeatTiming(lastTick);
@@ -125,7 +137,7 @@ namespace MornBeat
                 nexTime = GetBeatTiming(nextTick);
             }
 
-            while (nexTime < curTime && nextTick + tickSize < s_currentBeatMemo.TickSum)
+            while (nexTime < curTime && nextTick + tickSize < _currentBeatMemo.TickSum)
             {
                 lastTick += tickSize;
                 nextTick += tickSize;
