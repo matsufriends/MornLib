@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MornUI
 {
-    public sealed class MornUIPanelMono : MonoBehaviour
+    public sealed class MornUIControllerMono : MonoBehaviour
     {
         [SerializeField] private MornUIMonoBase _firstFocus;
         private HashSet<MornUIMonoBase> _uis;
