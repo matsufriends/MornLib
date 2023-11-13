@@ -7,6 +7,7 @@ namespace MornLocalize
     {
         private static readonly ReactiveProperty<MornLocalizeLanguageType> _languageChangedRp = new();
         public static IObservable<MornLocalizeLanguageType> OnLanguageChanged => _languageChangedRp;
+        public static MornLocalizeLanguageType CurrentLanguage => _languageChangedRp.Value;
 
         public static void ChangeLanguage(MornLocalizeLanguageType mornLocalizeLanguageType)
         {
