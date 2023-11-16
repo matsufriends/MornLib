@@ -24,7 +24,7 @@ namespace MornSound
 
         public float VolumeRateToDecibel(float rate)
         {
-            return rate <= 0 ? -5000 : (rate - 1) * _minDb;
+            return rate <= 0 ? -5000 : (1 - rate) * _minDb;
         }
     }
 }
