@@ -11,6 +11,7 @@ namespace MornBeat
         private MornBeatMemoSo _currentBeatMemo;
         private int _tick;
         private bool _waitLoop;
+        private double _loopStartDspTime;
         private double _startDspTime;
         private double _offsetTime;
         private Subject<MornBeatTimingInfo> _beatSubject = new();
@@ -23,7 +24,10 @@ namespace MornBeat
         public int MeasureTickCount => _currentBeatMemo.MeasureTickCount;
         public int BeatCount => _currentBeatMemo.BeatCount;
         public double CurrentBeatLength => 60d / CurrentBpm;
-        public double MusicPlayingTime => AudioSettings.dspTime - _startDspTime + _currentBeatMemo.Offset + _offsetTime;
+        /// <summary> ループ時に0から初期化 </summary>
+        public double MusicPlayingTime => AudioSettings.dspTime - _loopStartDspTime + _currentBeatMemo.Offset + _offsetTime;
+        /// <summary> ループ後に値を継続 </summary>
+        public double MusicPlayingTimeNoReset => AudioSettings.dspTime - _startDspTime + _currentBeatMemo.Offset + _offsetTime;
 
         public MornBeatCore(AudioSource audioSource)
         {
@@ -42,6 +46,7 @@ namespace MornBeat
             CurrentBpm = 120;
             _waitLoop = false;
             _startDspTime = AudioSettings.dspTime;
+            _loopStartDspTime = _startDspTime;
             _beatSubject = new Subject<MornBeatTimingInfo>();
             _initializeBeatSubject = new Subject<MornBeatMemoSo>();
             _endBeatSubject = new Subject<Unit>();
@@ -73,7 +78,7 @@ namespace MornBeat
                     return;
                 }
 
-                _startDspTime += length;
+                _loopStartDspTime += length;
                 time -= length;
                 _waitLoop = false;
             }
@@ -108,7 +113,8 @@ namespace MornBeat
             _currentBeatMemo = beatMemo;
             _tick = 0;
             _waitLoop = false;
-            _startDspTime = AudioSettings.dspTime + 0.1d;
+            _startDspTime = AudioSettings.dspTime + 0.2d;
+            _loopStartDspTime = _startDspTime;
             _audioSource.loop = beatMemo.IsLoop;
             _audioSource.clip = beatMemo.Clip;
             _audioSource.PlayScheduled(_startDspTime);
