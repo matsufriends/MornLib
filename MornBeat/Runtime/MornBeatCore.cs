@@ -28,6 +28,8 @@ namespace MornBeat
         public double MusicPlayingTime => AudioSettings.dspTime - _loopStartDspTime + _currentBeatMemo.Offset + _offsetTime;
         /// <summary> ループ後に値を継続 </summary>
         public double MusicPlayingTimeNoReset => AudioSettings.dspTime - _startDspTime + _currentBeatMemo.Offset + _offsetTime;
+        public double BeatTime => MusicPlayingTime / CurrentBeatLength;
+        public double BeatTimeNoRepeat => MusicPlayingTimeNoReset / CurrentBeatLength;
 
         public MornBeatCore(AudioSource audioSource)
         {
