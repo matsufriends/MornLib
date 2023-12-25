@@ -1,27 +1,20 @@
-﻿using System;
-using UniRx;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MornSetting
 {
     [CreateAssetMenu(fileName = nameof(MornSettingBoolSo), menuName = "MornSetting/" + nameof(MornSettingBoolSo))]
-    public sealed class MornSettingBoolSo : MornSettingSoBase
+    public sealed class MornSettingBoolSo : MornSettingSoBase<bool>
     {
-        [SerializeField] private bool _defaultValue;
-        private readonly Subject<bool> _boolSubject = new();
-        public IObservable<bool> OnBoolChanged => _boolSubject;
-
-        public bool LoadBool()
+        protected override bool LoadValueImpl()
         {
             var value = PlayerPrefs.GetInt(Key, -1);
-            return value < 0 ? _defaultValue : value > 0;
+            return value < 0 ? DefaultValue : value > 0;
         }
 
-        public void SaveBool(bool value)
+        protected override void SaveValueImpl(bool value)
         {
             PlayerPrefs.SetInt(Key, value ? 1 : 0);
             PlayerPrefs.Save();
-            _boolSubject.OnNext(value);
         }
     }
 }

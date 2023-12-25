@@ -13,16 +13,15 @@ namespace MornSetting
 
         private void Awake()
         {
-            ApplyValue(_settingSo.LoadFloat());
-            _settingSo.OnFloatChanged.Where(x => _selfChangeLock == false).Subscribe(ApplyValue).AddTo(this);
-            _slider.OnValueChangedAsObservable()
-                   .Subscribe(x =>
-                    {
-                        _selfChangeLock = true;
-                        _settingSo.SaveFloat(x);
-                        _selfChangeLock = false;
-                    })
-                   .AddTo(this);
+            ApplyValue(_settingSo.LoadValue());
+            _settingSo.OnValueChanged.Where(x => _selfChangeLock == false).Subscribe(ApplyValue).AddTo(this);
+            _slider.OnValueChangedAsObservable().Subscribe(
+                x =>
+                {
+                    _selfChangeLock = true;
+                    _settingSo.SaveValue(x);
+                    _selfChangeLock = false;
+                }).AddTo(this);
         }
 
         private void ApplyValue(float value)

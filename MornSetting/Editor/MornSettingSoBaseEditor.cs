@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MornSetting.MornLib.MornSetting.Editor
 {
-    [CustomEditor(typeof(MornSettingSoBase), true)] [CanEditMultipleObjects]
+    [CustomEditor(typeof(MornSettingSoBase<>), true)] [CanEditMultipleObjects]
     internal sealed class MornSettingSoBaseEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
@@ -14,11 +14,10 @@ namespace MornSetting.MornLib.MornSetting.Editor
             {
                 foreach (var target in targets)
                 {
-                    var settingSo = (MornSettingSoBase)target;
-                    var assetPath = AssetDatabase.GetAssetPath(settingSo);
+                    var assetPath = AssetDatabase.GetAssetPath(target);
                     var fileName = Path.GetFileNameWithoutExtension(assetPath);
-                    settingSo.SetKey(fileName);
-                    EditorUtility.SetDirty(settingSo);
+                    ((IMornSettingSo)target).SetKey(fileName);
+                    EditorUtility.SetDirty(target);
                 }
             }
         }

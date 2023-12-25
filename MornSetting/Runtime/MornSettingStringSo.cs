@@ -1,26 +1,19 @@
-﻿using System;
-using UniRx;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MornSetting
 {
     [CreateAssetMenu(fileName = nameof(MornSettingStringSo), menuName = "MornSetting/" + nameof(MornSettingStringSo))]
-    public sealed class MornSettingStringSo : MornSettingSoBase
+    public sealed class MornSettingStringSo : MornSettingSoBase<string>
     {
-        [SerializeField] private string _defaultString;
-        private readonly Subject<string> _stringSubject = new();
-        public IObservable<string> OnStringChanged => _stringSubject;
-
-        public string LoadString()
+        protected override string LoadValueImpl()
         {
-            return PlayerPrefs.GetString(Key, _defaultString);
+            return PlayerPrefs.GetString(Key, DefaultValue);
         }
 
-        public void SaveFloat(string value)
+        protected override void SaveValueImpl(string value)
         {
             PlayerPrefs.SetString(Key, value);
             PlayerPrefs.Save();
-            _stringSubject.OnNext(value);
         }
     }
 }

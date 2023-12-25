@@ -35,17 +35,17 @@ namespace MornSound
         private void Awake()
         {
             SoundParameter = MornSoundParameter.Default;
-            _masterSo.OnFloatChanged.Subscribe(x => ApplyVolumeToMixer(MornSoundVolumeType.Master, x)).AddTo(this);
-            _bgmSo.OnFloatChanged.Subscribe(x => ApplyVolumeToMixer(MornSoundVolumeType.Bgm, x)).AddTo(this);
-            _seSo.OnFloatChanged.Subscribe(x => ApplyVolumeToMixer(MornSoundVolumeType.Se, x)).AddTo(this);
+            _masterSo.OnValueChanged.Subscribe(x => ApplyVolumeToMixer(MornSoundVolumeType.Master, x)).AddTo(this);
+            _bgmSo.OnValueChanged.Subscribe(x => ApplyVolumeToMixer(MornSoundVolumeType.Bgm, x)).AddTo(this);
+            _seSo.OnValueChanged.Subscribe(x => ApplyVolumeToMixer(MornSoundVolumeType.Se, x)).AddTo(this);
         }
 
         private void Start()
         {
             //Mixer.SetFloatがAwake関数では適切に処理されない
-            ApplyVolumeToMixer(MornSoundVolumeType.Master, _masterSo.LoadFloat());
-            ApplyVolumeToMixer(MornSoundVolumeType.Se, _seSo.LoadFloat());
-            ApplyVolumeToMixer(MornSoundVolumeType.Bgm, _bgmSo.LoadFloat());
+            ApplyVolumeToMixer(MornSoundVolumeType.Master, _masterSo.LoadValue());
+            ApplyVolumeToMixer(MornSoundVolumeType.Se, _seSo.LoadValue());
+            ApplyVolumeToMixer(MornSoundVolumeType.Bgm, _bgmSo.LoadValue());
         }
 
         internal void SetSoundParameter(MornSoundParameter soundParameter)
@@ -87,15 +87,15 @@ namespace MornSound
             {
                 case MornSoundVolumeType.Master:
                     _materVolumeFadeRate = value;
-                    ApplyVolumeToMixer(volumeType, _masterSo.LoadFloat());
+                    ApplyVolumeToMixer(volumeType, _masterSo.LoadValue());
                     break;
                 case MornSoundVolumeType.Bgm:
                     _bgmVolumeFadeRate = value;
-                    ApplyVolumeToMixer(volumeType, _bgmSo.LoadFloat());
+                    ApplyVolumeToMixer(volumeType, _bgmSo.LoadValue());
                     break;
                 case MornSoundVolumeType.Se:
                     _seVolumeFadeRate = value;
-                    ApplyVolumeToMixer(volumeType, _seSo.LoadFloat());
+                    ApplyVolumeToMixer(volumeType, _seSo.LoadValue());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(volumeType), volumeType, null);
