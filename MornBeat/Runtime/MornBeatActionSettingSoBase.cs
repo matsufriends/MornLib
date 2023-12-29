@@ -42,15 +42,15 @@ namespace MornBeat
             return list;
         }
 
-        public bool TryGetAction(int index, out MornBeatAction<TEnum> valleyBeatAction)
+        public bool TryGetAction(int index, out MornBeatAction<TEnum> beatAction)
         {
             if (index < 0 || index >= _beatAction.Count)
             {
-                valleyBeatAction = default(MornBeatAction<TEnum>);
+                beatAction = default(MornBeatAction<TEnum>);
                 return false;
             }
 
-            valleyBeatAction = _beatAction[index];
+            beatAction = _beatAction[index];
             return true;
         }
 
