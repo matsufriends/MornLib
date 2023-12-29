@@ -5,7 +5,7 @@ namespace MornSound
     public readonly struct MornSoundParameter
     {
         // 半音
-        public static MornSoundParameter Default => new(1f / 1.05946309f, 1.05946309f, -30f);
+        public static MornSoundParameter Default => new(1, 1.05946309f, -30f);
         private readonly float _pitchMin;
         private readonly float _pitchMax;
         private readonly float _minDb;
