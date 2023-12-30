@@ -56,7 +56,7 @@ namespace MornSound
         internal async UniTask FadeInAsync(MornSoundVolumeType volumeType, float duration, CancellationToken token)
         {
             var elapsedTime = 0f;
-            while (elapsedTime <= duration)
+            while (elapsedTime < duration)
             {
                 elapsedTime += Time.unscaledDeltaTime;
                 var rate = Mathf.Clamp01(elapsedTime / duration);
@@ -70,7 +70,7 @@ namespace MornSound
         internal async UniTask FadeOutAsync(MornSoundVolumeType volumeType, float duration, CancellationToken token)
         {
             var elapsedTime = 0f;
-            while (elapsedTime <= duration)
+            while (elapsedTime < duration)
             {
                 elapsedTime += Time.unscaledDeltaTime;
                 var rate = Mathf.Clamp01(elapsedTime / duration);
