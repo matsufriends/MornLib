@@ -1,8 +1,12 @@
 {
-    "name": "MornEditor",
-    "rootNamespace": "MornEditor",
-    "references": [],
-    "includePlatforms": [],
+    "name": "MornDebug.Editor",
+    "rootNamespace": "MornDebug",
+    "references": [
+        "GUID:dc6d51e8dd10af545a842d16b165b707"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

@@ -1,24 +1,24 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
 
-namespace MornEditor
+namespace MornDebug
 {
-    public sealed class MornEditorWindow : EditorWindow
+    public sealed class MornDebugWindow : EditorWindow
     {
         private Vector2 _scroll;
 
-        [MenuItem("MornLib/MornEditorWindow")]
+        [MenuItem("MornLib/" + nameof(MornDebugWindow))]
         private static void ShowWindow()
         {
-            GetWindow<MornEditorWindow>();
+            GetWindow<MornDebugWindow>();
         }
 
         private void OnGUI()
         {
-            MornEditorCore.CheckDisposed();
+            MornDebugCore.CheckDisposed();
             using (var scrollScope = new EditorGUILayout.ScrollViewScope(_scroll))
             {
-                foreach (var info in MornEditorCore.OnGUIHashSet)
+                foreach (var info in MornDebugCore.OnGUIHashSet)
                 {
                     GUILayout.Label(info.Label);
                     info.OnGUI();

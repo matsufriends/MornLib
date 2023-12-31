@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("MornEditor.Editor")]
-namespace MornEditor
+[assembly: InternalsVisibleTo("MornDebug.Editor")]
+namespace MornDebug
 {
-    public static class MornEditorCore
+    public static class MornDebugCore
     {
-        internal static readonly HashSet<MornEditorOnGUIData> OnGUIHashSet = new();
-        private static readonly List<MornEditorOnGUIData> _cacheList = new();
+        internal static readonly HashSet<MornDebugOnGUIData> OnGUIHashSet = new();
+        private static readonly List<MornDebugOnGUIData> _cacheList = new();
 
         public static void RegisterOnGUI(string label, Action action)
         {
-            OnGUIHashSet.Add(new MornEditorOnGUIData(label, action));
+            OnGUIHashSet.Add(new MornDebugOnGUIData(label, action));
         }
 
         internal static void CheckDisposed()

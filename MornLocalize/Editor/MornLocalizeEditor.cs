@@ -1,4 +1,4 @@
-﻿using MornEditor;
+﻿using MornDebug;
 using MornEnum;
 using UnityEditor;
 using UnityEngine;
@@ -10,7 +10,7 @@ namespace MornLocalize
     {
         static MornLocalizeEditor()
         {
-            MornEditorCore.RegisterOnGUI(
+            MornDebugCore.RegisterOnGUI(
                 nameof(MornLocalizeEditor),
                 () =>
                 {
