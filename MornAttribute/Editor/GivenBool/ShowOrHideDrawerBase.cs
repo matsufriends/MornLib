@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace MornAttribute
 {
-    public abstract class ShowOrHideDrawerBase : GivenBoolNameDrawerBase
+    public abstract class ShowOrHideDrawerBase : GivenBoolDrawerBase
     {
-        protected override void OnCorrectValue(Rect position, SerializedProperty property, GUIContent label)
+        protected override void OnCorrect(Rect position, SerializedProperty property, GUIContent label)
         {
             EditorGUI.PropertyField(position, property, label, true);
         }
 
-        protected override void OnIncorrectValue(Rect position, SerializedProperty property, GUIContent label)
+        protected override void OnIncorrect(Rect position, SerializedProperty property, GUIContent label)
         {
         }
 

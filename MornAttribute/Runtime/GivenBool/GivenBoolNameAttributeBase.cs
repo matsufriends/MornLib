@@ -6,7 +6,7 @@ namespace MornAttribute
     {
         public readonly string PropertyName;
 
-        public GivenBoolNameAttributeBase(string propertyName)
+        protected GivenBoolNameAttributeBase(string propertyName)
         {
             PropertyName = propertyName;
         }

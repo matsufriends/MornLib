@@ -4,17 +4,17 @@ using UnityEngine;
 
 namespace MornAttribute
 {
-    public abstract class GivenBoolNameDrawerBase : PropertyDrawer
+    public abstract class GivenBoolDrawerBase : PropertyDrawer
     {
         protected abstract bool CorrectValue { get; }
-        protected abstract void OnCorrectValue(Rect position, SerializedProperty property, GUIContent label);
-        protected abstract void OnIncorrectValue(Rect position, SerializedProperty property, GUIContent label);
+        protected abstract void OnCorrect(Rect position, SerializedProperty property, GUIContent label);
+        protected abstract void OnIncorrect(Rect position, SerializedProperty property, GUIContent label);
 
         protected bool TryGetBool(SerializedProperty property, out bool value)
         {
             var showIf = (GivenBoolNameAttributeBase)attribute;
             var targetObject = property.serializedObject.targetObject;
-            var propertyInfo = targetObject.GetType().GetProperty(showIf.PropertyName, BindingFlags.Instance | BindingFlags.NonPublic);
+            var propertyInfo = targetObject.GetType().GetProperty(showIf.PropertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (propertyInfo != null && propertyInfo.GetValue(targetObject) is bool boolValue)
             {
                 value = boolValue;
@@ -31,11 +31,11 @@ namespace MornAttribute
             {
                 if (boolValue == CorrectValue)
                 {
-                    OnCorrectValue(position, property, label);
+                    OnCorrect(position, property, label);
                 }
                 else
                 {
-                    OnIncorrectValue(position, property, label);
+                    OnIncorrect(position, property, label);
                 }
             }
             else
