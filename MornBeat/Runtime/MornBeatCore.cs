@@ -17,17 +17,22 @@ namespace MornBeat
         private Subject<MornBeatTimingInfo> _beatSubject = new();
         private Subject<MornBeatMemoSo> _initializeBeatSubject = new();
         private Subject<Unit> _endBeatSubject = new();
+        private Subject<Unit> _updateBeatSubject = new();
         public IObservable<MornBeatTimingInfo> OnBeat => _beatSubject;
         public IObservable<MornBeatMemoSo> OnInitializeBeat => _initializeBeatSubject;
         public IObservable<Unit> OnEndBeat => _endBeatSubject;
+        public IObservable<Unit> OnUpdateBeat => _updateBeatSubject;
         public double CurrentBpm { get; private set; } = 120;
         public int MeasureTickCount => _currentBeatMemo.MeasureTickCount;
         public int BeatCount => _currentBeatMemo.BeatCount;
         public double CurrentBeatLength => 60d / CurrentBpm;
+
         /// <summary> ループ時に0から初期化 </summary>
         public double MusicPlayingTime => AudioSettings.dspTime - _loopStartDspTime + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) + _offsetTime;
+
         /// <summary> ループ後に値を継続 </summary>
         public double MusicPlayingTimeNoReset => AudioSettings.dspTime - _startDspTime + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) + _offsetTime;
+
         public double BeatTime => MusicPlayingTime / CurrentBeatLength;
         public double BeatTimeNoRepeat => MusicPlayingTimeNoReset / CurrentBeatLength;
 
@@ -52,6 +57,7 @@ namespace MornBeat
             _beatSubject = new Subject<MornBeatTimingInfo>();
             _initializeBeatSubject = new Subject<MornBeatMemoSo>();
             _endBeatSubject = new Subject<Unit>();
+            _updateBeatSubject = new Subject<Unit>();
         }
 
         public float GetBeatTiming(int tick)
@@ -65,6 +71,12 @@ namespace MornBeat
         }
 
         public void UpdateBeat()
+        {
+            UpdateBeatInternal();
+            _updateBeatSubject.OnNext(Unit.Default);
+        }
+
+        private void UpdateBeatInternal()
         {
             if (_currentBeatMemo == null)
             {

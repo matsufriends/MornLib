@@ -30,6 +30,7 @@ namespace MornEditor
                     foreach (var obj in targets)
                     {
                         method.Invoke(obj, null);
+                        EditorUtility.SetDirty(obj);
                     }
                 }
             }
