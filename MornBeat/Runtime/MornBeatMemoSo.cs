@@ -23,12 +23,14 @@ namespace MornBeat
         [SerializeField] private int _beatCount = 4;
         [SerializeField] private double _interval = 0.000001d;
         [SerializeField] private AudioClip _clip;
+        [SerializeField] private float volume = 1f;
         [SerializeField] private float _offset;
         public bool IsLoop => _isLoop;
         public int MeasureTickCount => _measureTickCount;
         public int BeatCount => _beatCount;
         public int TickSum => _timingList.Count;
         public AudioClip Clip => _clip;
+        public float Volume => volume;
         internal float Offset => _offset;
 
         internal float GetBeatTiming(int index)

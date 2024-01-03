@@ -131,6 +131,7 @@ namespace MornBeat
             _loopStartDspTime = _startDspTime;
             _audioSource.loop = beatMemo.IsLoop;
             _audioSource.clip = beatMemo.Clip;
+            _audioSource.volume = beatMemo.Volume;
             _audioSource.PlayScheduled(_startDspTime);
             _initializeBeatSubject.OnNext(beatMemo);
         }
