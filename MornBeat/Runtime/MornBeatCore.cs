@@ -58,6 +58,7 @@ namespace MornBeat
             _initializeBeatSubject = new Subject<MornBeatMemoSo>();
             _endBeatSubject = new Subject<Unit>();
             _updateBeatSubject = new Subject<Unit>();
+            _audioSource.Stop();
         }
 
         public float GetBeatTiming(int tick)
