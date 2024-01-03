@@ -10,8 +10,8 @@ namespace MornSetting
     {
         [SerializeField] internal string Key;
         [SerializeField] internal T DefaultValue;
-        private BehaviorSubject<T> _subject;
-        private BehaviorSubject<T> Subject => _subject ??= new BehaviorSubject<T>(DefaultValue);
+        private Subject<T> _subject;
+        private Subject<T> Subject => _subject ??= new Subject<T>();
         public IObservable<T> OnValueChanged => Subject;
 
         void IMornSettingSo.SetKey(string key)
