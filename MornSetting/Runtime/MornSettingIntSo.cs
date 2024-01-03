@@ -13,7 +13,6 @@ namespace MornSetting
         protected override void SaveValueImpl(int value)
         {
             PlayerPrefs.SetInt(Key, value);
-            PlayerPrefs.Save();
         }
     }
 }

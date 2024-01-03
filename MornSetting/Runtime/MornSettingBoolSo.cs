@@ -14,7 +14,6 @@ namespace MornSetting
         protected override void SaveValueImpl(bool value)
         {
             PlayerPrefs.SetInt(Key, value ? 1 : 0);
-            PlayerPrefs.Save();
         }
     }
 }
