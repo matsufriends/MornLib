@@ -17,6 +17,7 @@ namespace MornSound
         }
 
         private FadeType _fadeType;
+        private float _cachedVolume;
         private float _elapsedTime;
         private float _fadeSeconds;
         private static readonly Queue<MornSoundPlayer> s_playEndQueue = new();
@@ -31,6 +32,7 @@ namespace MornSound
             _audioSource.priority = priority;
             _audioSource.outputAudioMixerGroup = mixerGroup;
             _audioSource.volume = volume;
+            _cachedVolume = volume;
             _audioSource.clip = clip;
             _audioSource.loop = isLoop;
             _audioSource.pitch = pitch;
@@ -41,8 +43,8 @@ namespace MornSound
         {
             if (_fadeType != FadeType.None)
             {
-                var start = _fadeType == FadeType.FadeIn ? 0f : 1f;
-                var end = _fadeType == FadeType.FadeIn ? 1f : 0f;
+                var start = _fadeType == FadeType.FadeIn ? 0f : _cachedVolume;
+                var end = _fadeType == FadeType.FadeIn ? _cachedVolume : 0f ;
                 if (_elapsedTime < _fadeSeconds)
                 {
                     _elapsedTime += Time.deltaTime;
@@ -80,6 +82,7 @@ namespace MornSound
             _fadeType = FadeType.FadeIn;
             _fadeSeconds = seconds;
             _elapsedTime = 0;
+            _audioSource.volume = 0;
         }
 
         public void FadeOut(float seconds)
@@ -87,6 +90,7 @@ namespace MornSound
             _fadeType = FadeType.FadeOut;
             _fadeSeconds = seconds;
             _elapsedTime = 0;
+            _audioSource.volume = _cachedVolume;
         }
 
         public static MornSoundPlayer GetInstance(Transform parent)

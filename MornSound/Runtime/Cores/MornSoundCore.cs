@@ -48,7 +48,7 @@ namespace MornSound
             soundPlayer.Init(_solver.SeMixer, info.AudioClip, -16, false, volume, pitch);
         }
 
-        public void PlayBgm(T soundType, float fadeDuration = 1, bool skipSameTransition = true)
+        public void PlayBgm(T soundType, float volume = 1, float fadeDuration = 1, bool skipSameTransition = true)
         {
             var info = _solver.GetInfo(soundType);
             if (skipSameTransition && _lastBgmInfo.AudioClip == info.AudioClip)
@@ -57,7 +57,7 @@ namespace MornSound
             }
 
             var soundPlayer = MornSoundPlayer.GetInstance(_solver.transform);
-            soundPlayer.Init(_solver.BgmMixer, info.AudioClip, 16, true, 0, 1f);
+            soundPlayer.Init(_solver.BgmMixer, info.AudioClip, 16, true, volume, 1f);
             soundPlayer.FadeIn(fadeDuration);
             if (_cachedBgmPlayer)
             {
