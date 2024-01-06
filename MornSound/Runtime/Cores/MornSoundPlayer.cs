@@ -22,11 +22,13 @@ namespace MornSound
         private float _fadeSeconds;
         private static readonly Queue<MornSoundPlayer> s_playEndQueue = new();
 
-        public void Init(AudioMixerGroup mixerGroup, AudioClip clip, int priority, bool isLoop, float volume, float pitch)
+        public void Init(AudioMixerGroup mixerGroup, AudioClip clip, int priority, bool isLoop, float volume,
+            float pitch, double? scheduled = null)
         {
             if (_audioSource == null)
             {
-                _audioSource = TryGetComponent<AudioSource>(out var source) ? source : gameObject.AddComponent<AudioSource>();
+                _audioSource = TryGetComponent<AudioSource>(out var source) ? source
+                        : gameObject.AddComponent<AudioSource>();
             }
 
             _audioSource.priority = priority;
@@ -36,7 +38,14 @@ namespace MornSound
             _audioSource.clip = clip;
             _audioSource.loop = isLoop;
             _audioSource.pitch = pitch;
-            _audioSource.Play();
+            if (scheduled != null)
+            {
+                _audioSource.PlayScheduled(scheduled.Value);
+            }
+            else
+            {
+                _audioSource.Play();
+            }
         }
 
         private void Update()
@@ -44,7 +53,7 @@ namespace MornSound
             if (_fadeType != FadeType.None)
             {
                 var start = _fadeType == FadeType.FadeIn ? 0f : _cachedVolume;
-                var end = _fadeType == FadeType.FadeIn ? _cachedVolume : 0f ;
+                var end = _fadeType == FadeType.FadeIn ? _cachedVolume : 0f;
                 if (_elapsedTime < _fadeSeconds)
                 {
                     _elapsedTime += Time.deltaTime;
