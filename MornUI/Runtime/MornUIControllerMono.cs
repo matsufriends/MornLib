@@ -47,18 +47,24 @@ namespace MornUI
 
         private void ChangeFocus(MornUIMonoBase focus)
         {
-            _currentFocus = focus;
+            if (_currentFocus == focus)
+            {
+                return;
+            }
+
             foreach (var ui in _uis)
             {
                 if (ui == _currentFocus)
                 {
-                    ui.OnFocus();
-                }
-                else
-                {
                     ui.OnUnFocus();
                 }
+                else if (ui == focus)
+                {
+                    ui.OnFocus();
+                }
             }
+
+            _currentFocus = focus;
         }
 
         private bool CanInput()
