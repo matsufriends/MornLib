@@ -54,13 +54,24 @@ namespace MornEditor
         private void GetAllInheritedTypes(Type baseType, bool includeMono)
         {
             var monoType = typeof(MonoBehaviour);
-            _inheritedTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).Where(p => baseType.IsAssignableFrom(p) && p.IsClass && (!monoType.IsAssignableFrom(p) || includeMono)).Prepend(null).ToArray();
+            _inheritedTypes = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(s => s.GetTypes())
+                    .Where(p => baseType.IsAssignableFrom(p) && p.IsClass && (!monoType.IsAssignableFrom(p) || includeMono))
+                    .Prepend(null)
+                    .ToArray();
         }
 
         private void GetInheritedTypeNameArrays()
         {
-            _typePopupNameArray = _inheritedTypes.Select(type => type == null ? "<null>" : type.ToString()).ToArray();
-            _typeFullNameArray = _inheritedTypes.Select(type => type == null ? "" : $"{type.Assembly.ToString().Split(',')[0]} {type.FullName}").ToArray();
+            _typePopupNameArray = _inheritedTypes.Select(type =>
+                    {
+                        var attribute = type?.GetCustomAttribute<SubclassNameAttribute>();
+                        return type == null ? "<null>" :
+                                attribute == null ? type.Name : attribute.Name;
+                    })
+                    .ToArray();
+            _typeFullNameArray = _inheritedTypes.Select(type => type == null ? "" : $"{type.Assembly.ToString().Split(',')[0]} {type.FullName}")
+                    .ToArray();
         }
 
         private static Type GetFieldType(SerializedProperty property)
