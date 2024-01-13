@@ -82,7 +82,7 @@ namespace MornSound
             var start = _fadeScaleDict[volumeType];
             while (elapsedTime < duration)
             {
-                elapsedTime += Time.unscaledTime;
+                elapsedTime += Time.unscaledDeltaTime;
                 _fadeScaleDict[volumeType] = Mathf.Lerp(start, endValue, Mathf.Clamp01(elapsedTime / duration));
                 ApplyVolumeToMixer(volumeType);
                 await UniTask.Yield(PlayerLoopTiming.Update, _cancellationTokenSource.Token);
