@@ -1,19 +1,20 @@
 ﻿using System;
+using MornEditor;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace MornBeat
 {
-    public sealed class MornBeatCore
+    public sealed class MornBeatControllerMono : MonoBehaviour
     {
-        private readonly AudioSource _audioSource;
-        private MornBeatMemoSo _currentBeatMemo;
-        private int _tick;
-        private bool _waitLoop;
-        private double _loopStartDspTime;
-        private double _startDspTime;
-        private double _offsetTime;
+        [SerializeField] private AudioSource _audioSource;
+        [SerializeField, ReadOnly] private MornBeatMemoSo _currentBeatMemo;
+        [SerializeField, ReadOnly] private int _tick;
+        [SerializeField, ReadOnly] private bool _waitLoop;
+        [SerializeField, ReadOnly] private double _loopStartDspTime;
+        [SerializeField, ReadOnly] private double _startDspTime;
+        [SerializeField, ReadOnly] private double _offsetTime;
         private Subject<MornBeatTimingInfo> _beatSubject = new();
         private Subject<MornBeatMemoSo> _initializeBeatSubject = new();
         private Subject<Unit> _endBeatSubject = new();
@@ -26,27 +27,28 @@ namespace MornBeat
         public int MeasureTickCount => _currentBeatMemo.MeasureTickCount;
         public int BeatCount => _currentBeatMemo.BeatCount;
         public double CurrentBeatLength => 60d / CurrentBpm;
-
         /// <summary> ループ時に0から初期化 </summary>
-        public double MusicPlayingTime => AudioSettings.dspTime - _loopStartDspTime + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) + _offsetTime;
-
+        public double MusicPlayingTime => AudioSettings.dspTime
+                - _loopStartDspTime
+                + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0)
+                + _offsetTime;
         /// <summary> ループ後に値を継続 </summary>
-        public double MusicPlayingTimeNoReset => AudioSettings.dspTime - _startDspTime + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) + _offsetTime;
-
+        public double MusicPlayingTimeNoReset => AudioSettings.dspTime
+                - _startDspTime
+                + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0)
+                + _offsetTime;
         public double BeatTime => MusicPlayingTime / CurrentBeatLength;
         public double BeatTimeNoRepeat => MusicPlayingTimeNoReset / CurrentBeatLength;
+        private const double PlayStartOffset = 0.1d;
 
-        public MornBeatCore(AudioSource audioSource)
-        {
-            _audioSource = audioSource;
-        }
+
 
         public void ChangeOffset(double offset)
         {
             _offsetTime = offset;
         }
 
-        public void Reset()
+        public void ResetBeat()
         {
             _currentBeatMemo = null;
             _tick = 0;
@@ -71,7 +73,7 @@ namespace MornBeat
             return _currentBeatMemo.GetBeatTiming(tick);
         }
 
-        public void UpdateBeat()
+        private void Update()
         {
             UpdateBeatInternal();
             _updateBeatSubject.OnNext(Unit.Default);
@@ -128,7 +130,7 @@ namespace MornBeat
             _currentBeatMemo = beatMemo;
             _tick = 0;
             _waitLoop = false;
-            _startDspTime = AudioSettings.dspTime + 0.2d;
+            _startDspTime = AudioSettings.dspTime + PlayStartOffset;
             _loopStartDspTime = _startDspTime;
             _audioSource.loop = beatMemo.IsLoop;
             _audioSource.clip = beatMemo.Clip;
