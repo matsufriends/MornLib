@@ -1,63 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace MornSound
 {
-    public sealed class MornSoundCore<T> where T : Enum
+    public sealed class MornSoundCore
     {
-        private readonly MornSoundSolverMonoBase<T> _solver;
+        private readonly MornSoundSolverMonoBase _solver;
         private MornSoundPlayer _cachedBgmPlayer;
-        private MornSoundInfo _lastBgmInfo;
+        private MornSoundDataSo _lastBgmInfo;
+        private readonly Dictionary<MornSoundVolumeType, float> _fadeScaleDict = new()
+        {
+                { MornSoundVolumeType.Master, 1 },
+                { MornSoundVolumeType.Bgm, 1 },
+                { MornSoundVolumeType.Se, 1 },
+        };
+        private CancellationTokenSource _cancellationTokenSource;
+        private const string MasterVolumeKey = "MasterVolume";
+        private const string SeVolumeKey = "SeVolume";
+        private const string BGMVolumeKey = "BgmVolume";
 
-        public MornSoundCore(MornSoundSolverMonoBase<T> solver)
+        public MornSoundCore(MornSoundSolverMonoBase solver)
         {
             _solver = solver;
+            _solver.Initialize(ApplyVolumeToMixer);
         }
 
-        public void SetSoundParameter(MornSoundParameter soundParameter)
+        public void PlaySe(MornSoundDataSo info, float volume = 1)
         {
-            _solver.SetSoundParameter(soundParameter);
-        }
-
-        public UniTask FadeInAsync(MornSoundVolumeType volumeType, double duration, CancellationToken token)
-        {
-            return _solver.FadeInAsync(volumeType, (float)duration, token);
-        }
-
-        public UniTask FadeInAsync(MornSoundVolumeType volumeType, float duration, CancellationToken token)
-        {
-            return _solver.FadeInAsync(volumeType, duration, token);
-        }
-
-        public UniTask FadeOutAsync(MornSoundVolumeType volumeType, double duration, CancellationToken token)
-        {
-            return _solver.FadeOutAsync(volumeType, (float)duration, token);
-        }
-
-        public UniTask FadeOutAsync(MornSoundVolumeType volumeType, float duration, CancellationToken token)
-        {
-            return _solver.FadeOutAsync(volumeType, duration, token);
-        }
-
-        public void PlaySe(T soundType, float volume = 1)
-        {
-            var info = _solver.GetInfo(soundType);
             var soundPlayer = MornSoundPlayer.GetInstance(_solver.transform);
-            var pitch = info.IsRandomPitch ? _solver.SoundParameter.GetRandomPitch() : 1f;
-            soundPlayer.Init(_solver.SeMixer, info.AudioClip, -16, false, volume, pitch, null);
+            soundPlayer.Init(_solver.SeGroup, info.AudioClip, -16, false, volume * info.VolumeRate, info.PitchRate);
         }
 
-        public void PlayBgm(T soundType, float volume = 1, float fadeDuration = 1, bool skipSameTransition = true, double? scheduled = null)
+        public void PlayBgm(MornSoundDataSo info, float volume = 1, float fadeDuration = 1, bool skipSameTransition = true, double? scheduled = null)
         {
-            var info = _solver.GetInfo(soundType);
             if (skipSameTransition && _lastBgmInfo.AudioClip == info.AudioClip)
             {
                 return;
             }
 
             var soundPlayer = MornSoundPlayer.GetInstance(_solver.transform);
-            soundPlayer.Init(_solver.BgmMixer, info.AudioClip, 16, true, volume, 1f, scheduled);
+            soundPlayer.Init(_solver.BgmGroup, info.AudioClip, 16, true, volume * info.VolumeRate, info.PitchRate, scheduled);
             soundPlayer.FadeIn(fadeDuration);
             if (_cachedBgmPlayer)
             {
@@ -76,13 +61,59 @@ namespace MornSound
             }
 
             _cachedBgmPlayer = null;
-            _lastBgmInfo = default(MornSoundInfo);
+            _lastBgmInfo = null;
         }
 
-        public void Reset()
+        public async UniTask FadeInAsync(MornSoundVolumeType volumeType, float duration, CancellationToken token)
         {
-            _cachedBgmPlayer = null;
-            _lastBgmInfo = default(MornSoundInfo);
+            await FadeInternalAsync(volumeType, duration, 1, token);
+        }
+
+        public async UniTask FadeOutAsync(MornSoundVolumeType volumeType, float duration, CancellationToken token)
+        {
+            await FadeInternalAsync(volumeType, duration, 0, token);
+        }
+
+        private async UniTask FadeInternalAsync(MornSoundVolumeType volumeType, float duration, float endValue, CancellationToken token)
+        {
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(token);
+            var elapsedTime = 0f;
+            var start = _fadeScaleDict[volumeType];
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.unscaledTime;
+                _fadeScaleDict[volumeType] = Mathf.Lerp(start, endValue, Mathf.Clamp01(elapsedTime / duration));
+                ApplyVolumeToMixer(volumeType);
+                await UniTask.Yield(PlayerLoopTiming.Update, _cancellationTokenSource.Token);
+            }
+
+            ApplyVolumeToMixer(volumeType);
+        }
+
+        public void ApplyVolumeToMixer(MornSoundVolumeType volumeType)
+        {
+            var baseVolume = volumeType switch
+            {
+                    MornSoundVolumeType.Master => _solver.MasterVolume,
+                    MornSoundVolumeType.Bgm    => _solver.BgmVolume,
+                    MornSoundVolumeType.Se     => _solver.SeVolume,
+                    _                          => throw new ArgumentOutOfRangeException(nameof(volumeType), volumeType, null),
+            };
+            var fadeScale = _fadeScaleDict[volumeType];
+            var volumeKey = volumeType switch
+            {
+                    MornSoundVolumeType.Master => MasterVolumeKey,
+                    MornSoundVolumeType.Se     => SeVolumeKey,
+                    MornSoundVolumeType.Bgm    => BGMVolumeKey,
+                    _                          => throw new ArgumentOutOfRangeException(nameof(volumeType), volumeType, null),
+            };
+            _solver.Mixer.SetFloat(volumeKey, VolumeRateToDecibel(baseVolume * fadeScale));
+        }
+
+        private static float VolumeRateToDecibel(float rate)
+        {
+            return rate <= 0 ? -5000 : (1 - rate) * -30;
         }
     }
 }
