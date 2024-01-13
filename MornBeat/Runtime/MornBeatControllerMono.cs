@@ -9,12 +9,12 @@ namespace MornBeat
     public sealed class MornBeatControllerMono : MonoBehaviour
     {
         [SerializeField] private AudioSource _audioSource;
-        [SerializeField, ReadOnly] private MornBeatMemoSo _currentBeatMemo;
-        [SerializeField, ReadOnly] private int _tick;
-        [SerializeField, ReadOnly] private bool _waitLoop;
-        [SerializeField, ReadOnly] private double _loopStartDspTime;
-        [SerializeField, ReadOnly] private double _startDspTime;
-        [SerializeField, ReadOnly] private double _offsetTime;
+        [SerializeField] [ReadOnly] private MornBeatMemoSo _currentBeatMemo;
+        [SerializeField] [ReadOnly] private int _tick;
+        [SerializeField] [ReadOnly] private bool _waitLoop;
+        [SerializeField] [ReadOnly] private double _loopStartDspTime;
+        [SerializeField] [ReadOnly] private double _startDspTime;
+        [SerializeField] [ReadOnly] private double _offsetTime;
         private Subject<MornBeatTimingInfo> _beatSubject = new();
         private Subject<MornBeatMemoSo> _initializeBeatSubject = new();
         private Subject<Unit> _endBeatSubject = new();
@@ -28,20 +28,12 @@ namespace MornBeat
         public int BeatCount => _currentBeatMemo.BeatCount;
         public double CurrentBeatLength => 60d / CurrentBpm;
         /// <summary> ループ時に0から初期化 </summary>
-        public double MusicPlayingTime => AudioSettings.dspTime
-                - _loopStartDspTime
-                + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0)
-                + _offsetTime;
+        public double MusicPlayingTime => AudioSettings.dspTime - _loopStartDspTime + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) + _offsetTime;
         /// <summary> ループ後に値を継続 </summary>
-        public double MusicPlayingTimeNoReset => AudioSettings.dspTime
-                - _startDspTime
-                + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0)
-                + _offsetTime;
+        public double MusicPlayingTimeNoReset => AudioSettings.dspTime - _startDspTime + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) + _offsetTime;
         public double BeatTime => MusicPlayingTime / CurrentBeatLength;
         public double BeatTimeNoRepeat => MusicPlayingTimeNoReset / CurrentBeatLength;
         private const double PlayStartOffset = 0.1d;
-
-
 
         public void ChangeOffset(double offset)
         {

@@ -3,7 +3,6 @@
     "rootNamespace": "MornSound",
     "references": [
         "GUID:560b04d1a97f54a4e82edc0cbbb69285",
-        "GUID:125c1ea3b2f364846bbec0de39d4c3af",
         "GUID:f51ebe6a0ceec4240a699833d6309b23"
     ],
     "includePlatforms": [],
