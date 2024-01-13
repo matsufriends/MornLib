@@ -11,21 +11,49 @@ namespace MornLib.Cores
 {
     public static class MornApp
     {
-        private static readonly CancellationTokenSource TokenSource = new();
-        private static readonly CompositeDisposable Disposable = new();
-        public static CancellationToken QuitToken => TokenSource.Token;
-        public static ICollection<IDisposable> QuitDisposable => Disposable;
-
-        static MornApp()
+        private static CancellationTokenSource _tokenSource;
+        private static CompositeDisposable _disposable;
+        private static GameObject _flag;
+        public static CancellationToken QuitToken
         {
-            var flag = new GameObject(nameof(MornAppFlag));
-            flag.AddComponent<MornAppFlag>();
-            Object.DontDestroyOnLoad(flag);
-            flag.OnDestroyAsObservable().Subscribe(x =>
+            get
             {
-                Disposable.Clear();
-                TokenSource.Cancel();
-            });
+                if (_flag == null)
+                {
+                    GenerateFlag();
+                }
+
+                return _tokenSource.Token;
+            }
+        }
+        public static ICollection<IDisposable> QuitDisposable
+        {
+            get
+            {
+                if (_flag == null)
+                {
+                    GenerateFlag();
+                }
+
+                return _disposable;
+            }
+        }
+
+        private static void GenerateFlag()
+        {
+            _tokenSource?.Cancel();
+            _tokenSource = new CancellationTokenSource();
+            _disposable?.Clear();
+            _disposable = new CompositeDisposable();
+            _flag = new GameObject(nameof(MornAppFlag));
+            _flag.AddComponent<MornAppFlag>();
+            Object.DontDestroyOnLoad(_flag);
+            _flag.OnDestroyAsObservable()
+                    .Subscribe(x =>
+                    {
+                        _tokenSource.Cancel();
+                        _disposable.Clear();
+                    });
         }
 
         public static void Quit()
