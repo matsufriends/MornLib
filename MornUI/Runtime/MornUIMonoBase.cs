@@ -57,17 +57,17 @@ namespace MornUI
         {
             nextFocus = input.ToDir() switch
             {
-                MornUIDirType.None  => null,
-                MornUIDirType.Up    => _up,
-                MornUIDirType.Down  => _down,
-                MornUIDirType.Left  => _left,
-                MornUIDirType.Right => _right,
-                _                   => throw new ArgumentOutOfRangeException(),
+                    MornUIDirType.None  => null,
+                    MornUIDirType.Up    => _up,
+                    MornUIDirType.Down  => _down,
+                    MornUIDirType.Left  => _left,
+                    MornUIDirType.Right => _right,
+                    _                   => throw new ArgumentOutOfRangeException(),
             };
         }
 
-        public abstract void OnFocus();
-        public abstract void OnUnFocus();
+        public abstract void OnFocus(bool isInitial);
+        public abstract void OnUnFocus(bool isInitial);
 
         protected virtual void Reset()
         {
@@ -82,11 +82,11 @@ namespace MornUI
             var lossyScale = RectTransform.lossyScale;
             return dir switch
             {
-                MornUIDirType.Up    => position + new Vector2(sizeDelta.x / 4f * lossyScale.x, sizeDelta.y / 2 * lossyScale.y),
-                MornUIDirType.Down  => position + new Vector2(-sizeDelta.x / 4f * lossyScale.x, -sizeDelta.y / 2 * lossyScale.y),
-                MornUIDirType.Left  => position + new Vector2(-sizeDelta.x / 2 * lossyScale.x, sizeDelta.y / 4f * lossyScale.y),
-                MornUIDirType.Right => position + new Vector2(sizeDelta.x / 2 * lossyScale.x, -sizeDelta.y / 4f * lossyScale.y),
-                _                   => throw new ArgumentOutOfRangeException(nameof(dir), dir, null),
+                    MornUIDirType.Up    => position + new Vector2(sizeDelta.x / 4f * lossyScale.x, sizeDelta.y / 2 * lossyScale.y),
+                    MornUIDirType.Down  => position + new Vector2(-sizeDelta.x / 4f * lossyScale.x, -sizeDelta.y / 2 * lossyScale.y),
+                    MornUIDirType.Left  => position + new Vector2(-sizeDelta.x / 2 * lossyScale.x, sizeDelta.y / 4f * lossyScale.y),
+                    MornUIDirType.Right => position + new Vector2(sizeDelta.x / 2 * lossyScale.x, -sizeDelta.y / 4f * lossyScale.y),
+                    _                   => throw new ArgumentOutOfRangeException(nameof(dir), dir, null),
             };
         }
 
@@ -97,11 +97,11 @@ namespace MornUI
             var lossyScale = RectTransform.lossyScale;
             return dir switch
             {
-                MornUIDirType.Up    => position + new Vector2(sizeDelta.x / 4f * lossyScale.x, -sizeDelta.y / 2 * lossyScale.y),
-                MornUIDirType.Down  => position + new Vector2(-sizeDelta.x / 4f * lossyScale.x, sizeDelta.y / 2 * lossyScale.y),
-                MornUIDirType.Left  => position + new Vector2(sizeDelta.x / 2 * lossyScale.x, sizeDelta.y / 4f * lossyScale.y),
-                MornUIDirType.Right => position + new Vector2(-sizeDelta.x / 2 * lossyScale.x, -sizeDelta.y / 4f * lossyScale.y),
-                _                   => throw new ArgumentOutOfRangeException(nameof(dir), dir, null),
+                    MornUIDirType.Up    => position + new Vector2(sizeDelta.x / 4f * lossyScale.x, -sizeDelta.y / 2 * lossyScale.y),
+                    MornUIDirType.Down  => position + new Vector2(-sizeDelta.x / 4f * lossyScale.x, sizeDelta.y / 2 * lossyScale.y),
+                    MornUIDirType.Left  => position + new Vector2(sizeDelta.x / 2 * lossyScale.x, sizeDelta.y / 4f * lossyScale.y),
+                    MornUIDirType.Right => position + new Vector2(-sizeDelta.x / 2 * lossyScale.x, -sizeDelta.y / 4f * lossyScale.y),
+                    _                   => throw new ArgumentOutOfRangeException(nameof(dir), dir, null),
             };
         }
 
@@ -157,13 +157,13 @@ namespace MornUI
             var ui = (MornUIMonoBase)target;
             if (GUILayout.Button("Focus"))
             {
-                ui.OnFocus();
+                ui.OnFocus(false);
                 EditorUtility.SetDirty(ui);
             }
 
             if (GUILayout.Button("UnFocus"))
             {
-                ui.OnUnFocus();
+                ui.OnUnFocus(false);
                 EditorUtility.SetDirty(ui);
             }
         }

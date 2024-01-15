@@ -42,10 +42,10 @@ namespace MornUI
 
         public void ResetFocus()
         {
-            ChangeFocus(_firstFocus);
+            ChangeFocus(_firstFocus, true);
         }
 
-        private void ChangeFocus(MornUIMonoBase focus)
+        private void ChangeFocus(MornUIMonoBase focus, bool isInitial)
         {
             if (_currentFocus == focus)
             {
@@ -56,11 +56,11 @@ namespace MornUI
             {
                 if (ui == _currentFocus)
                 {
-                    ui.OnUnFocus();
+                    ui.OnUnFocus(isInitial);
                 }
                 else if (ui == focus)
                 {
-                    ui.OnFocus();
+                    ui.OnFocus(isInitial);
                 }
             }
 
@@ -99,7 +99,7 @@ namespace MornUI
                 }
                 else
                 {
-                    ChangeFocus(nextFocus);
+                    ChangeFocus(nextFocus, false);
                 }
             }
 
@@ -125,7 +125,7 @@ namespace MornUI
                 _currentFocus.OnMove(input, out var nextFocus);
                 if (nextFocus != null)
                 {
-                    ChangeFocus(nextFocus);
+                    ChangeFocus(nextFocus, false);
                     var dif = curDir != _preDir ? ChangeFocusInitInterval : ChangeFocusInterval;
                     _nextCanMoveTime = Time.realtimeSinceStartup + dif;
                     _lastInputTime = Time.realtimeSinceStartup;
