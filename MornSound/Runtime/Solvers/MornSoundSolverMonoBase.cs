@@ -15,19 +15,19 @@ namespace MornSound
         public abstract float MasterVolume { get; }
         public abstract float BgmVolume { get; }
         public abstract float SeVolume { get; }
-        private Action<MornSoundVolumeType> _applyVolume;
+        protected Action<MornSoundVolumeType> ApplyVolume;
 
         internal void Initialize(Action<MornSoundVolumeType> applyVolume)
         {
-            _applyVolume = applyVolume;
+            ApplyVolume = applyVolume;
         }
 
         protected virtual void Start()
         {
             //Mixer.SetFloatがAwake関数では適切に処理されない
-            _applyVolume(MornSoundVolumeType.Master);
-            _applyVolume(MornSoundVolumeType.Bgm);
-            _applyVolume(MornSoundVolumeType.Se);
+            ApplyVolume(MornSoundVolumeType.Master);
+            ApplyVolume(MornSoundVolumeType.Bgm);
+            ApplyVolume(MornSoundVolumeType.Se);
         }
     }
 }
