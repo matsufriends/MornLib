@@ -33,7 +33,7 @@ namespace MornBeat
         public double MusicPlayingTimeNoReset => AudioSettings.dspTime - _startDspTime + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) + _offsetTime;
         public double BeatTime => MusicPlayingTime / CurrentBeatLength;
         public double BeatTimeNoRepeat => MusicPlayingTimeNoReset / CurrentBeatLength;
-        private const double PlayStartOffset = 0.1d;
+        private const double PlayStartOffset = 0.3d;
 
         public void ChangeOffset(double offset)
         {
