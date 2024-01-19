@@ -36,7 +36,7 @@ namespace MornSound
 
         public void PlayBgm(MornSoundDataSo info, float volume = 1, float fadeDuration = 1, bool skipSameTransition = true, double? scheduled = null)
         {
-            if (skipSameTransition && _lastBgmInfo.AudioClip == info.AudioClip)
+            if (skipSameTransition && _lastBgmInfo != null && _lastBgmInfo.AudioClip == info.AudioClip)
             {
                 return;
             }
