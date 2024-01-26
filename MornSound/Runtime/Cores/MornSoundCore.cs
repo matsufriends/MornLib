@@ -82,12 +82,13 @@ namespace MornSound
             var start = _fadeScaleDict[volumeType];
             while (elapsedTime < duration)
             {
-                elapsedTime += Time.unscaledDeltaTime;
+                elapsedTime += Time.deltaTime;
                 _fadeScaleDict[volumeType] = Mathf.Lerp(start, endValue, Mathf.Clamp01(elapsedTime / duration));
                 ApplyVolumeToMixer(volumeType);
                 await UniTask.Yield(PlayerLoopTiming.Update, _cancellationTokenSource.Token);
             }
-
+            
+            _fadeScaleDict[volumeType] = endValue;
             ApplyVolumeToMixer(volumeType);
         }
 

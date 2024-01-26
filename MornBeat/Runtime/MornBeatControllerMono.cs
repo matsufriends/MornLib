@@ -31,9 +31,9 @@ namespace MornBeat
         /// <summary> ループ時に0から初期化 </summary>
         public double MusicPlayingTime => AudioSettings.dspTime - _loopStartDspTime + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) + _offsetTime;
         /// <summary> ループ後に値を継続 </summary>
-        public double MusicPlayingTimeNoReset => AudioSettings.dspTime - _startDspTime + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) + _offsetTime;
+        public double MusicPlayingTimeNoRepeat => AudioSettings.dspTime - _startDspTime + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) + _offsetTime;
         public double MusicBeatTime => MusicPlayingTime / CurrentBeatLength;
-        public double MusicBeatTimeNoRepeat => MusicPlayingTimeNoReset / CurrentBeatLength;
+        public double MusicBeatTimeNoRepeat => MusicPlayingTimeNoRepeat / CurrentBeatLength;
         private const double PlayStartOffset = 0.3d;
 
         public void ChangeOffset(double offset)
