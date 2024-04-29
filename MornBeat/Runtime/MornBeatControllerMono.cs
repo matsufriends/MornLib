@@ -1,5 +1,5 @@
 ﻿using System;
-using MornEditor;
+using MornAttribute;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Assertions;
