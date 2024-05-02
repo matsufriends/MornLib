@@ -30,17 +30,18 @@ namespace MornHierarchy
                 DrawLine(selectionRect, gameObject);
             }
 
-            var sortingGroup = gameObject.GetComponentInParent<SortingGroup>(true);
-            if (sortingGroup != null)
+            var sortingGroups = gameObject.GetComponentsInParent<SortingGroup>(true);
+            if (sortingGroups.Length > 0)
             {
-                DrawSpriteSorting(selectionRect, sortingGroup.sortingLayerName, sortingGroup.sortingOrder);
+                var topSortingGroup = sortingGroups[^1];
+                DrawSpriteSorting(selectionRect, topSortingGroup.sortingLayerName, topSortingGroup.sortingOrder, gameObject != topSortingGroup.gameObject);
             }
             else
             {
                 var renderer = gameObject.GetComponent<Renderer>();
                 if (renderer != null)
                 {
-                    DrawSpriteSorting(selectionRect, renderer.sortingLayerName, renderer.sortingOrder);
+                    DrawSpriteSorting(selectionRect, renderer.sortingLayerName, renderer.sortingOrder, false);
                 }
             }
 
@@ -105,7 +106,7 @@ namespace MornHierarchy
             }
         }
 
-        private static void DrawSpriteSorting(Rect selectionRect, string sortingLayerName, int sortingOrder)
+        private static void DrawSpriteSorting(Rect selectionRect, string sortingLayerName, int sortingOrder, bool byGroup)
         {
             // SortingLayers
             var style = new GUIStyle();
@@ -113,6 +114,7 @@ namespace MornHierarchy
             selectionRect.xMin += selectionRect.width - 80;
             style.normal.textColor = GUI.contentColor;
             style.alignment = TextAnchor.MiddleRight;
+            style.fontSize = byGroup ? 10 : 12;
             EditorGUI.LabelField(selectionRect, $"{sortingLayerName}-{sortingOrder:00}", style);
         }
 
