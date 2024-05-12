@@ -42,6 +42,11 @@ namespace MornUI
 
         private void DoScale()
         {
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+
             if (_defaultScale == null)
             {
                 _defaultScale = RectTransform.localScale;

@@ -74,7 +74,7 @@ namespace MornBeat
         private void ShowBeatActionType(SerializedProperty beatActionType)
         {
             var tuples = ((IMornBeatActionSettingSo)target).DisplayTuples;
-            var width = (EditorGUIUtility.currentViewWidth - InputWidth * 2 - ButtonWidth * 2 - 50) / tuples.Length;
+            var width = (EditorGUIUtility.currentViewWidth - InputWidth * 2 - ButtonWidth * 2 - 50) / tuples.Length - 5;
             var flag = beatActionType.enumValueFlag;
             foreach (var tuple in tuples)
             {

@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace MornHierarchy
 {
@@ -27,6 +28,21 @@ namespace MornHierarchy
             if (gameObject.TryGetComponent<MornHierarchyLine>(out _))
             {
                 DrawLine(selectionRect, gameObject);
+            }
+
+            var sortingGroups = gameObject.GetComponentsInParent<SortingGroup>(true);
+            if (sortingGroups.Length > 0)
+            {
+                var topSortingGroup = sortingGroups[^1];
+                DrawSpriteSorting(selectionRect, topSortingGroup.sortingLayerName, topSortingGroup.sortingOrder, gameObject != topSortingGroup.gameObject);
+            }
+            else
+            {
+                var renderer = gameObject.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    DrawSpriteSorting(selectionRect, renderer.sortingLayerName, renderer.sortingOrder, false);
+                }
             }
 
             if (MornHierarchySettings.instance.ShowTag)
@@ -88,6 +104,18 @@ namespace MornHierarchy
                 target = target.parent;
                 drawOffset++;
             }
+        }
+
+        private static void DrawSpriteSorting(Rect selectionRect, string sortingLayerName, int sortingOrder, bool byGroup)
+        {
+            // SortingLayers
+            var style = new GUIStyle();
+            selectionRect.xMax -= 16;
+            selectionRect.xMin += selectionRect.width - 80;
+            style.normal.textColor = GUI.contentColor;
+            style.alignment = TextAnchor.MiddleRight;
+            style.fontSize = byGroup ? 10 : 12;
+            EditorGUI.LabelField(selectionRect, $"{sortingLayerName}-{sortingOrder:00}", style);
         }
 
         private static void DrawTag(Rect selectionRect, GameObject gameObject)
