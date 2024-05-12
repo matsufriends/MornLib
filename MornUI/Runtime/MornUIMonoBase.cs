@@ -86,7 +86,7 @@ namespace MornUI
                     MornUIDirType.Down  => position + new Vector2(-sizeDelta.x / 4f * lossyScale.x, -sizeDelta.y / 2 * lossyScale.y),
                     MornUIDirType.Left  => position + new Vector2(-sizeDelta.x / 2 * lossyScale.x, sizeDelta.y / 4f * lossyScale.y),
                     MornUIDirType.Right => position + new Vector2(sizeDelta.x / 2 * lossyScale.x, -sizeDelta.y / 4f * lossyScale.y),
-                    _                   => throw new ArgumentOutOfRangeException(nameof(dir), dir, null),
+                    _                   => position,
             };
         }
 
@@ -101,7 +101,7 @@ namespace MornUI
                     MornUIDirType.Down  => position + new Vector2(-sizeDelta.x / 4f * lossyScale.x, sizeDelta.y / 2 * lossyScale.y),
                     MornUIDirType.Left  => position + new Vector2(sizeDelta.x / 2 * lossyScale.x, sizeDelta.y / 4f * lossyScale.y),
                     MornUIDirType.Right => position + new Vector2(-sizeDelta.x / 2 * lossyScale.x, -sizeDelta.y / 4f * lossyScale.y),
-                    _                   => throw new ArgumentOutOfRangeException(nameof(dir), dir, null),
+                    _                   => position,
             };
         }
 
@@ -130,6 +130,12 @@ namespace MornUI
             {
                 Gizmos.color = Color.green;
                 DrawGizmoArrow(GetFromPos(MornUIDirType.Right), _right.GetToPos(MornUIDirType.Right));
+            }
+            
+            if (_cancel != null)
+            {
+                Gizmos.color = Color.magenta;
+                DrawGizmoArrow(GetFromPos(MornUIDirType.None), _cancel.GetToPos(MornUIDirType.None));
             }
 
             Gizmos.color = gizmosColor;
