@@ -31,8 +31,6 @@ namespace MornUI
 
                 ui.AddSurround(tryAddQueue.Enqueue);
             }
-
-            ResetFocus();
         }
 
         public void RegisterInitialInput(Vector2 input)
