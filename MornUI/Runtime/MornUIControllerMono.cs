@@ -106,6 +106,11 @@ namespace MornUI
 
         public void PanelUpdate(Vector2 input)
         {
+            if(_currentFocus == null)
+            {
+                return;
+            }
+            
             var curDir = input.ToDir();
             if (_lockDir != MornUIDirType.None && curDir == _lockDir)
             {
