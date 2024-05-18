@@ -143,6 +143,7 @@ namespace MornUI
 
         private static void DrawGizmoArrow(Vector3 from, Vector3 to, float arrowHeadLength = 5f, float arrowHeadAngle = 30.0f)
         {
+            if(from == to) return;
             Gizmos.DrawLine(from, to);
             var direction = to - from;
             var right = Quaternion.LookRotation(direction, Vector3.forward) * Quaternion.Euler(0, 180 + arrowHeadAngle, 0) * Vector3.forward;

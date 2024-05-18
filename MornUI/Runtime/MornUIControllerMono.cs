@@ -43,6 +43,17 @@ namespace MornUI
             ChangeFocus(_firstFocus, true);
         }
 
+        public void ResendFocus()
+        {
+            foreach (var ui in _uis)
+            {
+                if (ui == _currentFocus)
+                {
+                    ui.OnFocus(true);
+                }
+            }
+        }
+
         private void ChangeFocus(MornUIMonoBase focus, bool isInitial)
         {
             if (_currentFocus == focus)
