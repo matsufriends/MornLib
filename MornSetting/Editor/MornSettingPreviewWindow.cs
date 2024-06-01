@@ -31,6 +31,14 @@ namespace MornSetting
             }
         }
 
+        private void ResetKey<T>(List<T> list) where T : Object
+        {
+            foreach (var obj in list)
+            {
+                ((IMornSettingSo)obj).SetKey();
+            }
+        }
+
         private void OnGUI()
         {
             if (GUILayout.Button("Gather Settings"))
@@ -39,6 +47,14 @@ namespace MornSetting
                 GatherSettings(_intSettings);
                 GatherSettings(_floatSettings);
                 GatherSettings(_stringSettings);
+            }
+            
+            if (GUILayout.Button("Reset Key"))
+            {
+                ResetKey(_boolSettings);
+                ResetKey(_intSettings);
+                ResetKey(_floatSettings);
+                ResetKey(_stringSettings);
             }
 
             using (var scrollScope = new EditorGUILayout.ScrollViewScope(_scroll))
