@@ -7,6 +7,11 @@ namespace MornLib.Cores
 {
     public static class MornTask
     {
+        public async static UniTask TransitionAsync(TimeSpan duration, float startValue, float endValue, Action<float> action, bool useUnscaledTime = false, CancellationToken cancellationToken = default)
+        {
+            await TransitionAsync(duration, x => action(Mathf.Lerp(startValue, endValue, x)), useUnscaledTime, cancellationToken);
+        }
+
         public async static UniTask TransitionAsync(TimeSpan duration, Action<float> action, bool useUnscaledTime = false, CancellationToken cancellationToken = default)
         {
             var totalSeconds = (float)duration.TotalSeconds;
