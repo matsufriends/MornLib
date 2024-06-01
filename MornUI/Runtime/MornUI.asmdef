@@ -2,7 +2,8 @@
     "name": "MornUI",
     "rootNamespace": "MornUI",
     "references": [
-        "GUID:560b04d1a97f54a4e82edc0cbbb69285"
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
+        "GUID:520891f70526d454fa74c098f96aaedd"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,4 +1,5 @@
 ﻿using System;
+using MornAttribute;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -9,38 +10,41 @@ namespace MornUI
     [RequireComponent(typeof(RectTransform))]
     public abstract class MornUIMonoBase : MonoBehaviour
     {
-        [SerializeField] protected RectTransform RectTransform;
-        [SerializeField] private MornUIMonoBase _up;
-        [SerializeField] private MornUIMonoBase _down;
-        [SerializeField] private MornUIMonoBase _left;
-        [SerializeField] private MornUIMonoBase _right;
-        [SerializeField] private MornUIMonoBase _cancel;
+        [SerializeField, ReadOnly] protected RectTransform RectTransform;
+        [Header("Navigation")]
+        [SerializeField] private MornUIMonoBase up;
+        [SerializeField] private MornUIMonoBase down;
+        [SerializeField] private MornUIMonoBase left;
+        [SerializeField] private MornUIMonoBase right;
+        [SerializeField] private MornUIMonoBase cancel;
+        private MornUIControllerMono cachedParent;
+        public MornUIControllerMono Parent => cachedParent ??= GetComponentInParent<MornUIControllerMono>();
 
         internal void AddSurround(Action<MornUIMonoBase> addSurround)
         {
-            if (_up != null)
+            if (up != null)
             {
-                addSurround(_up);
+                addSurround(up);
             }
 
-            if (_down != null)
+            if (down != null)
             {
-                addSurround(_down);
+                addSurround(down);
             }
 
-            if (_left != null)
+            if (left != null)
             {
-                addSurround(_left);
+                addSurround(left);
             }
 
-            if (_right != null)
+            if (right != null)
             {
-                addSurround(_right);
+                addSurround(right);
             }
 
-            if (_cancel != null)
+            if (cancel != null)
             {
-                addSurround(_cancel);
+                addSurround(cancel);
             }
         }
 
@@ -50,7 +54,7 @@ namespace MornUI
 
         public virtual void OnCancel(out MornUIMonoBase nextFocus)
         {
-            nextFocus = _cancel;
+            nextFocus = cancel;
         }
 
         public virtual void OnMove(Vector2 input, out MornUIMonoBase nextFocus)
@@ -58,10 +62,10 @@ namespace MornUI
             nextFocus = input.ToDir() switch
             {
                     MornUIDirType.None  => null,
-                    MornUIDirType.Up    => _up,
-                    MornUIDirType.Down  => _down,
-                    MornUIDirType.Left  => _left,
-                    MornUIDirType.Right => _right,
+                    MornUIDirType.Up    => up,
+                    MornUIDirType.Down  => down,
+                    MornUIDirType.Left  => left,
+                    MornUIDirType.Right => right,
                     _                   => throw new ArgumentOutOfRangeException(),
             };
         }
@@ -108,34 +112,34 @@ namespace MornUI
         private void OnDrawGizmos()
         {
             var gizmosColor = Gizmos.color;
-            if (_up != null)
+            if (up != null)
             {
                 Gizmos.color = Color.red;
-                DrawGizmoArrow(GetFromPos(MornUIDirType.Up), _up.GetToPos(MornUIDirType.Up));
+                DrawGizmoArrow(GetFromPos(MornUIDirType.Up), up.GetToPos(MornUIDirType.Up));
             }
 
-            if (_down != null)
+            if (down != null)
             {
                 Gizmos.color = Color.blue;
-                DrawGizmoArrow(GetFromPos(MornUIDirType.Down), _down.GetToPos(MornUIDirType.Down));
+                DrawGizmoArrow(GetFromPos(MornUIDirType.Down), down.GetToPos(MornUIDirType.Down));
             }
 
-            if (_left != null)
+            if (left != null)
             {
                 Gizmos.color = Color.yellow;
-                DrawGizmoArrow(GetFromPos(MornUIDirType.Left), _left.GetToPos(MornUIDirType.Left));
+                DrawGizmoArrow(GetFromPos(MornUIDirType.Left), left.GetToPos(MornUIDirType.Left));
             }
 
-            if (_right != null)
+            if (right != null)
             {
                 Gizmos.color = Color.green;
-                DrawGizmoArrow(GetFromPos(MornUIDirType.Right), _right.GetToPos(MornUIDirType.Right));
+                DrawGizmoArrow(GetFromPos(MornUIDirType.Right), right.GetToPos(MornUIDirType.Right));
             }
-            
-            if (_cancel != null)
+
+            if (cancel != null)
             {
                 Gizmos.color = Color.magenta;
-                DrawGizmoArrow(GetFromPos(MornUIDirType.None), _cancel.GetToPos(MornUIDirType.None));
+                DrawGizmoArrow(GetFromPos(MornUIDirType.None), cancel.GetToPos(MornUIDirType.None));
             }
 
             Gizmos.color = gizmosColor;
@@ -143,7 +147,8 @@ namespace MornUI
 
         private static void DrawGizmoArrow(Vector3 from, Vector3 to, float arrowHeadLength = 5f, float arrowHeadAngle = 30.0f)
         {
-            if(from == to) return;
+            if (from == to)
+                return;
             Gizmos.DrawLine(from, to);
             var direction = to - from;
             var right = Quaternion.LookRotation(direction, Vector3.forward) * Quaternion.Euler(0, 180 + arrowHeadAngle, 0) * Vector3.forward;

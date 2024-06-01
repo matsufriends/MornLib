@@ -6,38 +6,39 @@ namespace MornUI
 {
     public sealed class MornUIButtonMono : MornUIMonoBase
     {
-        [SerializeField] private GameObject _focused;
-        [SerializeField] private GameObject _unfocused;
-        private readonly Subject<bool> _onFocusAsObservableSubject = new();
-        private readonly Subject<bool> _onUnfocusAsObservableSubject = new();
-        private readonly Subject<Unit> _onSubmitAsObservableSubject = new();
-        private Vector3? _defaultScale;
+        [Header("Button")]
+        [SerializeField] private GameObject focused;
+        [SerializeField] private GameObject unfocused;
+        private readonly Subject<bool> onFocusAsObservableSubject = new();
+        private readonly Subject<bool> onUnfocusAsObservableSubject = new();
+        private readonly Subject<Unit> onSubmitAsObservableSubject = new();
+        private Vector3? defaultScale;
         private const float SubmitScale = 1.1f;
         private const float LerpT = 10f;
-        public IObservable<Unit> OnSubmitAsObservable => _onSubmitAsObservableSubject;
-        public IObservable<bool> OnFocusAsObservable => _onFocusAsObservableSubject;
-        public IObservable<bool> OnUnfocusAsObservable => _onUnfocusAsObservableSubject;
+        public IObservable<Unit> OnSubmitAsObservable => onSubmitAsObservableSubject;
+        public IObservable<bool> OnFocusAsObservable => onFocusAsObservableSubject;
+        public IObservable<bool> OnUnfocusAsObservable => onUnfocusAsObservableSubject;
 
         public override void OnSubmit()
         {
             base.OnSubmit();
-            _onSubmitAsObservableSubject.OnNext(Unit.Default);
+            onSubmitAsObservableSubject.OnNext(Unit.Default);
             DoScale();
         }
 
         public override void OnFocus(bool isInitialFocus)
         {
-            _focused.SetActive(true);
-            _unfocused.SetActive(false);
-            _onFocusAsObservableSubject.OnNext(isInitialFocus);
+            focused.SetActive(true);
+            unfocused.SetActive(false);
+            onFocusAsObservableSubject.OnNext(isInitialFocus);
             DoScale();
         }
 
         public override void OnUnFocus(bool isInitialFocus)
         {
-            _focused.SetActive(false);
-            _unfocused.SetActive(true);
-            _onUnfocusAsObservableSubject.OnNext(isInitialFocus);
+            focused.SetActive(false);
+            unfocused.SetActive(true);
+            onUnfocusAsObservableSubject.OnNext(isInitialFocus);
         }
 
         private void DoScale()
@@ -47,20 +48,20 @@ namespace MornUI
                 return;
             }
 
-            if (_defaultScale == null)
+            if (defaultScale == null)
             {
-                _defaultScale = RectTransform.localScale;
+                defaultScale = RectTransform.localScale;
             }
 
-            RectTransform.localScale = _defaultScale.Value * SubmitScale;
+            RectTransform.localScale = defaultScale.Value * SubmitScale;
         }
 
         private void Update()
         {
-            if (_defaultScale != null)
+            if (defaultScale != null)
             {
                 var a = RectTransform.localScale;
-                var b = _defaultScale.Value;
+                var b = defaultScale.Value;
                 var t = Time.deltaTime * LerpT;
                 RectTransform.localScale = Vector3.Lerp(a, b, t);
             }
