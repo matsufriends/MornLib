@@ -15,6 +15,16 @@ namespace MornBeat
         [SerializeField] private int _measureTick;
         [SerializeField] private List<MornBeatAction<TEnum>> _beatAction;
 
+        public int GetMeasureTick()
+        {
+            return _measureTick;
+        }
+
+        public void OverrideBeatAction(List<MornBeatAction<TEnum>> beatAction)
+        {
+            _beatAction = beatAction;
+        }
+
         Dictionary<int, MornBeatAction<T>> IMornBeatActionSettingSo.GetDictionary<T>()
         {
             var dict = new Dictionary<int, MornBeatAction<T>>();
