@@ -43,6 +43,11 @@ namespace MornUI
             }
 
             _canvasGroup.alpha = Mathf.Lerp(_canvasGroup.alpha, _aimAlpha, Time.deltaTime * LerpT);
+            if (Mathf.Abs(_canvasGroup.alpha - _aimAlpha) < 0.01f)
+            {
+                _canvasGroup.alpha = _aimAlpha;
+                _aimChanged = false;
+            }
         }
     }
 }
