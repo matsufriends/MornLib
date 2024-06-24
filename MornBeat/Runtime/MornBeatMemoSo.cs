@@ -32,6 +32,11 @@ namespace MornBeat
         public AudioClip Clip => _clip;
         public float Volume => _volume;
         internal float Offset => _offset;
+        
+        public void OverrideTimingList(List<float> timingList)
+        {
+            _timingList = timingList;
+        }
 
         internal float GetBeatTiming(int index)
         {
