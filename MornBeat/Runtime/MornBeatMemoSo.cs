@@ -38,7 +38,7 @@ namespace MornBeat
             _timingList = timingList;
         }
 
-        internal float GetBeatTiming(int index)
+        public float GetBeatTiming(int index)
         {
             if (index < 0 || TickSum <= index)
             {
