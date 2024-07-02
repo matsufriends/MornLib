@@ -1,67 +1,63 @@
 ﻿using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+
 
 namespace MornCamera
 {
     [RequireComponent(typeof(Camera))]
-    [ExecuteAlways]
     public sealed class MornCameraAdjusterMono : MonoBehaviour
     {
-        [SerializeField] private Camera targetCamera;
-        [SerializeField] private MornCameraSettingSo cameraSetting;
-        private Vector2 cachedRes;
+        [SerializeField] private Camera _targetCamera;
+        [SerializeField] private MornCameraSettingSo _cameraSetting;
+        private Vector2 _cachedRes;
 
         private void Start()
         {
-            cachedRes = new Vector2(Screen.width, Screen.height);
-            AdjustCamera(cachedRes);
+            _cachedRes = new Vector2(Screen.width, Screen.height);
+            AdjustCamera(_cachedRes);
         }
 
         private void Update()
         {
             var currentRes = new Vector2(Screen.width, Screen.height);
-            if (cachedRes != currentRes)
+            if (_cachedRes != currentRes)
             {
-                cachedRes = currentRes;
+                _cachedRes = currentRes;
                 AdjustCamera(currentRes);
             }
         }
 
         private void AdjustCamera(Vector2 screenRes)
         {
+            if (_cameraSetting == null)
+            {
+                return;
+            }
+
             var currentAspect = screenRes.y / screenRes.x;
-            var aimAspect = cameraSetting.Resolution.y / cameraSetting.Resolution.x;
+            var aimAspect = _cameraSetting.Resolution.y / _cameraSetting.Resolution.x;
             Rect newRect;
             if (currentAspect > aimAspect)
             {
                 var gameRes = new Vector2(screenRes.x, screenRes.x * aimAspect);
-                newRect= new Rect(0, (screenRes.y - gameRes.y) / screenRes.y / 2, 1, gameRes.y / screenRes.y);
+                newRect = new Rect(0, (screenRes.y - gameRes.y) / screenRes.y / 2, 1, gameRes.y / screenRes.y);
             }
             else
             {
                 newRect = new Rect(0, 0, 1, 1);
             }
 
-            var curRect = targetCamera.rect;
+            var curRect = _targetCamera.rect;
             if (curRect != newRect)
             {
-                targetCamera.rect = newRect;
-#if UNITY_EDITOR
-                if (!Application.isPlaying)
-                {
-                    EditorUtility.SetDirty(targetCamera);
-                }
-#endif
+                _targetCamera.rect = newRect;
             }
         }
 
         private void OnValidate()
         {
-            if (targetCamera == null)
+            if (_targetCamera == null)
             {
-                targetCamera = GetComponent<Camera>();
+                _targetCamera = GetComponent<Camera>();
             }
         }
     }
