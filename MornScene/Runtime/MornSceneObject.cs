@@ -17,7 +17,7 @@ namespace MornScene
         {
             return new MornSceneObject
             {
-                _sceneName = sceneName,
+                _sceneName = sceneName
             };
         }
     }

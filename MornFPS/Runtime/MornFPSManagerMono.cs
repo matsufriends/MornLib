@@ -6,16 +6,13 @@ namespace MornFPS
 {
     public sealed class MornFPSManagerMono : MonoBehaviour
     {
-        private MornFPSManagerMono _instance;
         [SerializeField] private int _aimFps = 60;
         private float _currentFrameTime;
+        private MornFPSManagerMono _instance;
 
         private void Awake()
         {
-            if (_instance != null)
-            {
-                Destroy(gameObject);
-            }
+            if (_instance != null) Destroy(gameObject);
 
             _instance = this;
             QualitySettings.vSyncCount = 0;
@@ -37,10 +34,7 @@ namespace MornFPS
                 var realTime = Time.realtimeSinceStartup;
 
                 //フレーム秒以上にリアルタイムが進んでいるとき、フレーム秒を補正
-                if (_currentFrameTime < realTime)
-                {
-                    _currentFrameTime = realTime;
-                }
+                if (_currentFrameTime < realTime) _currentFrameTime = realTime;
 
                 //フレーム秒まで0.01秒以上残っていれば、フレーム秒の0.01秒前までThread.Sleep
                 if (realTime + 0.01f < _currentFrameTime)
@@ -50,10 +44,7 @@ namespace MornFPS
                 }
 
                 //フレーム秒まで待機(0.01秒未満)
-                while (realTime < _currentFrameTime)
-                {
-                    realTime = Time.realtimeSinceStartup;
-                }
+                while (realTime < _currentFrameTime) realTime = Time.realtimeSinceStartup;
             }
         }
     }

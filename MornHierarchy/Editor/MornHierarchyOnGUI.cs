@@ -19,36 +19,26 @@ namespace MornHierarchy
         private static void HierarchyWindowItemOnGUI(int instanceId, Rect selectionRect)
         {
             var gameObject = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
-            if (gameObject == null)
-            {
-                return;
-            }
+            if (gameObject == null) return;
 
             DrawColor(selectionRect, gameObject);
-            if (gameObject.TryGetComponent<MornHierarchyLine>(out _))
-            {
-                DrawLine(selectionRect, gameObject);
-            }
+            if (gameObject.TryGetComponent<MornHierarchyLine>(out _)) DrawLine(selectionRect, gameObject);
 
             var sortingGroups = gameObject.GetComponentsInParent<SortingGroup>(true);
             if (sortingGroups.Length > 0)
             {
                 var topSortingGroup = sortingGroups[^1];
-                DrawSpriteSorting(selectionRect, topSortingGroup.sortingLayerName, topSortingGroup.sortingOrder, gameObject != topSortingGroup.gameObject);
+                DrawSpriteSorting(selectionRect, topSortingGroup.sortingLayerName, topSortingGroup.sortingOrder,
+                    gameObject != topSortingGroup.gameObject);
             }
             else
             {
                 var renderer = gameObject.GetComponent<Renderer>();
                 if (renderer != null)
-                {
                     DrawSpriteSorting(selectionRect, renderer.sortingLayerName, renderer.sortingOrder, false);
-                }
             }
 
-            if (MornHierarchySettings.instance.ShowTag)
-            {
-                DrawTag(selectionRect, gameObject);
-            }
+            if (MornHierarchySettings.instance.ShowTag) DrawTag(selectionRect, gameObject);
         }
 
         private static void DrawColor(Rect selectionRect, GameObject gameObject)
@@ -61,10 +51,7 @@ namespace MornHierarchy
             }
 
             var colorHierarchy = gameObject.GetComponentsInParent<MornHierarchyColor>(true);
-            if (colorHierarchy == null)
-            {
-                return;
-            }
+            if (colorHierarchy == null) return;
 
             //targetが一番親のcolorのtransform一致するまで
             //親を順に辿りながら色を塗る
@@ -92,12 +79,14 @@ namespace MornHierarchy
                 var colorRect = selectionRect;
                 colorRect.xMax = colorRect.xMin - 14 * drawOffset;
                 colorRect.xMin = colorRect.xMax - 14;
-                DrawTransparentRect(colorRect, drawColor.BackColor * GetTransformDepth(drawColor.transform, target.parent));
+                DrawTransparentRect(colorRect,
+                    drawColor.BackColor * GetTransformDepth(drawColor.transform, target.parent));
 
                 //Main
                 if (hasDrawn == false)
                 {
-                    DrawTransparentRect(selectionRect, drawColor.BackColor * GetTransformDepth(drawColor.transform, gameObject.transform));
+                    DrawTransparentRect(selectionRect,
+                        drawColor.BackColor * GetTransformDepth(drawColor.transform, gameObject.transform));
                     hasDrawn = true;
                 }
 
@@ -106,7 +95,8 @@ namespace MornHierarchy
             }
         }
 
-        private static void DrawSpriteSorting(Rect selectionRect, string sortingLayerName, int sortingOrder, bool byGroup)
+        private static void DrawSpriteSorting(Rect selectionRect, string sortingLayerName, int sortingOrder,
+            bool byGroup)
         {
             // SortingLayers
             var style = new GUIStyle();
@@ -160,10 +150,7 @@ namespace MornHierarchy
 
         private static float GetTransformDepth(Transform home, Transform own)
         {
-            if (home == own)
-            {
-                return 1f;
-            }
+            if (home == own) return 1f;
 
             var pare = own.parent;
             return Mathf.InverseLerp(pare.childCount + 2, -1, own.GetSiblingIndex()) * GetTransformDepth(home, pare);
@@ -171,10 +158,7 @@ namespace MornHierarchy
 
         private static Color GetBackGroundColor(int instanceID, Rect rect)
         {
-            if (Selection.Contains(instanceID))
-            {
-                return s_selectedBackColor;
-            }
+            if (Selection.Contains(instanceID)) return s_selectedBackColor;
 
             return rect.Contains(Event.current.mousePosition) ? s_highlightedBackColor : s_normalBackColor;
         }

@@ -5,15 +5,15 @@ namespace MornScene
 {
     public sealed class MornSceneController
     {
+        private readonly List<MornSceneDataSo> _cachedUpdateList = new();
         private readonly MornSceneSolver _sceneSolver;
         private readonly List<MornSceneDataSo> _sceneUpdateList = new();
-        private readonly List<MornSceneDataSo> _cachedUpdateList = new();
 
         public MornSceneController(MornSceneSolver sceneSolver)
         {
             _sceneSolver = sceneSolver;
         }
-        
+
         internal void Reset()
         {
             _sceneUpdateList.Clear();
@@ -22,10 +22,7 @@ namespace MornScene
 
         internal void ChangeScene(MornSceneDataSo sceneDataSo)
         {
-            foreach (var updateScene in _sceneUpdateList)
-            {
-                _sceneSolver[updateScene].OnExitScene(updateScene);
-            }
+            foreach (var updateScene in _sceneUpdateList) _sceneSolver[updateScene].OnExitScene(updateScene);
 
             _sceneUpdateList.Clear();
             AddScene(sceneDataSo);
@@ -44,13 +41,9 @@ namespace MornScene
             if (_sceneUpdateList.Count > 0)
             {
                 if (_sceneUpdateList[^1] != sceneData)
-                {
                     Debug.LogError($"[RemoveScene({sceneName})]:TOPのシーン({_sceneUpdateList[^1]})からRemoveして下さい。");
-                }
                 else
-                {
                     _sceneUpdateList.RemoveAt(_sceneUpdateList.Count - 1);
-                }
             }
             else
             {

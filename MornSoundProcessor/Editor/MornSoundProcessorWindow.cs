@@ -7,26 +7,9 @@ namespace MornSoundProcessor
     {
         private static Editor s_editor;
 
-        [MenuItem("MornLib/MornSoundProcessor")]
-        private static void Open()
-        {
-            Init();
-        }
-
-        private static void Init()
-        {
-            var instance = MornSoundProcessorSettings.instance;
-            instance.Init();
-            instance.hideFlags = HideFlags.HideAndDontSave & ~HideFlags.NotEditable;
-            Editor.CreateCachedEditor(instance, null, ref s_editor);
-        }
-
         private void OnGUI()
         {
-            if (s_editor == null)
-            {
-                Init();
-            }
+            if (s_editor == null) Init();
 
             EditorGUI.BeginChangeCheck();
             s_editor.OnInspectorGUI();
@@ -47,23 +30,28 @@ namespace MornSoundProcessor
             }
         }
 
+        [MenuItem("MornLib/MornSoundProcessor")]
+        private static void Open()
+        {
+            Init();
+        }
+
+        private static void Init()
+        {
+            var instance = MornSoundProcessorSettings.instance;
+            instance.Init();
+            instance.hideFlags = HideFlags.HideAndDontSave & ~HideFlags.NotEditable;
+            Editor.CreateCachedEditor(instance, null, ref s_editor);
+        }
+
         private static AudioClip ConvertClip(AudioClip clip)
         {
             var instance = MornSoundProcessorSettings.instance;
-            if (instance.UseCutBeginningSilence)
-            {
-                clip = CutBeginningSilence(clip);
-            }
+            if (instance.UseCutBeginningSilence) clip = CutBeginningSilence(clip);
 
-            if (instance.UseCutEndingSilence)
-            {
-                clip = CutEndingSilence(clip);
-            }
+            if (instance.UseCutEndingSilence) clip = CutEndingSilence(clip);
 
-            if (instance.UseNormalizeAmplitude)
-            {
-                clip = Normalize(clip);
-            }
+            if (instance.UseNormalizeAmplitude) clip = Normalize(clip);
 
             return clip;
         }
@@ -71,7 +59,8 @@ namespace MornSoundProcessor
         private static AudioClip CutBeginningSilence(AudioClip clip)
         {
             var instance = MornSoundProcessorSettings.instance;
-            return MornSoundProcessor.CutBeginningSilence(clip, instance.BeginningOffsetSample, instance.BeginningAmplitude);
+            return MornSoundProcessor.CutBeginningSilence(clip, instance.BeginningOffsetSample,
+                instance.BeginningAmplitude);
         }
 
         private static AudioClip CutEndingSilence(AudioClip clip)

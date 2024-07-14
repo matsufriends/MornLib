@@ -7,18 +7,19 @@ namespace MornHierarchy
 {
     internal sealed class MornHierarchySettingsProvider : SettingsProvider
     {
-        private Editor _cachedEditor;
         private const string SettingPath = "Preferences/MornHierarchy";
+        private Editor _cachedEditor;
+
+        private MornHierarchySettingsProvider(string path, SettingsScope scopes, IEnumerable<string> keywords) : base(
+            path, scopes,
+            keywords)
+        {
+        }
 
         [SettingsProvider]
         public static SettingsProvider CreateSettingProvider()
         {
             return new MornHierarchySettingsProvider(SettingPath, SettingsScope.User, null);
-        }
-
-        private MornHierarchySettingsProvider(string path, SettingsScope scopes, IEnumerable<string> keywords) : base(path, scopes,
-            keywords)
-        {
         }
 
         public override void OnActivate(string searchContext, VisualElement rootElement)

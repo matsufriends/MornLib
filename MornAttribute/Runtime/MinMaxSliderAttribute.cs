@@ -4,8 +4,8 @@ namespace MornAttribute
 {
     public sealed class MinMaxSliderAttribute : PropertyAttribute
     {
-        public readonly float Min;
         public readonly float Max;
+        public readonly float Min;
 
         public MinMaxSliderAttribute(float min, float max)
         {

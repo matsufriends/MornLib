@@ -14,16 +14,10 @@ namespace MornDictionary
 
         public Dictionary<TKey, TValue> GetDictionary()
         {
-            if (_keyToValueDict != null)
-            {
-                return _keyToValueDict;
-            }
+            if (_keyToValueDict != null) return _keyToValueDict;
 
-            _keyToValueDict = new();
-            for (var i = 0; i < _pairList.Count; i++)
-            {
-                _keyToValueDict.Add(_pairList[i].Key, _pairList[i].Value);
-            }
+            _keyToValueDict = new Dictionary<TKey, TValue>();
+            for (var i = 0; i < _pairList.Count; i++) _keyToValueDict.Add(_pairList[i].Key, _pairList[i].Value);
 
             return _keyToValueDict;
         }

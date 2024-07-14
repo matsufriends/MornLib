@@ -24,14 +24,14 @@ namespace MornSetting
                 }).AddTo(this);
         }
 
-        private void ApplyValue(bool value)
-        {
-            _toggle.isOn = value;
-        }
-
         private void Reset()
         {
             _toggle = GetComponent<Toggle>();
+        }
+
+        private void ApplyValue(bool value)
+        {
+            _toggle.isOn = value;
         }
     }
 }

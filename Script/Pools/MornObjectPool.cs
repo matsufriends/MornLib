@@ -12,10 +12,7 @@ namespace MornLib.Pools
 
         public MornObjectPool(Func<T> onGenerate, Action<T> onRent, Action<T> onReturn, int startCount)
         {
-            if (startCount < 0)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
+            if (startCount < 0) throw new ArgumentOutOfRangeException();
 
             _onGenerate = onGenerate;
             _onRent = onRent;
@@ -30,10 +27,7 @@ namespace MornLib.Pools
 
         public T Rent()
         {
-            if (_poolStack.TryDequeue(out var result) == false)
-            {
-                result = _onGenerate();
-            }
+            if (_poolStack.TryDequeue(out var result) == false) result = _onGenerate();
 
             _onRent(result);
             return result;

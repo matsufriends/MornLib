@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("MornDebug.Editor")]
+
 namespace MornDebug
 {
     public static class MornDebugCore
@@ -18,17 +19,10 @@ namespace MornDebug
         internal static void CheckDisposed()
         {
             foreach (var info in OnGUIHashSet)
-            {
                 if (info.IsDisposed)
-                {
                     _cacheList.Add(info);
-                }
-            }
 
-            foreach (var info in _cacheList)
-            {
-                OnGUIHashSet.Remove(info);
-            }
+            foreach (var info in _cacheList) OnGUIHashSet.Remove(info);
 
             _cacheList.Clear();
         }

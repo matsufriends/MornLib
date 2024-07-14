@@ -8,13 +8,6 @@ namespace MornLib.Editor
     {
         private Vector2 _scrollPos;
 
-        [MenuItem("MornLib/" + nameof(MornLogWindow))]
-        private static void Open()
-        {
-            var window = GetWindow<MornLogWindow>();
-            window.titleContent = new GUIContent(nameof(MornLogWindow));
-        }
-
         private void Update()
         {
             Repaint();
@@ -24,13 +17,16 @@ namespace MornLib.Editor
         {
             var text = MornDebugLog.Instance.GetLog();
             if (text.Length > 0)
-            {
                 GUILayout.Label(text);
-            }
             else
-            {
                 GUILayout.Label("データが登録されていません");
-            }
+        }
+
+        [MenuItem("MornLib/" + nameof(MornLogWindow))]
+        private static void Open()
+        {
+            var window = GetWindow<MornLogWindow>();
+            window.titleContent = new GUIContent(nameof(MornLogWindow));
         }
     }
 }

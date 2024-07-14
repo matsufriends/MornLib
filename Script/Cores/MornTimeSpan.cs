@@ -7,6 +7,6 @@ namespace MornLib.Cores
         public static TimeSpan ToTimeSpanAsSeconds(this float seconds)
         {
             return TimeSpan.FromSeconds(seconds);
-        } 
+        }
     }
 }

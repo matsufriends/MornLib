@@ -16,12 +16,8 @@ namespace MornLib.Extensions
             var count = 0;
             var totalCount = list.Count;
             for (var i = totalCount - 1; i >= 0; i--)
-            {
                 if (EqualityComparer<T>.Default.Equals(list[i], correct))
-                {
                     count++;
-                }
-            }
 
             return count;
         }
@@ -31,12 +27,8 @@ namespace MornLib.Extensions
             var count = 0;
             var totalCount = list.Count;
             for (var i = totalCount - 1; i >= 0; i--)
-            {
                 if (EqualityComparer<T>.Default.Equals(list[i], correct))
-                {
                     count++;
-                }
-            }
 
             return count;
         }

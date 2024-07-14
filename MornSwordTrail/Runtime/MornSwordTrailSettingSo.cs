@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace MornSwordTrail
 {
-    [CreateAssetMenu(fileName = nameof(MornSwordTrailSettingSo), menuName = "MornLib/" + nameof(MornSwordTrailSettingSo))]
+    [CreateAssetMenu(fileName = nameof(MornSwordTrailSettingSo),
+        menuName = "MornLib/" + nameof(MornSwordTrailSettingSo))]
     public sealed class MornSwordTrailSettingSo : ScriptableObject
     {
         [SerializeField] private Material _material;

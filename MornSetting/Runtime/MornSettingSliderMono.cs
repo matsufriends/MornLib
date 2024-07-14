@@ -24,14 +24,14 @@ namespace MornSetting
                 }).AddTo(this);
         }
 
-        private void ApplyValue(float value)
-        {
-            _slider.value = value;
-        }
-
         private void Reset()
         {
             _slider = GetComponent<Slider>();
+        }
+
+        private void ApplyValue(float value)
+        {
+            _slider.value = value;
         }
     }
 }

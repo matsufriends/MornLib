@@ -1,11 +1,11 @@
 ﻿{
-  "name": "com.matsufriends.mornfps",
-  "displayName": "Morn Frame",
-  "version": "1.0.0",
-  "unity": "2021.3",
-  "description": "Update Extension for Unity.",
-  "license": "Unlicense",
-  "dependencies": {
-    "com.neuecc.unirx": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts"
-  }
+    "name": "com.matsufriends.mornfps",
+    "displayName": "Morn Frame",
+    "version": "1.0.0",
+    "unity": "2021.3",
+    "description": "Update Extension for Unity.",
+    "license": "Unlicense",
+    "dependencies": {
+        "com.neuecc.unirx": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts"
+    }
 }

@@ -2,7 +2,8 @@
 
 namespace MornLib.Physics2d
 {
-    [CreateAssetMenu(fileName = nameof(MornPhysics2dLocalSettingSo), menuName ="MornLib/"+ nameof(MornPhysics2dLocalSettingSo))]
+    [CreateAssetMenu(fileName = nameof(MornPhysics2dLocalSettingSo),
+        menuName = "MornLib/" + nameof(MornPhysics2dLocalSettingSo))]
     public class MornPhysics2dLocalSettingSo : ScriptableObject
     {
         [SerializeField] private float _jumpUpDuration;

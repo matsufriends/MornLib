@@ -7,12 +7,12 @@ namespace MornLib.Pools
         [SerializeField] protected T _prefab;
         private MornObjectPool<T> _mornObjectPool;
 
+        protected virtual int StartCount => 10;
+
         private void Awake()
         {
             _mornObjectPool = new MornObjectPool<T>(OnGenerate, OnRent, OnReturn, StartCount);
         }
-
-        protected virtual int StartCount => 10;
 
         protected virtual void OnReturn(T x)
         {

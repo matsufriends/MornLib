@@ -13,11 +13,11 @@ namespace MornAttribute
             var infoBoxRect = new Rect(position.x, position.y, position.width, atr.Height);
             var messageType = atr.HelpBoxType switch
             {
-                    HelpBoxType.None    => MessageType.None,
-                    HelpBoxType.Info    => MessageType.Info,
-                    HelpBoxType.Warning => MessageType.Warning,
-                    HelpBoxType.Error   => MessageType.Error,
-                    _                   => throw new ArgumentOutOfRangeException(),
+                HelpBoxType.None => MessageType.None,
+                HelpBoxType.Info => MessageType.Info,
+                HelpBoxType.Warning => MessageType.Warning,
+                HelpBoxType.Error => MessageType.Error,
+                _ => throw new ArgumentOutOfRangeException()
             };
             EditorGUI.HelpBox(infoBoxRect, atr.LabelName, messageType);
             var propertyRect = new Rect(position.x, position.y + atr.Height, position.width, position.height);

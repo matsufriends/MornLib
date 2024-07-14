@@ -19,20 +19,11 @@ namespace MornLib.Mono
 
         public override void OnPointerClick(PointerEventData eventData)
         {
-            if (eventData.IsLeftClick() && IsClickOnMouseLeft)
-            {
-                Show();
-            }
+            if (eventData.IsLeftClick() && IsClickOnMouseLeft) Show();
 
-            if (eventData.IsMiddleClick() && IsClickOnMouseMiddle)
-            {
-                Show();
-            }
+            if (eventData.IsMiddleClick() && IsClickOnMouseMiddle) Show();
 
-            if (eventData.IsRightClick() && IsClickOnMouseRight)
-            {
-                Show();
-            }
+            if (eventData.IsRightClick() && IsClickOnMouseRight) Show();
         }
     }
 #endif
@@ -44,7 +35,8 @@ namespace MornLib.Mono
         {
             var dropdown = (MornTMPDropdown)target;
             dropdown.IsClickOnMouseRight = EditorGUILayout.Toggle("IsClickOnMouseRight", dropdown.IsClickOnMouseRight);
-            dropdown.IsClickOnMouseMiddle = EditorGUILayout.Toggle("IsClickOnMouseMiddle", dropdown.IsClickOnMouseMiddle);
+            dropdown.IsClickOnMouseMiddle =
+                EditorGUILayout.Toggle("IsClickOnMouseMiddle", dropdown.IsClickOnMouseMiddle);
             dropdown.IsClickOnMouseLeft = EditorGUILayout.Toggle("IsClickOnMouseLeft", dropdown.IsClickOnMouseLeft);
             EditorGUILayout.Space();
             base.OnInspectorGUI();

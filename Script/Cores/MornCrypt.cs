@@ -19,7 +19,7 @@ namespace MornLib.Cores
             using var myRijndael = new RijndaelManaged
             {
                 BlockSize = 128, KeySize = 256, Mode = CipherMode.CBC, Padding = PaddingMode.PKCS7,
-                IV = Encoding.UTF8.GetBytes(iv), Key = Encoding.UTF8.GetBytes(key),
+                IV = Encoding.UTF8.GetBytes(iv), Key = Encoding.UTF8.GetBytes(key)
             };
             var encryptor = myRijndael.CreateEncryptor(myRijndael.Key, myRijndael.IV);
             using var mStream = new MemoryStream();
@@ -45,7 +45,7 @@ namespace MornLib.Cores
             using var rijndael = new RijndaelManaged
             {
                 BlockSize = 128, KeySize = 256, Mode = CipherMode.CBC, Padding = PaddingMode.PKCS7,
-                IV = Encoding.UTF8.GetBytes(iv), Key = Encoding.UTF8.GetBytes(key),
+                IV = Encoding.UTF8.GetBytes(iv), Key = Encoding.UTF8.GetBytes(key)
             };
             var decryotor = rijndael.CreateDecryptor(rijndael.Key, rijndael.IV);
             using var mStream = new MemoryStream(Convert.FromBase64String(cipher));

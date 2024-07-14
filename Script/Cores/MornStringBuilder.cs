@@ -23,10 +23,7 @@ namespace MornLib.Cores
 
         public void Append(string message)
         {
-            if (_isFirst == false)
-            {
-                _builder.Append(_split);
-            }
+            if (_isFirst == false) _builder.Append(_split);
 
             _builder.Append(message);
             _isFirst = false;

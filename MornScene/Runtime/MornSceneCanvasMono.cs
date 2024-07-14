@@ -9,18 +9,18 @@ namespace MornScene
         [SerializeField] private Canvas _canvas;
         [SerializeField] private CanvasGroup _canvasGroup;
 
+        private void Reset()
+        {
+            _canvas = GetComponent<Canvas>();
+            _canvasGroup = GetComponent<CanvasGroup>();
+        }
+
         internal void SetActiveImmediate(bool isActive)
         {
             _canvas.enabled = isActive;
             _canvasGroup.alpha = isActive ? 1 : 0;
             _canvasGroup.interactable = isActive;
             _canvasGroup.blocksRaycasts = isActive;
-        }
-
-        private void Reset()
-        {
-            _canvas = GetComponent<Canvas>();
-            _canvasGroup = GetComponent<CanvasGroup>();
         }
     }
 }

@@ -13,15 +13,9 @@ namespace MornLib.Mono
 
         private void LateUpdate()
         {
-            if (_mainCamera == null)
-            {
-                _mainCamera = Camera.main;
-            }
+            if (_mainCamera == null) _mainCamera = Camera.main;
 
-            if (_mainCamera != null)
-            {
-                transform.rotation = _mainCamera.transform.rotation;
-            }
+            if (_mainCamera != null) transform.rotation = _mainCamera.transform.rotation;
         }
     }
 }

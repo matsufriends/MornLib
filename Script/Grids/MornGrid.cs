@@ -6,6 +6,12 @@ namespace MornLib.Grids
     {
         private readonly T[,] _board;
 
+        protected MornGrid(MornGridSize size)
+        {
+            Size = size;
+            _board = new T[size.Width, size.Height];
+        }
+
         public T this[MornGridPos pos]
         {
             get => _board[pos.X, pos.Y];
@@ -13,12 +19,6 @@ namespace MornLib.Grids
         }
 
         public MornGridSize Size { get; }
-
-        protected MornGrid(MornGridSize size)
-        {
-            Size = size;
-            _board = new T[size.Width, size.Height];
-        }
 
         public bool IsInner(MornGridPos pos)
         {
@@ -36,10 +36,7 @@ namespace MornLib.Grids
         {
             var isValid = 0 <= pos.X && pos.X < Size.Width && 0 <= pos.Y && pos.Y < Size.Height &&
                           !EqualityComparer<T>.Default.Equals(_board[pos.X, pos.Y], value);
-            if (isValid)
-            {
-                _board[pos.X, pos.Y] = value;
-            }
+            if (isValid) _board[pos.X, pos.Y] = value;
 
             return isValid;
         }

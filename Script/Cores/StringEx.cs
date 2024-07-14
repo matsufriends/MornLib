@@ -13,12 +13,8 @@ namespace MornLib.Cores
         {
             var result = 0;
             foreach (var c in message)
-            {
                 if (c == match)
-                {
                     result++;
-                }
-            }
 
             return result;
         }
@@ -28,7 +24,6 @@ namespace MornLib.Cores
             var matchIndex = 0;
             var result = 0;
             foreach (var c in message)
-            {
                 if (c == match[matchIndex])
                 {
                     matchIndex++;
@@ -42,7 +37,6 @@ namespace MornLib.Cores
                 {
                     matchIndex = 0;
                 }
-            }
 
             return result;
         }

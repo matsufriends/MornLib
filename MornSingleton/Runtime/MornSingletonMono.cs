@@ -7,20 +7,15 @@ namespace MornSingleton
     {
         private static T s_instance;
         private bool _didAwake;
+
         public static T Instance
         {
             get
             {
-                if (s_instance != null)
-                {
-                    return s_instance;
-                }
+                if (s_instance != null) return s_instance;
 
                 s_instance = FindObjectOfType<T>();
-                if (s_instance == null)
-                {
-                    Debug.LogError($"{typeof(T)}が見つかりません");
-                }
+                if (s_instance == null) Debug.LogError($"{typeof(T)}が見つかりません");
 
                 s_instance.OnInstanced();
                 return s_instance;
@@ -48,24 +43,20 @@ namespace MornSingleton
         protected abstract void OnInstanced();
     }
 
-    public abstract class MornSingletonMono<TMono, TInterface> : MonoBehaviour where TMono : MornSingletonMono<TMono, TInterface>, TInterface, IMornSingleton
+    public abstract class MornSingletonMono<TMono, TInterface> : MonoBehaviour
+        where TMono : MornSingletonMono<TMono, TInterface>, TInterface, IMornSingleton
     {
         private static TInterface s_instance;
+
         public static TInterface Instance
         {
             get
             {
-                if (s_instance != null)
-                {
-                    return s_instance;
-                }
+                if (s_instance != null) return s_instance;
 
                 var mono = FindObjectOfType<TMono>();
                 s_instance = mono;
-                if (s_instance == null)
-                {
-                    throw new Exception($"{typeof(TMono)}が見つかりません");
-                }
+                if (s_instance == null) throw new Exception($"{typeof(TMono)}が見つかりません");
 
                 mono.Instanced();
                 return s_instance;

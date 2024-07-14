@@ -15,7 +15,7 @@ namespace MornAttribute
             var showIf = (GivenBoolNameAttributeBase)attribute;
             var targetObject = property.serializedObject.targetObject;
             var propertyInfo = targetObject.GetType()
-                    .GetProperty(showIf.PropertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                .GetProperty(showIf.PropertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (propertyInfo != null && propertyInfo.GetValue(targetObject) is bool boolValue)
             {
                 value = boolValue;
@@ -31,17 +31,14 @@ namespace MornAttribute
             if (TryGetBool(property, out var boolValue))
             {
                 if (boolValue == CorrectValue)
-                {
                     OnCorrect(position, property, label);
-                }
                 else
-                {
                     OnIncorrect(position, property, label);
-                }
             }
             else
             {
-                EditorGUI.HelpBox(position, $"Property not found: {((GivenBoolNameAttributeBase)attribute).PropertyName}", MessageType.Error);
+                EditorGUI.HelpBox(position,
+                    $"Property not found: {((GivenBoolNameAttributeBase)attribute).PropertyName}", MessageType.Error);
             }
         }
     }

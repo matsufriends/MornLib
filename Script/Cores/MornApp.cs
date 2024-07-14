@@ -14,26 +14,22 @@ namespace MornLib.Cores
         private static CancellationTokenSource _tokenSource;
         private static CompositeDisposable _disposable;
         private static GameObject _flag;
+
         public static CancellationToken QuitToken
         {
             get
             {
-                if (_flag == null)
-                {
-                    GenerateFlag();
-                }
+                if (_flag == null) GenerateFlag();
 
                 return _tokenSource.Token;
             }
         }
+
         public static ICollection<IDisposable> QuitDisposable
         {
             get
             {
-                if (_flag == null)
-                {
-                    GenerateFlag();
-                }
+                if (_flag == null) GenerateFlag();
 
                 return _disposable;
             }
@@ -49,11 +45,11 @@ namespace MornLib.Cores
             _flag.AddComponent<MornAppFlag>();
             Object.DontDestroyOnLoad(_flag);
             _flag.OnDestroyAsObservable()
-                    .Subscribe(x =>
-                    {
-                        _tokenSource.Cancel();
-                        _disposable.Clear();
-                    });
+                .Subscribe(x =>
+                {
+                    _tokenSource.Cancel();
+                    _disposable.Clear();
+                });
         }
 
         public static void Quit()

@@ -9,12 +9,12 @@ namespace MornBeat
     [CustomEditor(typeof(MornBeatActionSettingSoBase<>), true)]
     internal sealed class MornBeatActionSettingSoEditor : Editor
     {
-        private SerializedProperty _measureTick;
-        private SerializedProperty _beatAction;
-        private readonly HashSet<int> _tickHashSet = new();
-        private Color _cachedBackgroundColor;
         private const int InputWidth = 30;
         private const int ButtonWidth = 50;
+        private readonly HashSet<int> _tickHashSet = new();
+        private SerializedProperty _beatAction;
+        private Color _cachedBackgroundColor;
+        private SerializedProperty _measureTick;
 
         private void OnEnable()
         {
@@ -83,13 +83,9 @@ namespace MornBeat
                 if (GUILayout.Button(tuple.Item2, GUILayout.Width(width)))
                 {
                     if (containFlag)
-                    {
                         beatActionType.enumValueFlag = flag.BitRemove((int)(object)tuple.Item1);
-                    }
                     else
-                    {
                         beatActionType.enumValueFlag = flag.BitAdd((int)(object)tuple.Item1);
-                    }
                 }
 
                 GUI.backgroundColor = _cachedBackgroundColor;

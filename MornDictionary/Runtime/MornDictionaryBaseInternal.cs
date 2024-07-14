@@ -18,16 +18,11 @@ namespace MornDictionary
 
         public Dictionary<TKey, TValue> GetDictionary()
         {
-            if (_keyToValueDict != null && _keyList.Count == _valueList.Count && _keyList.Count == _keyToValueDict.Count)
-            {
-                return _keyToValueDict;
-            }
+            if (_keyToValueDict != null && _keyList.Count == _valueList.Count &&
+                _keyList.Count == _keyToValueDict.Count) return _keyToValueDict;
 
             _keyToValueDict = new Dictionary<TKey, TValue>();
-            for (var i = 0; i < _keyList.Count; i++)
-            {
-                _keyToValueDict.Add(_keyList[i], _valueList[i]);
-            }
+            for (var i = 0; i < _keyList.Count; i++) _keyToValueDict.Add(_keyList[i], _valueList[i]);
 
             return _keyToValueDict;
         }

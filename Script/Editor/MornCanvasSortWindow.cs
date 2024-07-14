@@ -9,25 +9,22 @@ namespace MornLib.Editor
     {
         private Vector2 _scrollPos;
 
-        [MenuItem("MornLib/" + nameof(MornCanvasSortWindow))]
-        private static void Open()
-        {
-            var window = GetWindow<MornCanvasSortWindow>();
-            window.titleContent = new GUIContent(nameof(MornCanvasSortWindow));
-        }
-
         private void OnGUI()
         {
             _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
             {
                 GUILayout.Label("Canvas Sorting Order");
                 var list = FindObjectsOfType<Canvas>().OrderBy(x => x.sortingOrder);
-                foreach (var canvas in list)
-                {
-                    GUILayout.Label($"{canvas.sortingOrder}:{canvas.transform.GetPath()}");
-                }
+                foreach (var canvas in list) GUILayout.Label($"{canvas.sortingOrder}:{canvas.transform.GetPath()}");
             }
             EditorGUILayout.EndScrollView();
+        }
+
+        [MenuItem("MornLib/" + nameof(MornCanvasSortWindow))]
+        private static void Open()
+        {
+            var window = GetWindow<MornCanvasSortWindow>();
+            window.titleContent = new GUIContent(nameof(MornCanvasSortWindow));
         }
     }
 }

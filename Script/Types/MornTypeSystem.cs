@@ -10,10 +10,7 @@ namespace MornLib.Types
         {
             Stack += addChar;
             hiragana = UpdateHiraganaList(out var isKeep);
-            if (hiragana != "")
-            {
-                Stack = isKeep ? Stack[^1].ToString() : "";
-            }
+            if (hiragana != "") Stack = isKeep ? Stack[^1].ToString() : "";
 
             return hiragana != "";
         }
@@ -22,41 +19,23 @@ namespace MornLib.Types
         {
             isKeep = true;
             //っ
-            if (TryConvert(Convert2ToXtu, 2, out var hiragana))
-            {
-                return hiragana;
-            }
+            if (TryConvert(Convert2ToXtu, 2, out var hiragana)) return hiragana;
 
             //ん
-            if (TryConvert(Convert2ToNn, 2, out hiragana))
-            {
-                return hiragana;
-            }
+            if (TryConvert(Convert2ToNn, 2, out hiragana)) return hiragana;
 
             isKeep = false;
             //4文字
-            if (TryConvert(Convert4ToHiragana, 4, out hiragana))
-            {
-                return hiragana;
-            }
+            if (TryConvert(Convert4ToHiragana, 4, out hiragana)) return hiragana;
 
             //3文字
-            if (TryConvert(Convert3ToHiragana, 3, out hiragana))
-            {
-                return hiragana;
-            }
+            if (TryConvert(Convert3ToHiragana, 3, out hiragana)) return hiragana;
 
             //2文字
-            if (TryConvert(Convert2ToHiragana, 2, out hiragana))
-            {
-                return hiragana;
-            }
+            if (TryConvert(Convert2ToHiragana, 2, out hiragana)) return hiragana;
 
             //1文字
-            if (TryConvert(Convert1ToHiragana, 1, out hiragana))
-            {
-                return hiragana;
-            }
+            if (TryConvert(Convert1ToHiragana, 1, out hiragana)) return hiragana;
 
             return "";
         }

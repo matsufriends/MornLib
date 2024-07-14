@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace MornScene
 {
-    [CustomEditor(typeof(MornSceneDataSo))] [CanEditMultipleObjects]
+    [CustomEditor(typeof(MornSceneDataSo))]
+    [CanEditMultipleObjects]
     internal sealed class MornSceneDataSoEditor : Editor
     {
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
             if (GUILayout.Button("File Name -> Scene Name"))
-            {
                 foreach (var target in targets)
                 {
                     var sceneDataSo = (MornSceneDataSo)target;
@@ -20,7 +20,6 @@ namespace MornScene
                     sceneDataSo.SetSceneName(fileName);
                     EditorUtility.SetDirty(sceneDataSo);
                 }
-            }
         }
     }
 }

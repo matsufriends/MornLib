@@ -9,10 +9,7 @@ namespace MornLib.Extensions
         public static void DestroyChildren(this Transform transform)
         {
             var totalCount = transform.childCount;
-            for (var i = totalCount - 1; i >= 0; i--)
-            {
-                Object.DestroyImmediate(transform.GetChild(i).gameObject);
-            }
+            for (var i = totalCount - 1; i >= 0; i--) Object.DestroyImmediate(transform.GetChild(i).gameObject);
         }
 
         public static string GetPath(this Transform transform)
@@ -27,10 +24,7 @@ namespace MornLib.Extensions
                 parent = parent.parent;
             }
 
-            for (var i = list.Count - 1; i >= 0; i--)
-            {
-                builder.Append(list[i]);
-            }
+            for (var i = list.Count - 1; i >= 0; i--) builder.Append(list[i]);
 
             var message = builder.Get();
             MornSharedObjectPool<MornList<string>>.Return(list);

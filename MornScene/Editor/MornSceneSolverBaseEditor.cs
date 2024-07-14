@@ -10,24 +10,14 @@ namespace MornScene
         {
             base.OnInspectorGUI();
             var dictionaryProperty = serializedObject.FindProperty("_sceneDictionary");
-            if (dictionaryProperty.objectReferenceValue == null)
-            {
-                return;
-            }
+            if (dictionaryProperty.objectReferenceValue == null) return;
 
             var dictionary = (MornSceneDictionaryMono)dictionaryProperty.objectReferenceValue;
-            if (GUILayout.Button("HideAll"))
-            {
-                ChangeScene(dictionary, null);
-            }
+            if (GUILayout.Button("HideAll")) ChangeScene(dictionary, null);
 
             foreach (var pair in dictionary.GetDictionary())
-            {
                 if (GUILayout.Button($"[{pair.Key.SceneName}]"))
-                {
                     ChangeScene(dictionary, pair.Key);
-                }
-            }
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -41,13 +31,9 @@ namespace MornScene
             }
 
             if (sceneData == null)
-            {
                 Debug.Log("Hide All Scenes.");
-            }
             else
-            {
                 Debug.Log($"Scene Changed to {sceneData.SceneName}.");
-            }
         }
     }
 }

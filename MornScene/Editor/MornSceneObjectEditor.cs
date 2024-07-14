@@ -9,18 +9,11 @@ namespace MornScene
     {
         private static SceneAsset GetSceneObject(string sceneObjectName)
         {
-            if (string.IsNullOrEmpty(sceneObjectName))
-            {
-                return null;
-            }
+            if (string.IsNullOrEmpty(sceneObjectName)) return null;
 
             foreach (var scene in EditorBuildSettings.scenes)
-            {
                 if (scene.path.IndexOf(sceneObjectName, StringComparison.Ordinal) != -1)
-                {
                     return AssetDatabase.LoadAssetAtPath(scene.path, typeof(SceneAsset)) as SceneAsset;
-                }
-            }
 
             Debug.Log($"{sceneObjectName}が'Scenes in the Build'に含まれていません");
             return null;
@@ -41,13 +34,9 @@ namespace MornScene
                 {
                     var scnObj = GetSceneObject(newScene.name);
                     if (scnObj == null)
-                    {
                         Debug.Log($"{newScene}が'Scenes in the Build'に含まれていません");
-                    }
                     else
-                    {
                         nameProperty.stringValue = newScene.name;
-                    }
                 }
             }
         }

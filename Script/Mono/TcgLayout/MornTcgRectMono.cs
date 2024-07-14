@@ -9,13 +9,10 @@ namespace MornLib.Mono.TcgLayout
         IPointerExitHandler
     {
         [SerializeField] private RectTransform _ownRect;
-        private IMornTcgRectUser _mornTcgRectUser;
-        private Action _selected;
         private Action _deselected;
         private int _index;
-        int IMornTcgRectController.Index => _index;
-        Vector2 IMornTcgRectController.Size => _ownRect.sizeDelta;
-        Vector2 IMornTcgRectController.Scale => _ownRect.localScale;
+        private IMornTcgRectUser _mornTcgRectUser;
+        private Action _selected;
 
         private void Awake()
         {
@@ -26,6 +23,10 @@ namespace MornLib.Mono.TcgLayout
         {
             _ownRect = GetComponent<RectTransform>();
         }
+
+        int IMornTcgRectController.Index => _index;
+        Vector2 IMornTcgRectController.Size => _ownRect.sizeDelta;
+        Vector2 IMornTcgRectController.Scale => _ownRect.localScale;
 
         void IMornTcgRectController.Init(Action selected, Action deselected)
         {
@@ -40,10 +41,7 @@ namespace MornLib.Mono.TcgLayout
 
         void IMornTcgRectController.RemoveIndex(int index)
         {
-            if (index < _index)
-            {
-                _index--;
-            }
+            if (index < _index) _index--;
         }
 
         void IMornTcgRectController.SetUpdate(Vector3 pos, Quaternion rotation, Vector3 scale, float transition)

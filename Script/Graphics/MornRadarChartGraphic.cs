@@ -14,9 +14,9 @@ namespace MornLib.Graphics
         [SerializeField] private float _lineWidth;
         [SerializeField] private float _scaleCount;
         [SerializeField] private float _splitWidth;
-        private int _valueCount;
         private float _baseRadius;
         private RectTransform _rectTransform;
+        private int _valueCount;
 
         protected override void OnEnable()
         {
@@ -29,38 +29,24 @@ namespace MornLib.Graphics
             _valueCount = _valueList.Count;
             var size = _rectTransform.sizeDelta;
             _baseRadius = Mathf.Min(size.x, size.y) / 2;
-            if (_drawInside)
-            {
-                GenerateInsideMesh(vh);
-            }
+            if (_drawInside) GenerateInsideMesh(vh);
 
             if (0 < _lineWidth && 1 <= _scaleCount)
             {
                 var dif = 1f / _scaleCount;
-                for (var i = dif; i <= 1; i += dif)
-                {
-                    GenerateBroadLine(vh, i);
-                }
+                for (var i = dif; i <= 1; i += dif) GenerateBroadLine(vh, i);
             }
 
-            if (_splitWidth > 0)
-            {
-                GenerateSplitLine(vh);
-            }
+            if (_splitWidth > 0) GenerateSplitLine(vh);
         }
 
         private void GenerateInsideMesh(VertexHelper vh)
         {
             vh.AddVert(GenerateUIVertex(GetPos(0), color)); //Center
             for (var i = 0; i < _valueCount; i++)
-            {
                 vh.AddVert(GenerateUIVertex(GetPos(i) * _baseRadius * _valueList[i], color)); //Per Vertex
-            }
 
-            for (var i = 0; i < _valueCount; i++)
-            {
-                vh.AddTriangle(0, i + 1, (i + 1) % _valueCount + 1);
-            }
+            for (var i = 0; i < _valueCount; i++) vh.AddTriangle(0, i + 1, (i + 1) % _valueCount + 1);
         }
 
         private void GenerateBroadLine(VertexHelper vh, float k)

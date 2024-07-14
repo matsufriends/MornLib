@@ -6,14 +6,12 @@ namespace MornDictionary
 {
     public abstract class MornDictionaryBaseEditor<TKey> : Editor
     {
-        private SerializedProperty _script;
-        private SerializedProperty _keyList;
-        private SerializedProperty _valueList;
+        private const int ButtonSize = 20;
         private readonly HashSet<TKey> _keyDuplicateHashSet = new();
         protected readonly HashSet<TKey> KeyNotFoundHashSet = new();
-        private const int ButtonSize = 20;
-        protected abstract TKey GetValue(SerializedProperty property);
-        protected abstract void AfterRenderDictionary();
+        private SerializedProperty _keyList;
+        private SerializedProperty _script;
+        private SerializedProperty _valueList;
 
         private void OnEnable()
         {
@@ -21,6 +19,9 @@ namespace MornDictionary
             _keyList = serializedObject.FindProperty("_keyList");
             _valueList = serializedObject.FindProperty("_valueList");
         }
+
+        protected abstract TKey GetValue(SerializedProperty property);
+        protected abstract void AfterRenderDictionary();
 
         public override void OnInspectorGUI()
         {
@@ -43,39 +44,26 @@ namespace MornDictionary
                         _valueList.ClearArray();
                     }
 
-                    if (GUILayout.Button("-", GUILayout.Width(ButtonSize)))
-                    {
-                        _keyList.arraySize--;
-                    }
+                    if (GUILayout.Button("-", GUILayout.Width(ButtonSize))) _keyList.arraySize--;
                 }
 
-                if (GUILayout.Button("+", GUILayout.Width(ButtonSize)))
-                {
-                    _keyList.arraySize++;
-                }
+                if (GUILayout.Button("+", GUILayout.Width(ButtonSize))) _keyList.arraySize++;
             }
 
-            while (_valueList.arraySize < _keyList.arraySize)
-            {
-                _valueList.arraySize++;
-            }
+            while (_valueList.arraySize < _keyList.arraySize) _valueList.arraySize++;
 
-            while (_valueList.arraySize > _keyList.arraySize)
-            {
-                _valueList.arraySize--;
-            }
+            while (_valueList.arraySize > _keyList.arraySize) _valueList.arraySize--;
 
             if (_keyList.isExpanded)
-            {
                 using (new EditorGUI.IndentLevelScope())
                 {
                     for (var i = 0; i < _keyList.arraySize; i++)
-                    {
                         using (new EditorGUILayout.VerticalScope(GUI.skin.box))
                         {
                             using (new EditorGUILayout.HorizontalScope())
                             {
-                                EditorGUILayout.PropertyField(_keyList.GetArrayElementAtIndex(i), new GUIContent("Key"));
+                                EditorGUILayout.PropertyField(_keyList.GetArrayElementAtIndex(i),
+                                    new GUIContent("Key"));
                                 using (new EditorGUI.DisabledScope(i == 0))
                                 {
                                     if (GUILayout.Button("↑", GUILayout.Width(ButtonSize)))
@@ -116,13 +104,9 @@ namespace MornDictionary
 
                             var key = GetValue(_keyList.GetArrayElementAtIndex(i));
                             if (!_keyDuplicateHashSet.Add(key))
-                            {
                                 EditorGUILayout.HelpBox("Duplicate key", MessageType.Error);
-                            }
                         }
-                    }
                 }
-            }
 
             for (var i = 0; i < _keyList.arraySize; i++)
             {
@@ -131,10 +115,7 @@ namespace MornDictionary
             }
 
             AfterRenderDictionary();
-            if (GUILayout.Button("Reset Cache"))
-            {
-                ((MornDictionaryBaseInternalBase)target).ResetDictionary();
-            }
+            if (GUILayout.Button("Reset Cache")) ((MornDictionaryBaseInternalBase)target).ResetDictionary();
 
             serializedObject.ApplyModifiedProperties();
         }

@@ -12,16 +12,10 @@ namespace MornSingleton
         {
             get
             {
-                if (s_instance != null)
-                {
-                    return s_instance;
-                }
+                if (s_instance != null) return s_instance;
 
                 s_instance = Resources.Load<T>(typeof(T).Name);
-                if (s_instance != null)
-                {
-                    return s_instance;
-                }
+                if (s_instance != null) return s_instance;
 
                 s_instance = CreateInstance<T>();
 #if UNITY_EDITOR

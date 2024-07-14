@@ -5,7 +5,7 @@ namespace MornHierarchy
 {
     public sealed class MornHierarchyColor : MonoBehaviour
     {
-        [SerializeField, ColorUsage(false)] private Color _backColor;
+        [SerializeField] [ColorUsage(false)] private Color _backColor;
         [SerializeField] private bool _applyChildren = true;
         public Color BackColor => _backColor;
         public bool ApplyChildren => _applyChildren;

@@ -1,7 +1,9 @@
 {
     "name": "MornDictionary.Editor",
     "rootNamespace": "MornDictionary",
-    "references": ["GUID:2310e99326312ea41bd9676ceb403692"],
+    "references": [
+        "GUID:2310e99326312ea41bd9676ceb403692"
+    ],
     "includePlatforms": [
         "Editor"
     ],

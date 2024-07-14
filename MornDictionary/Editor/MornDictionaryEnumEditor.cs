@@ -14,17 +14,11 @@ namespace MornDictionary
         protected override void AfterRenderDictionary()
         {
             var genericType = target.GetType().BaseType?.GetGenericArguments()[0];
-            if (genericType == null)
-            {
-                return;
-            }
+            if (genericType == null) return;
 
             foreach (var enumValue in Enum.GetValues(genericType))
             {
-                if (KeyNotFoundHashSet.Contains((int)enumValue))
-                {
-                    continue;
-                }
+                if (KeyNotFoundHashSet.Contains((int)enumValue)) continue;
 
                 EditorGUILayout.HelpBox($"{enumValue} is not Registered", MessageType.Error);
             }

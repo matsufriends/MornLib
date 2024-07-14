@@ -20,13 +20,9 @@ namespace MornLib.Mono.TcgLayout
         private void Update()
         {
             if (_dragRect == null)
-            {
                 NoDragUpdate();
-            }
             else
-            {
                 DragUpdate();
-            }
 
             ContentUpdate();
         }
@@ -54,10 +50,7 @@ namespace MornLib.Mono.TcgLayout
         {
             var transition = _transitionK * Time.deltaTime;
             var rectCount = _rectList.Count;
-            if (rectCount == 0)
-            {
-                return;
-            }
+            if (rectCount == 0) return;
 
             var focusIndex = _dragRect?.Index ?? _curRect?.Index ?? -1;
             var leftWidthSum = 0f;
@@ -106,18 +99,12 @@ namespace MornLib.Mono.TcgLayout
                 {
                     float aimPosX;
                     if (i < focusIndex) //左側の時
-                    {
                         aimPosX = -widthSum / 2f + (leftWidthSum - focusWidth / 2f) / leftCount * (i + 0.5f);
-                    }
                     else if (i == focusIndex) //フォーカス中のやつ
-                    {
                         aimPosX = -widthSum / 2f + widthSum / rectCount * (i + 0.5f);
-                    }
                     else //右側のやつ
-                    {
                         aimPosX = widthSum / 2f +
                                   (rightWidthSum - focusWidth / 2f) / rightCount * (i - rectCount + 0.5f);
-                    }
 
                     var rect = _rectList[i];
                     var aimScale = i == focusIndex ? _focusScale : Vector3.one;
@@ -140,47 +127,26 @@ namespace MornLib.Mono.TcgLayout
             {
                 //Selected
                 _curRect = mornTcgRect;
-                if (_dragRect == null)
-                {
-                    _curRect.Select();
-                }
+                if (_dragRect == null) _curRect.Select();
             }, () =>
             {
                 //Deselected
-                if (_curRect == mornTcgRect)
-                {
-                    _curRect = null;
-                }
+                if (_curRect == mornTcgRect) _curRect = null;
 
-                if (_dragRect == null)
-                {
-                    mornTcgRect.Deselect();
-                }
+                if (_dragRect == null) mornTcgRect.Deselect();
             });
         }
 
         public void RemoveItem(IMornTcgRectController mornTcgRect)
         {
-            if (mornTcgRect.Index < 0 || _rectList.Count <= mornTcgRect.Index)
-            {
-                MornLog.Error("不正なIndexです");
-            }
+            if (mornTcgRect.Index < 0 || _rectList.Count <= mornTcgRect.Index) MornLog.Error("不正なIndexです");
 
             _rectList.RemoveAt(mornTcgRect.Index);
-            foreach (var rect in _rectList)
-            {
-                rect.RemoveIndex(mornTcgRect.Index);
-            }
+            foreach (var rect in _rectList) rect.RemoveIndex(mornTcgRect.Index);
 
-            if (_curRect == mornTcgRect)
-            {
-                _curRect = null;
-            }
+            if (_curRect == mornTcgRect) _curRect = null;
 
-            if (_dragRect == mornTcgRect)
-            {
-                _dragRect = null;
-            }
+            if (_dragRect == mornTcgRect) _dragRect = null;
 
             mornTcgRect.ExeDestroy();
         }

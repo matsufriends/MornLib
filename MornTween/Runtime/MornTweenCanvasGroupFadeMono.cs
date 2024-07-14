@@ -15,10 +15,12 @@ namespace MornTween
         private void Awake()
         {
             canvasGroup = GetComponent<CanvasGroup>();
-            
+
             var token = this.GetCancellationTokenOnDestroy();
-            receiver.OnPointerEnterAsObservable().Subscribe(_ => canvasGroup.FadeFillAsync(0.1f,cancellationToken:token).Forget()).AddTo(this);
-            receiver.OnPointerExitAsObservable().Subscribe(_ => canvasGroup.FadeClearAsync(0.1f,cancellationToken:token).Forget()).AddTo(this);
+            receiver.OnPointerEnterAsObservable()
+                .Subscribe(_ => canvasGroup.FadeFillAsync(0.1f, cancellationToken: token).Forget()).AddTo(this);
+            receiver.OnPointerExitAsObservable()
+                .Subscribe(_ => canvasGroup.FadeClearAsync(0.1f, cancellationToken: token).Forget()).AddTo(this);
         }
     }
 }

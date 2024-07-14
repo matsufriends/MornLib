@@ -9,13 +9,6 @@ namespace MornBeat
     [CreateAssetMenu(fileName = nameof(MornBeatMemoSo), menuName = "MornBeat/" + nameof(MornBeatMemoSo))]
     public sealed class MornBeatMemoSo : ScriptableObject
     {
-        [Serializable]
-        private struct BpmAndTimeInfo
-        {
-            public double Bpm;
-            public double Time;
-        }
-
         [SerializeField] private bool _isLoop;
         [SerializeField] private List<float> _timingList;
         [SerializeField] private List<BpmAndTimeInfo> _bpmAndTimeInfoList;
@@ -32,7 +25,7 @@ namespace MornBeat
         public AudioClip Clip => _clip;
         public float Volume => _volume;
         internal float Offset => _offset;
-        
+
         public void OverrideTimingList(List<float> timingList)
         {
             _timingList = timingList;
@@ -40,10 +33,7 @@ namespace MornBeat
 
         public float GetBeatTiming(int index)
         {
-            if (index < 0 || TickSum <= index)
-            {
-                return Mathf.Infinity;
-            }
+            if (index < 0 || TickSum <= index) return Mathf.Infinity;
 
             return _timingList[index];
         }
@@ -61,20 +51,14 @@ namespace MornBeat
             {
                 var bpm = GetBpm(time);
                 var dif = bpm / 60 * _measureTickCount / _beatCount * _interval;
-                if (Math.Floor(beat) < Math.Floor(beat + dif))
-                {
-                    _timingList.Add((float)time % length);
-                }
+                if (Math.Floor(beat) < Math.Floor(beat + dif)) _timingList.Add((float)time % length);
 
                 beat += dif;
                 time += _interval;
             }
 
             var remove = _timingList.Count % _measureTickCount;
-            for (var i = 0; i < remove; i++)
-            {
-                _timingList.RemoveAt(_timingList.Count - 1);
-            }
+            for (var i = 0; i < remove; i++) _timingList.RemoveAt(_timingList.Count - 1);
         }
 
         public double GetBpm(double time)
@@ -87,17 +71,11 @@ namespace MornBeat
                     return _bpmAndTimeInfoList[0].Bpm;
             }
 
-            if (time < _bpmAndTimeInfoList[0].Time)
-            {
-                return _bpmAndTimeInfoList[0].Bpm;
-            }
+            if (time < _bpmAndTimeInfoList[0].Time) return _bpmAndTimeInfoList[0].Bpm;
 
             for (var i = 1; i < _bpmAndTimeInfoList.Count; i++)
             {
-                if (_bpmAndTimeInfoList[i].Time <= time)
-                {
-                    continue;
-                }
+                if (_bpmAndTimeInfoList[i].Time <= time) continue;
 
                 var begin = _bpmAndTimeInfoList[i - 1];
                 var end = _bpmAndTimeInfoList[i];
@@ -106,6 +84,13 @@ namespace MornBeat
             }
 
             return _bpmAndTimeInfoList[^1].Bpm;
+        }
+
+        [Serializable]
+        private struct BpmAndTimeInfo
+        {
+            public double Bpm;
+            public double Time;
         }
     }
 
@@ -123,10 +108,7 @@ namespace MornBeat
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
-            if (GUILayout.Button("MakeBeat"))
-            {
-                _mornBeatMemo.MakeBeat();
-            }
+            if (GUILayout.Button("MakeBeat")) _mornBeatMemo.MakeBeat();
         }
     }
 #endif

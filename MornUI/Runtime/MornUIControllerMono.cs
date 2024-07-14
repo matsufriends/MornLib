@@ -5,16 +5,16 @@ namespace MornUI
 {
     public sealed class MornUIControllerMono : MonoBehaviour
     {
-        [SerializeField] private MornUIMonoBase _firstFocus;
-        private HashSet<MornUIMonoBase> _uis;
-        private MornUIMonoBase _currentFocus;
-        private MornUIDirType _preDir;
-        private MornUIDirType _lockDir;
-        private float _lastInputTime;
-        private float _nextCanMoveTime;
         private const float SubmitInterval = 0.1f;
         private const float ChangeFocusInitInterval = 0.3f;
         private const float ChangeFocusInterval = 0.15f;
+        [SerializeField] private MornUIMonoBase _firstFocus;
+        private MornUIMonoBase _currentFocus;
+        private float _lastInputTime;
+        private MornUIDirType _lockDir;
+        private float _nextCanMoveTime;
+        private MornUIDirType _preDir;
+        private HashSet<MornUIMonoBase> _uis;
 
         private void Awake()
         {
@@ -24,10 +24,7 @@ namespace MornUI
             while (tryAddQueue.Count > 0)
             {
                 var ui = tryAddQueue.Dequeue();
-                if (ui == null || !_uis.Add(ui))
-                {
-                    continue;
-                }
+                if (ui == null || !_uis.Add(ui)) continue;
 
                 ui.AddSurround(tryAddQueue.Enqueue);
             }
@@ -46,32 +43,18 @@ namespace MornUI
         public void ResendFocus()
         {
             foreach (var ui in _uis)
-            {
                 if (ui == _currentFocus)
-                {
                     ui.OnFocus(true);
-                }
-            }
         }
 
         private void ChangeFocus(MornUIMonoBase focus, bool isInitial)
         {
-            if (_currentFocus == focus)
-            {
-                return;
-            }
+            if (_currentFocus == focus) return;
 
             foreach (var ui in _uis)
-            {
                 if (ui == _currentFocus)
-                {
                     ui.OnUnFocus(isInitial);
-                }
-                else if (ui == focus)
-                {
-                    ui.OnFocus(isInitial);
-                }
-            }
+                else if (ui == focus) ui.OnFocus(isInitial);
 
             _currentFocus = focus;
         }
@@ -83,10 +66,7 @@ namespace MornUI
 
         public void OnSubmit()
         {
-            if (!CanInput())
-            {
-                return;
-            }
+            if (!CanInput()) return;
 
             _currentFocus.OnSubmit();
             _lastInputTime = Time.realtimeSinceStartup;
@@ -94,22 +74,15 @@ namespace MornUI
 
         public void OnCancel()
         {
-            if (!CanInput())
-            {
-                return;
-            }
+            if (!CanInput()) return;
 
             _currentFocus.OnCancel(out var nextFocus);
             if (nextFocus != null)
             {
                 if (_currentFocus == nextFocus)
-                {
                     OnSubmit();
-                }
                 else
-                {
                     ChangeFocus(nextFocus, false);
-                }
             }
 
             _lastInputTime = Time.realtimeSinceStartup;
@@ -117,22 +90,13 @@ namespace MornUI
 
         public void PanelUpdate(Vector2 input)
         {
-            if (_currentFocus == null)
-            {
-                return;
-            }
+            if (_currentFocus == null) return;
 
             var curDir = input.ToDir();
-            if (_lockDir != MornUIDirType.None && curDir == _lockDir)
-            {
-                return;
-            }
+            if (_lockDir != MornUIDirType.None && curDir == _lockDir) return;
 
             _lockDir = MornUIDirType.None;
-            if (_preDir != curDir)
-            {
-                _nextCanMoveTime = 0;
-            }
+            if (_preDir != curDir) _nextCanMoveTime = 0;
 
             if (curDir != MornUIDirType.None && _nextCanMoveTime <= Time.realtimeSinceStartup)
             {

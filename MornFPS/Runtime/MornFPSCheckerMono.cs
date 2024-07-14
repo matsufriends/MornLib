@@ -17,10 +17,7 @@ namespace MornFPS
             var cur = Time.realtimeSinceStartup;
             var fps = 1 / (cur - _cachedUpdateTime);
             _fpsQueue.Enqueue(fps);
-            if (_fpsQueue.Count > Mathf.Max(1, _saveFrames))
-            {
-                _fpsQueue.Dequeue();
-            }
+            if (_fpsQueue.Count > Mathf.Max(1, _saveFrames)) _fpsQueue.Dequeue();
 
             _fpsText.text = $"FPS:{_fpsQueue.Average():.00}";
             _cachedUpdateTime = cur;

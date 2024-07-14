@@ -8,10 +8,7 @@
         {
             get
             {
-                if (s_instance != null)
-                {
-                    return s_instance;
-                }
+                if (s_instance != null) return s_instance;
 
                 s_instance = new T();
                 s_instance.Instanced();
@@ -31,10 +28,7 @@
         {
             get
             {
-                if (s_instance != null)
-                {
-                    return s_instance;
-                }
+                if (s_instance != null) return s_instance;
 
                 var cla = new TClass();
                 cla.Instanced();

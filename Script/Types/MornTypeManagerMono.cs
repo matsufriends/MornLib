@@ -7,9 +7,18 @@ namespace MornLib.Types
 {
     public sealed class MornTypeManagerMono : MornSingletonMono<MornTypeManagerMono>
     {
-        private bool _isActive;
         private readonly Subject<char> _inputChar = new();
+        private bool _isActive;
         public IObservable<char> OnInputChar => _inputChar;
+
+        private void OnGUI()
+        {
+            if (_isActive && Event.current.type == EventType.KeyDown)
+            {
+                var c = KeyCodeToChar(Event.current.keyCode);
+                if (c != '\0') _inputChar.OnNext(c);
+            }
+        }
 
         protected override void OnInstanced()
         {
@@ -18,18 +27,6 @@ namespace MornLib.Types
         public void SetIsActive(bool isActive)
         {
             _isActive = isActive;
-        }
-
-        private void OnGUI()
-        {
-            if (_isActive && Event.current.type == EventType.KeyDown)
-            {
-                var c = KeyCodeToChar(Event.current.keyCode);
-                if (c != '\0')
-                {
-                    _inputChar.OnNext(c);
-                }
-            }
         }
 
         private static char KeyCodeToChar(KeyCode keyCode)

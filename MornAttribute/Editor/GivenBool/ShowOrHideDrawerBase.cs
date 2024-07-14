@@ -16,10 +16,7 @@ namespace MornAttribute
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            if (TryGetBool(property, out var boolValue) && boolValue != CorrectValue)
-            {
-                return -2;
-            }
+            if (TryGetBool(property, out var boolValue) && boolValue != CorrectValue) return -2;
 
             return base.GetPropertyHeight(property, label);
         }

@@ -12,13 +12,15 @@ namespace MornTween
             return gameObject.TryGetComponent<T>(out var component) ? component : gameObject.AddComponent<T>();
         }
 
-        public async static UniTask FadeFillAsync(this CanvasGroup target, float duration, bool isUnscaled = false, CancellationToken cancellationToken = default)
+        public static async UniTask FadeFillAsync(this CanvasGroup target, float duration, bool isUnscaled = false,
+            CancellationToken cancellationToken = default)
         {
             var mornTweenCanvasGroup = GetOrAddComponent<MornTweenCanvasGroupCtrl>(target.gameObject);
             await mornTweenCanvasGroup.FadeFillAsync(duration.ToTimeSpanAsSeconds(), isUnscaled, cancellationToken);
         }
-        
-        public async static UniTask FadeClearAsync(this CanvasGroup target, float duration, bool isUnscaled = false, CancellationToken cancellationToken = default)
+
+        public static async UniTask FadeClearAsync(this CanvasGroup target, float duration, bool isUnscaled = false,
+            CancellationToken cancellationToken = default)
         {
             var mornTweenCanvasGroup = GetOrAddComponent<MornTweenCanvasGroupCtrl>(target.gameObject);
             await mornTweenCanvasGroup.FadeClearAsync(duration.ToTimeSpanAsSeconds(), isUnscaled, cancellationToken);

@@ -7,12 +7,6 @@ namespace MornDebug
     {
         private Vector2 _scroll;
 
-        [MenuItem("MornLib/" + nameof(MornDebugWindow))]
-        private static void ShowWindow()
-        {
-            GetWindow<MornDebugWindow>();
-        }
-
         private void OnGUI()
         {
             MornDebugCore.CheckDisposed();
@@ -27,6 +21,12 @@ namespace MornDebug
 
                 _scroll = scrollScope.scrollPosition;
             }
+        }
+
+        [MenuItem("MornLib/" + nameof(MornDebugWindow))]
+        private static void ShowWindow()
+        {
+            GetWindow<MornDebugWindow>();
         }
     }
 }

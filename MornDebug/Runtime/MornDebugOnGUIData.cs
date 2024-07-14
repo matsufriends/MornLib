@@ -6,13 +6,14 @@ namespace MornDebug
     {
         public readonly string Label;
         public readonly Action OnGUI;
-        public bool IsDisposed { get; private set; }
 
         public MornDebugOnGUIData(string label, Action onGUI)
         {
             Label = label;
             OnGUI = onGUI;
         }
+
+        public bool IsDisposed { get; private set; }
 
         void IDisposable.Dispose()
         {

@@ -9,15 +9,18 @@ namespace MornAttribute
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var minMaxSlider = (MinMaxSliderAttribute)attribute;
-            if (property.propertyType != SerializedPropertyType.Vector2 && property.propertyType != SerializedPropertyType.Vector2Int)
+            if (property.propertyType != SerializedPropertyType.Vector2 &&
+                property.propertyType != SerializedPropertyType.Vector2Int)
             {
-                EditorGUI.HelpBox(position, $"Property type must be Vector2(Int): {property.propertyType}", MessageType.Error);
+                EditorGUI.HelpBox(position, $"Property type must be Vector2(Int): {property.propertyType}",
+                    MessageType.Error);
                 return;
             }
 
             if (minMaxSlider.Min > minMaxSlider.Max)
             {
-                EditorGUI.HelpBox(position, $"Min must be less than Max: {minMaxSlider.Min} > {minMaxSlider.Max}", MessageType.Error);
+                EditorGUI.HelpBox(position, $"Min must be less than Max: {minMaxSlider.Min} > {minMaxSlider.Max}",
+                    MessageType.Error);
                 return;
             }
 
@@ -47,10 +50,7 @@ namespace MornAttribute
                 max = Mathf.RoundToInt(maxF);
                 min = EditorGUI.IntField(minRect, min);
                 max = EditorGUI.IntField(maxRect, max);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    property.vector2IntValue = new Vector2Int(min, max);
-                }
+                if (EditorGUI.EndChangeCheck()) property.vector2IntValue = new Vector2Int(min, max);
             }
             else
             {
@@ -68,10 +68,7 @@ namespace MornAttribute
                 EditorGUI.MinMaxSlider(sliderRect, ref min, ref max, minMaxSlider.Min, minMaxSlider.Max);
                 min = EditorGUI.FloatField(minRect, min);
                 max = EditorGUI.FloatField(maxRect, max);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    property.vector2Value = new Vector2(min, max);
-                }
+                if (EditorGUI.EndChangeCheck()) property.vector2Value = new Vector2(min, max);
             }
         }
     }

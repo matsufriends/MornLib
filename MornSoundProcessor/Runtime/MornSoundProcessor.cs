@@ -16,12 +16,10 @@ namespace MornSoundProcessor
             clip.GetData(data, 0);
             var max = Mathf.Max(Mathf.Abs(data.Min()), Mathf.Abs(data.Max()));
             var rate = maxAmplitude / max;
-            for (var i = 0; i < data.Length; i++)
-            {
-                data[i] *= rate;
-            }
+            for (var i = 0; i < data.Length; i++) data[i] *= rate;
 
-            var normalizeClip = AudioClip.Create(clip.name, samples, channels, frequency, clip.loadType == AudioClipLoadType.Streaming);
+            var normalizeClip = AudioClip.Create(clip.name, samples, channels, frequency,
+                clip.loadType == AudioClipLoadType.Streaming);
             normalizeClip.SetData(data, 0);
             return normalizeClip;
         }
@@ -36,12 +34,10 @@ namespace MornSoundProcessor
             var startIndex = GetSoundBeginningIndex(data, beginAmplitude, channels);
             startIndex = Mathf.Max(startIndex - beginOffsetSample * channels, 0);
             var newSamples = samples - startIndex / channels;
-            var cutClip = AudioClip.Create(clip.name, newSamples, channels, frequency, clip.loadType == AudioClipLoadType.Streaming);
+            var cutClip = AudioClip.Create(clip.name, newSamples, channels, frequency,
+                clip.loadType == AudioClipLoadType.Streaming);
             var cachedArray = new float[newSamples * channels];
-            for (var i = 0; i < newSamples * channels; i++)
-            {
-                cachedArray[i] = data[startIndex + i];
-            }
+            for (var i = 0; i < newSamples * channels; i++) cachedArray[i] = data[startIndex + i];
 
             cutClip.SetData(cachedArray, 0);
             return cutClip;
@@ -57,12 +53,10 @@ namespace MornSoundProcessor
             var endIndex = GetSoundEndingIndex(data, endAmplitude, channels);
             endIndex = Mathf.Min(endIndex + endOffsetSample * channels, samples * channels);
             var newSamples = endIndex / channels;
-            var cutClip = AudioClip.Create(clip.name, newSamples, channels, frequency, clip.loadType == AudioClipLoadType.Streaming);
+            var cutClip = AudioClip.Create(clip.name, newSamples, channels, frequency,
+                clip.loadType == AudioClipLoadType.Streaming);
             var cachedArray = new float[newSamples * channels];
-            for (var i = 0; i < newSamples * channels; i++)
-            {
-                cachedArray[i] = data[i];
-            }
+            for (var i = 0; i < newSamples * channels; i++) cachedArray[i] = data[i];
 
             cutClip.SetData(cachedArray, 0);
             return cutClip;
@@ -71,12 +65,8 @@ namespace MornSoundProcessor
         private static int GetSoundBeginningIndex(IReadOnlyList<float> list, float minAmplitude, int channels)
         {
             for (var i = 0; i < list.Count; i++)
-            {
                 if (Mathf.Abs(list[i]) > minAmplitude)
-                {
                     return i - i % channels;
-                }
-            }
 
             return 0;
         }
@@ -84,12 +74,8 @@ namespace MornSoundProcessor
         private static int GetSoundEndingIndex(IReadOnlyList<float> list, float minAmplitude, int channels)
         {
             for (var i = list.Count - 1; i >= 0; i--)
-            {
                 if (Mathf.Abs(list[i]) > minAmplitude)
-                {
                     return i - i % channels;
-                }
-            }
 
             return list.Count - 1 - (list.Count - 1) % channels;
         }
@@ -111,10 +97,9 @@ namespace MornSoundProcessor
             using var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
             WriteWavHeader(fileStream, samples, (short)channels, frequency);
             foreach (var value in data)
-            {
                 //符号bitあり
-                WriteShortLittleEndian(fileStream, value > 0 ? (short)(short.MaxValue * value) : (short)(short.MinValue * -value));
-            }
+                WriteShortLittleEndian(fileStream,
+                    value > 0 ? (short)(short.MaxValue * value) : (short)(short.MinValue * -value));
         }
 
         private static void WriteWavHeader(Stream stream, int samples, short channels, int frequency)

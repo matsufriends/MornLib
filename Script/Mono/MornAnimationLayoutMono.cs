@@ -7,11 +7,11 @@ namespace MornLib.Mono
     [RequireComponent(typeof(RectTransform))]
     public class MornAnimationLayoutMono : MonoBehaviour
     {
+        private const float _movement = 20;
         [SerializeField] private Dir _dir;
         [SerializeField] private int _spacing;
         [SerializeField] private bool _ignoreTimeScale = true;
         [SerializeField] private List<RectTransform> _list = new();
-        private const float _movement = 20;
 
         private void Update()
         {
@@ -30,6 +30,14 @@ namespace MornLib.Mono
             }
         }
 
+        private void OnTransformChildrenChanged()
+        {
+            _list.Clear();
+            for (var i = transform.childCount - 1; i >= 0; i--)
+                if (transform.GetChild(i).TryGetComponent<RectTransform>(out var rect))
+                    _list.Add(rect);
+        }
+
         private static Vector2 DirToVector(Dir dir)
         {
             switch (dir)
@@ -42,24 +50,12 @@ namespace MornLib.Mono
             }
         }
 
-        private void OnTransformChildrenChanged()
-        {
-            _list.Clear();
-            for (var i = transform.childCount - 1; i >= 0; i--)
-            {
-                if (transform.GetChild(i).TryGetComponent<RectTransform>(out var rect))
-                {
-                    _list.Add(rect);
-                }
-            }
-        }
-
         private enum Dir
         {
             Up,
             Left,
             Right,
-            Down,
+            Down
         }
     }
 }

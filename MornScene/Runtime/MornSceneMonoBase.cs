@@ -4,19 +4,20 @@ using UniRx;
 using UnityEngine;
 
 [assembly: InternalsVisibleTo("MornScene.Editor")]
+
 namespace MornScene
 {
     public abstract class MornSceneMonoBase : MonoBehaviour
     {
         [SerializeField] private MornSceneCanvasMono _sceneCanvas;
         [SerializeField] private GameObject _root;
-        protected bool ActiveSelf { get; private set; }
-        private readonly Subject<Unit> _onEnterSceneSubject = new();
-        private readonly Subject<Unit> _onUpdateSceneSubject = new();
-        private readonly Subject<Unit> _onExitSceneSubject = new();
-        private readonly Subject<MornSceneDataSo> _onChangeScene = new();
         private readonly Subject<MornSceneDataSo> _onAddScene = new();
+        private readonly Subject<MornSceneDataSo> _onChangeScene = new();
+        private readonly Subject<Unit> _onEnterSceneSubject = new();
+        private readonly Subject<Unit> _onExitSceneSubject = new();
         private readonly Subject<MornSceneDataSo> _onRemoveScene = new();
+        private readonly Subject<Unit> _onUpdateSceneSubject = new();
+        protected bool ActiveSelf { get; private set; }
         public IObservable<Unit> OnEnterSceneRx => _onEnterSceneSubject;
         public IObservable<Unit> OnUpdateSceneRx => _onUpdateSceneSubject;
         public IObservable<Unit> OnExitSceneRx => _onExitSceneSubject;

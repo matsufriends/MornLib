@@ -18,19 +18,16 @@ namespace MornEnum
 
             if (property.propertyType != SerializedPropertyType.String)
             {
-                EditorGUI.HelpBox(position, $"Property type must be string: {property.propertyType}", MessageType.Error);
+                EditorGUI.HelpBox(position, $"Property type must be string: {property.propertyType}",
+                    MessageType.Error);
                 return;
             }
 
             Enum selected;
             if (Enum.IsDefined(enumType, property.stringValue))
-            {
                 selected = (Enum)Enum.Parse(enumType, property.stringValue);
-            }
             else
-            {
                 selected = (Enum)Activator.CreateInstance(enumType);
-            }
 
             var value = EditorGUI.EnumPopup(position, label, selected);
             property.stringValue = value.ToString();
