@@ -30,16 +30,14 @@ namespace MornBeat
         public int BeatTick => MeasureTickCount / BeatCount;
         public double CurrentBeatLength => 60d / CurrentBpm;
         public double StartDspTime => _startDspTime;
-
         /// <summary> ループ時に0から初期化 </summary>
-        public double MusicPlayingTime => AudioSettings.dspTime - _loopStartDspTime +
-                                          (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) + _offsetTime;
-
+        public double MusicPlayingTime =>
+            AudioSettings.dspTime - _loopStartDspTime + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) +
+            _offsetTime;
         /// <summary> ループ後に値を継続 </summary>
-        public double MusicPlayingTimeNoRepeat => AudioSettings.dspTime - _startDspTime +
-                                                  (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) +
-                                                  _offsetTime;
-
+        public double MusicPlayingTimeNoRepeat =>
+            AudioSettings.dspTime - _startDspTime + (_currentBeatMemo != null ? _currentBeatMemo.Offset : 0) +
+            _offsetTime;
         public double MusicBeatTime => MusicPlayingTime / CurrentBeatLength;
         public double MusicBeatTimeNoRepeat => MusicPlayingTimeNoRepeat / CurrentBeatLength;
 
@@ -72,34 +70,29 @@ namespace MornBeat
         public float GetBeatTiming(int tick)
         {
             if (_currentBeatMemo == null) return Mathf.Infinity;
-
             return _currentBeatMemo.GetBeatTiming(tick);
         }
 
         private void UpdateBeatInternal()
         {
             if (_currentBeatMemo == null) return;
-
             var time = MusicPlayingTime;
             if (_waitLoop)
             {
                 var length = _currentBeatMemo.Clip.length;
                 if (time < length) return;
-
                 _loopStartDspTime += length;
                 time -= length;
                 _waitLoop = false;
             }
 
             if (time < _currentBeatMemo.GetBeatTiming(_tick)) return;
-
             CurrentBpm = _currentBeatMemo.GetBpm(time);
             _beatSubject.OnNext(new MornBeatTimingInfo(_tick, _currentBeatMemo.MeasureTickCount));
             _tick++;
             if (_tick == _currentBeatMemo.TickSum)
             {
                 if (_currentBeatMemo.IsLoop) _tick = 0;
-
                 _waitLoop = true;
                 _endBeatSubject.OnNext(Unit.Default);
             }
@@ -108,7 +101,6 @@ namespace MornBeat
         public void InitializeBeat(MornBeatMemoSo beatMemo, bool isForceInitialize = false)
         {
             if (_currentBeatMemo == beatMemo && isForceInitialize == false) return;
-
             _currentBeatMemo = beatMemo;
             _tick = 0;
             _waitLoop = false;
