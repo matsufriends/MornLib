@@ -8,7 +8,7 @@ namespace MornBeat
 {
     public sealed class MornBeatControllerMono : MonoBehaviour
     {
-        private const double PlayStartOffset = 0.3d;
+        private const double PlayStartOffset = 0.5d;
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] [ReadOnly] private MornBeatMemoSo _currentBeatMemo;
         [SerializeField] [ReadOnly] private int _tick;
