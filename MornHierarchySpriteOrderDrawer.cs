@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace PastelParade
+namespace MornLib
 {
     public static class MornHierarchySpriteOrderDrawer
     {
@@ -22,6 +22,11 @@ namespace PastelParade
         private static void DrawTag(Rect selectionRect, GameObject gameObject)
         {
             var sortingGroup = gameObject.GetComponentInParent<SortingGroup>(true);
+            if (sortingGroup == null)
+            {
+                sortingGroup = gameObject.GetComponent<SortingGroup>();
+            }
+
             var renderer = gameObject.GetComponent<Renderer>();
             if (renderer == null)
             {
