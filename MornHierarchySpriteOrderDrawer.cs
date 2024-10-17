@@ -34,16 +34,9 @@ namespace MornLib
             }
 
             var rendererText = $"{LayerNameToNumber(renderer.sortingLayerName)}-{renderer.sortingOrder}";
-            var text = "";
-            if (sortingGroup != null)
-            {
-                text = $"{LayerNameToNumber(sortingGroup.sortingLayerName)}-{sortingGroup.sortingOrder}({rendererText})";
-            }
-            else
-            {
-                text = rendererText;
-            }
-
+            var text = sortingGroup != null
+                ? $"{LayerNameToNumber(sortingGroup.sortingLayerName)}-{sortingGroup.sortingOrder}({rendererText})"
+                : rendererText;
             var style = new GUIStyle();
             selectionRect.xMax -= 16;
             selectionRect.xMin = selectionRect.xMax - 80;
