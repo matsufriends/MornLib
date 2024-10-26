@@ -1,9 +1,9 @@
 using VContainer;
 using VContainer.Unity;
 
-namespace PastelParade
+namespace MornLib
 {
-    public class MornLifetimeScopeBase : LifetimeScope
+    public class MornLifetimeScope : LifetimeScope
     {
         protected override void Configure(IContainerBuilder builder)
         {
