@@ -28,12 +28,12 @@ namespace MornLib
             }
 
             var renderer = gameObject.GetComponent<Renderer>();
-            if (renderer == null)
+            if (renderer == null && sortingGroup == null)
             {
                 return;
             }
 
-            var rendererText = $"{LayerNameToNumber(renderer.sortingLayerName)}-{renderer.sortingOrder}";
+            var rendererText = renderer != null ? $"{LayerNameToNumber(renderer.sortingLayerName)}-{renderer.sortingOrder}" : "";
             var text = sortingGroup != null
                 ? $"{LayerNameToNumber(sortingGroup.sortingLayerName)}-{sortingGroup.sortingOrder}({rendererText})"
                 : rendererText;
