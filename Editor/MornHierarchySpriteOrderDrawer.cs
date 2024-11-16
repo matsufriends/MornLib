@@ -15,7 +15,8 @@ namespace MornLib
         private static void HierarchyWindowItemOnGUI(int instanceID, Rect selectionRect)
         {
             var gameObject = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
-            if (gameObject == null) return;
+            if (gameObject == null)
+                return;
             DrawTag(selectionRect, gameObject);
         }
 
@@ -33,10 +34,10 @@ namespace MornLib
                 return;
             }
 
-            var rendererText = renderer != null ? $"{LayerNameToNumber(renderer.sortingLayerName)}-{renderer.sortingOrder}" : "";
-            var text = sortingGroup != null
-                ? $"{LayerNameToNumber(sortingGroup.sortingLayerName)}-{sortingGroup.sortingOrder}({rendererText})"
-                : rendererText;
+            var rendererText = renderer != null ? $"{LayerNameToNumber(renderer.sortingLayerName)}.{renderer.sortingOrder}" : "";
+            var groupText = sortingGroup != null ? $"{LayerNameToNumber(sortingGroup.sortingLayerName)}.{sortingGroup.sortingOrder}" : "";
+            var text = groupText.Length > 0 && rendererText.Length > 0 ? $"{groupText} (+{rendererText})" :
+                groupText.Length > 0 ? groupText : rendererText;
             var style = new GUIStyle();
             selectionRect.xMax -= 16;
             selectionRect.xMin = selectionRect.xMax - 80;
