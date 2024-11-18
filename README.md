@@ -39,7 +39,6 @@ https://github.com/matsufriends/MornLib.git?path=各機能のフォルダ名
 
 ---
 
-[MornAttributeドキュメント](MornAttribute/README.md)  
 [MornEnumドキュメント](MornEnum/README.md)  
 [MornHierarchyドキュメント](MornHierarchy/README.md)  
 [MornSoundProcessorドキュメント](MornSoundProcessor/README.md)
